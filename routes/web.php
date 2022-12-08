@@ -18,6 +18,7 @@ Route::redirect('/', 'login');
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+// Test
 
 Auth::routes();
 
