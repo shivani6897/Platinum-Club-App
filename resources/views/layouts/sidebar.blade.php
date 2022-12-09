@@ -290,7 +290,7 @@
             </div>
             <div class="flex flex-col pt-2 pb-5">
               <a
-                href="#"
+                href="{{route('profile', Auth::user()->id)}}"
                 class="group flex items-center space-x-3 py-2 px-4 tracking-wide outline-none transition-all hover:bg-slate-100 focus:bg-slate-100 dark:hover:bg-navy-600 dark:focus:bg-navy-600"
               >
                 <div

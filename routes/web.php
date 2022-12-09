@@ -21,8 +21,9 @@ use App\Http\Controllers\Auth\LoginController;
 // });
 // Test
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
+<<<<<<< Updated upstream
 // Admin Route
 Route::group([
     'prefix'=>'admin',
@@ -40,5 +41,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::middleware(['auth'])->group(function(){
 	Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'adminDashboard'])->name('admin.dashboard');
-	Route::resource('/tasks',App\Http\Controllers\Customer\TaskController::class);
+
+    Route::group(['middleware' => ['verified']], function () {
+        Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+        Route::get('profile/{user}/edit', [App\Http\Controllers\UserController::class, 'profile'])->name('profile');
+        Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('updateProfile');
+        Route::resource('/tasks',App\Http\Controllers\Customer\TaskController::class);
+    });
 });
