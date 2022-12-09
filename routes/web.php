@@ -16,11 +16,6 @@ use App\Http\Controllers\Auth\LoginController;
 
 Route::redirect('/', 'login');
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-// Test
-
 Auth::routes(['verify' => true]);
 
 // Admin Route

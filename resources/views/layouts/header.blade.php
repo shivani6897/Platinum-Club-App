@@ -8,7 +8,7 @@
     <div class="flex w-full items-center justify-between">
       <!-- Left: Sidebar Toggle Button -->
       <div class="h-7 w-7">
-        <button
+        {{-- <button
           class="menu-toggle ml-0.5 flex h-7 w-7 flex-col justify-center space-y-1.5 text-primary outline-none focus:outline-none dark:text-accent-light/80"
           :class="$store.global.isSidebarExpanded && 'active'"
           @click="$store.global.isSidebarExpanded = !$store.global.isSidebarExpanded"
@@ -16,7 +16,7 @@
           <span></span>
           <span></span>
           <span></span>
-        </button>
+        </button> --}}
       </div>
 
       <!-- Right: Header buttons -->
@@ -42,7 +42,7 @@
           </svg>
         </button>
 
-        <!-- Main Searchbar -->
+        {{-- <!-- Main Searchbar -->
         <template x-if="$store.breakpoints.smAndUp">
           <div
             class="flex"
@@ -74,7 +74,7 @@
               </div>
             </div>
           </div>
-        </template>
+        </template> --}}
 
         <!-- Dark Mode Toggle -->
         <button
@@ -121,7 +121,7 @@
           ></i>
         </button>
 
-        <!-- Notification-->
+        {{-- <!-- Notification-->
         <div
           x-effect="if($store.global.isSearchbarActive) isShowPopper = false"
           x-data="usePopper({placement:'bottom-end',offset:12})"
@@ -392,7 +392,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> --}}
       </div>
     </div>
   </div>

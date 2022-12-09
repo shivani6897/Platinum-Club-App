@@ -488,8 +488,9 @@
     </div>
   </div>
 </div>
+@endsection
 
-<script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+@push('scripts')
 <script>
   $(document).ready(function(){
     $('input[name="type"]').change(function(e){
@@ -538,4 +539,4 @@
     $('input[name="frequency"][value="{{old('frequency',0)}}"]').prop('checked',true).trigger('change');
   });
 </script>
-@endsection
+@endpush
