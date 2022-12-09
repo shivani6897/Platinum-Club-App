@@ -31,6 +31,8 @@ Route::post('/admin', [LoginController::class,'adminLogin'])->name('admin-login'
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'adninDashboard'])->name('admin.dashboard');
-Route::resource('tasks',App\Http\Controllers\Customer\TaskController::class);
+Route::middleware(['auth'])->group(function(){
+	Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'adninDashboard'])->name('admin.dashboard');
+	Route::resource('/tasks',App\Http\Controllers\Customer\TaskController::class);
+});
 
