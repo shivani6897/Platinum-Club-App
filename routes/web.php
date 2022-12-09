@@ -14,7 +14,7 @@ use App\Http\Controllers\Auth\LoginController;
 |
 */
 
-//Route::redirect('/', 'login');
+Route::redirect('/', 'login');
 
 // Route::get('/', function () {
 //     return view('welcome');
