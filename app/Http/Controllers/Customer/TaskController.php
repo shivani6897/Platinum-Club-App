@@ -15,7 +15,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return view('customer.tasks.index');
+        $tasks = Task::with('task_category')->paginate(10);
+        return view('customer.tasks.index',compact('tasks'));
     }
 
     /**
@@ -25,7 +26,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        return view('customer.tasks.create');
     }
 
     /**
@@ -39,16 +40,6 @@ class TaskController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Task $task)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -58,7 +49,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return view('customer.tasks.edit',compact('task'));
     }
 
     /**
@@ -81,6 +72,7 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $task->delete();
+        return redirect()->back()->with('success','Task Deleted');
     }
 }

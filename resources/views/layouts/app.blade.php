@@ -10,13 +10,13 @@
     />
 
     <title>{{config('app.name') }}</title>
-    <link rel="icon" type="image/png" href="images/favicon.png" />
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
 
     <!-- CSS Assets -->
-    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="/css/app.css" />
 
     <!-- Javascript Assets -->
-    <script src="js/app.js" defer></script>
+    <script src="/js/app.js" defer></script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

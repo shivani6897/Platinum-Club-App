@@ -7,7 +7,7 @@
       <a href="/">
         <img
           class="h-11 w-11 transition-transform duration-500 ease-in-out hover:rotate-[360deg]"
-          src="images/app-logo.svg"
+          src="/images/app-logo.svg"
           alt="logo"
         />
       </a>
@@ -253,7 +253,7 @@
         >
           <img
             class="rounded-full"
-            src="images/200x200.png"
+            src="/images/200x200.png"
             alt="avatar"
           />
           <span
@@ -275,7 +275,7 @@
               <div class="avatar h-14 w-14">
                 <img
                   class="rounded-full"
-                  src="images/200x200.png"
+                  src="/images/200x200.png"
                   alt="avatar"
                 />
               </div>
