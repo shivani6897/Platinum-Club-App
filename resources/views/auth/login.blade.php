@@ -59,8 +59,10 @@
               </p>
             </div>
           </div>
-          <form method="POST" action="{{ route('login') }}">
-            @csrf
+            <form method="POST"
+                  action="{{ $role == 2 ? route('customer-login') : $role == route('admin-login') }}">
+                @csrf
+                <input type="hidden" name="role" value="{{ $role }}">
             <div class="card mt-5 rounded-lg p-5 lg:p-7">
               <label class="block">
                 <span>Email:</span>
@@ -72,9 +74,9 @@
                     name="email"
                     id="email"
                     value="{{ old('email') }}"
-                    required 
-                    autocomplete="email" 
-                    autofocus 
+                    required
+                    autocomplete="email"
+                    autofocus
                   />
                   <span
                     class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
@@ -110,7 +112,7 @@
                     type="password"
                     id="password"
                     name="password"
-                    required 
+                    required
                     autocomplete="current-password"
                   />
                   <span
@@ -143,7 +145,7 @@
                   <input
                     class="form-checkbox is-basic h-5 w-5 rounded border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
                     type="checkbox"
-                    name="remember" 
+                    name="remember"
                     id="remember"
                     {{ old('remember') ? 'checked' : '' }}
                   />
@@ -178,8 +180,8 @@
       </main>
     </div>
 
-    <!-- 
-        This is a place for Alpine.js Teleport feature 
+    <!--
+        This is a place for Alpine.js Teleport feature
         @see https://alpinejs.dev/directives/teleport
       -->
     <div id="x-teleport-target"></div>
