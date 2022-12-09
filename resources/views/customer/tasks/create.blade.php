@@ -10,7 +10,7 @@
   <li class="flex items-center space-x-2">
     <a
       class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-      href="#"
+      href="{{route('home')}}"
       >Dashboard</a
     >
     <svg
@@ -30,7 +30,7 @@
     </svg>
     <a
       class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-      href="#"
+      href="{{route('tasks.index')}}"
       >Tasks</a
     >
     <svg
@@ -54,7 +54,7 @@
 @endsection
 
 @section('content')
-<div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+<div class="card grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
   <div class="col-span-12">
     <div class=" p-4 sm:p-5">
       <p
@@ -339,7 +339,7 @@
                     class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
                     name="frequency"
                     value="0"
-                    @checked(old('frequency',0)==0)
+                    @checked(old('frequency',1)==1)
                     type="radio"
                   />
                   <span>Daily</span>
@@ -349,7 +349,7 @@
                     class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
                     name="frequency"
                     value="1"
-                    @checked(old('frequency',0)==1)
+                    @checked(old('frequency',1)==2)
                     type="radio"
                   />
                   <span>Bi-Weekly</span>
@@ -359,7 +359,7 @@
                     class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
                     name="frequency"
                     value="2"
-                    @checked(old('frequency',0)==2)
+                    @checked(old('frequency',1)==3)
                     type="radio"
                   />
                   <span>Weekly</span>
@@ -369,7 +369,7 @@
                     class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
                     name="frequency"
                     value="3"
-                    @checked(old('frequency',0)==3)
+                    @checked(old('frequency',1)==4)
                     type="radio"
                   />
                   <span>Monthly</span>
