@@ -23,8 +23,15 @@ use App\Http\Controllers\Auth\LoginController;
 
 Auth::routes();
 
-Route::get('/',[LoginController::class,'customer'])->name('customerLogin.index');
-Route::post('/', [LoginController::class,'customerLogin'])->name('customer-login');
+// Admin Route
+Route::group([
+    'prefix'=>'admin',
+    'as'=>'admin.',
+    'middleware'=>['auth']
+],base_path('routes/admin.php'));
+
+Route::get('/login',[LoginController::class,'customer'])->name('customerLogin.index');
+Route::post('/login', [LoginController::class,'customerLogin'])->name('customer-login');
 
 Route::get('/admin',[LoginController::class,'admin'])->name('adminLogin.index');
 Route::post('/admin', [LoginController::class,'adminLogin'])->name('admin-login');
@@ -32,7 +39,6 @@ Route::post('/admin', [LoginController::class,'adminLogin'])->name('admin-login'
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth'])->group(function(){
-	Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'adninDashboard'])->name('admin.dashboard');
+	Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'adminDashboard'])->name('admin.dashboard');
 	Route::resource('/tasks',App\Http\Controllers\Customer\TaskController::class);
 });
-

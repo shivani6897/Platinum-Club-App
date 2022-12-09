@@ -55,11 +55,11 @@ class LoginController extends Controller
         ];
         if ($request->role == 1) {
             if (Auth::attempt($cred)) {
-                if (\auth()->user()->role == 1) {
+                if (auth()->user()->role == 1) {
                     return redirect()->route('admin.dashboard');
                 }
                 else {
-                    \auth()->logout();
+                    auth()->logout();
                 }
             }
         }
@@ -68,7 +68,7 @@ class LoginController extends Controller
                 ->withErrors("Combination Of Email And Password Do Not Match");
         }
         return redirect()->route('adminLogin.index')
-            ->with(\auth()->user()->role == 1)
+            ->with(auth()->user()->role == 1)
             ->withErrors("Combination Of Email And Password Do Not Match");
     }
 
@@ -87,11 +87,11 @@ class LoginController extends Controller
         ];
         if ($request->role == 2) {
             if (Auth::attempt($cred)) {
-                if (\auth()->user()->role == 2) {
+                if (auth()->user()->role == 2) {
                     return redirect()->route('home');
                 }
                 else {
-                    \auth()->logout();
+                    auth()->logout();
                 }
             }
         }
@@ -100,7 +100,6 @@ class LoginController extends Controller
                 ->withErrors("Combination Of Email And Password Do Not Match");
         }
         return redirect()->route('customerLogin.index')
-            ->with(\auth()->user()->role == 2)
             ->withErrors("Combination Of Email And Password Do Not Match");
     }
 
