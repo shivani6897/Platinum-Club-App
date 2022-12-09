@@ -23,6 +23,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->text('profile')->nullable();
+            $table->tinyInteger('role')->default(2)->comment('0=Super Admin, 1=Admin, 2=User');
             $table->rememberToken();
             $table->timestamps();
         });
