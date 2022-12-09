@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
+use App\Models\TaskCategory;
 use Illuminate\Http\Request;
+use App\Http\Requests\Customer\Task\StoreRequest;
+use App\Http\Requests\Customer\Task\UpdateRequest;
 
 class TaskController extends Controller
 {
@@ -26,7 +29,8 @@ class TaskController extends Controller
      */
     public function create()
     {
-        return view('customer.tasks.create');
+        $categories = TaskCategory::all(['id','name']);
+        return view('customer.tasks.create',compact('categories'));
     }
 
     /**
@@ -35,9 +39,32 @@ class TaskController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        $array = $request->only([
+            'task_category_id',
+            'name',
+            'type'
+        ]);
+        $array['user_id'] = auth()->id();
+
+        if($array['type']==0)
+        {
+            $array['task_date'] = $request->date.' '.$request->time;
+        }
+        else
+        {
+            $array['start_date'] = $request->start_date;
+            $array['end_date'] = $request->end_date;
+            $array['task_time'] = $request->recurring_time;
+            $array['frequency'] = $request->frequency;
+            $array['day_of_week'] = ($request->frequency==1?$request->day_of_week_1:$request->day_of_week);
+            $array['day_of_week_2'] = $request->day_of_week_2;
+            $array['month_day'] = $request->day_of_month;
+        }
+
+        $task = Task::create($array);
+        return redirect()->back()->with('success','Task Created');
     }
 
 
@@ -59,7 +86,7 @@ class TaskController extends Controller
      * @param  \App\Models\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Task $task)
+    public function update(UpdateRequest $request, Task $task)
     {
         //
     }

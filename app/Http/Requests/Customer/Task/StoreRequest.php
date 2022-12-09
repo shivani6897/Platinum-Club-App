@@ -13,7 +13,7 @@ class StoreRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,20 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'task_category_id'=>'required|exists:task_categories,id',
+            'name'=>'required',
+            'type'=>'required|boolean',
+            'date'=>'required_if:type,0',
+            'time'=>'required_if:type,0',
+            'start_date'=>'required_if:type,1',
+            'end_date'=>'required_if:type,1',
+            'recurring_time'=>'required_if:type,1',
+            'frequency'=>'required_if:type,1',
+            'day_of_week'=>'required_if:frequency,2',
+            'day_of_week_1'=>'required_if:frequency,1',
+            'day_of_week_2'=>'required_if:frequency,1',
+            'day_of_month'=>'required_if:frequency,3',
+
         ];
     }
 }

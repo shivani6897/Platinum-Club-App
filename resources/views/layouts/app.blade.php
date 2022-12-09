@@ -87,6 +87,7 @@
           <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl">
             @yield('heading')
           </h2>
+          @yield('breadcrums')
         </div>
         @yield('content')
       </main>
