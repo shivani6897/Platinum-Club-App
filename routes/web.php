@@ -23,7 +23,6 @@ use App\Http\Controllers\Auth\LoginController;
 
 Auth::routes(['verify' => true]);
 
-<<<<<<< Updated upstream
 // Admin Route
 Route::group([
     'prefix'=>'admin',
