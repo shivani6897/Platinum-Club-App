@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\cr;
+use App\Models\Habit;
 use Illuminate\Http\Request;
 
 class HabitController extends Controller
@@ -13,11 +13,11 @@ class HabitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $habit = Habit::all();
+        return view('admin/habits/index', compact('habit'));
     }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -25,7 +25,7 @@ class HabitController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.habits.create');
     }
 
     /**
@@ -36,16 +36,22 @@ class HabitController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        Habit::create($request->all());
+
+        return redirect()->route('admin.habits.index')->with('success','Habit Created successfully');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\cr  $cr
+     * @param  \App\Models\Habit  $habit
      * @return \Illuminate\Http\Response
      */
-    public function show(cr $cr)
+    public function show(Habit $habit)
     {
         //
     }
@@ -53,34 +59,42 @@ class HabitController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\cr  $cr
+     * @param  \App\Models\Habit  $habit
      * @return \Illuminate\Http\Response
      */
-    public function edit(cr $cr)
+    public function edit(Habit $habit)
     {
-        //
+//        dd($habits);
+        return view('admin.habits.edit',compact('habit'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\cr  $cr
+     * @param  \App\Models\Habit  $habits
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, cr $cr)
+    public function update(Request $request,Habit $habit)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+        ]);
+
+        $habit->update($request->all());
+
+        return redirect()->route('admin.habits.index')->with('success','Habit Updated Successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\cr  $cr
+     * @param  \App\Models\Habit  $habit
      * @return \Illuminate\Http\Response
      */
-    public function destroy(cr $cr)
+    public function destroy(Habit $habit)
     {
-        //
+        $habit->delete();
+        return redirect()->route('admin.habits.index')->with('success','Habit Deleted Successfully');
     }
 }
