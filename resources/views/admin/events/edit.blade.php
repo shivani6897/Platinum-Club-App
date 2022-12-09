@@ -49,7 +49,7 @@
                 />
             </svg>
         </li>
-        <li>Create</li>
+        <li>Edit</li>
     </ul>
 @endsection
 
@@ -61,6 +61,7 @@
           enctype="multipart/form-data"
     >
         @csrf
+        @method('PUT')
         <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
             <div class="col-span-12">
                 <div class="card p-4 sm:p-5">

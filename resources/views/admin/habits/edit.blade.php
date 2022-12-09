@@ -49,11 +49,10 @@
                 />
             </svg>
         </li>
-        <li>Create</li>
+        <li>Edit</li>
     </ul>
 @endsection
 @section('content')
-{{--    @dd($habits)--}}
     <form method="POST"
           action="{{ route('admin.habits.update',$habit->id) }}"
           accept-charset="UTF-8"
@@ -62,29 +61,33 @@
     >
         @csrf
         @method('PUT')
-        <div class="my-3 flex h-8 ">
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-12">
-                <label class="block sm:col-span-8">
-                    <span>Name</span>
-                    <div class="relative mt-1.5 flex">
-                        <input
-                            class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2
-                            placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                            placeholder="Name"
-                            type="text"
-                            name="name"
-                            value="{{$habit->name}}"
-                        />
+
+        <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+            <div class="col-span-12">
+                <div class="card p-4 sm:p-5">
+                    <div class="mt-4 space-y-4">
+                        <label class="block">
+                            <span>Name</span>
+                            <span class="relative mt-1.5 flex">
+                                <input
+                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                    placeholder="Habit"
+                                    type="text"
+                                    name="name"
+                                    value="{{ $habit->name }}"
+                                />
+                            </span>
+                        </label>
+                        <div class="flex justify-end space-x-2">
+                            <button
+                                class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                            >
+                                <span>Submit</span>
+                            </button>
+                        </div>
                     </div>
-                </label>
+                </div>
             </div>
-        </div>
-        <div class="flex justify-end space-x-2">
-            <button
-                class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
-            >
-                <span>Submit</span>
-            </button>
         </div>
     </form>
 @endsection
