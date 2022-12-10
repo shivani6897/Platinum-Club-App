@@ -74,9 +74,13 @@
                                     type="text"
                                     name="name"
                                     autocomplete="off"
+                                    value="{{ old('name') }}"
                                     required
                                 />
                             </span>
+                            @error('name')
+                            <span class="text-tiny+ text-error">{{$message}}</span>
+                            @enderror
                         </label>
                         <div class="flex justify-end space-x-2">
                             <button

@@ -39,5 +39,9 @@ Route::middleware(['auth'])->group(function(){
         Route::get('profile/{user}/edit', [App\Http\Controllers\UserController::class, 'profile'])->name('profile');
         Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('updateProfile');
         Route::resource('/tasks',App\Http\Controllers\Customer\TaskController::class);
+
+
+        Route::get('/events', [App\Http\Controllers\Customer\EventController::class, 'index'])->name('events');
+
     });
 });

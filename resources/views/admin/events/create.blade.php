@@ -75,8 +75,13 @@
                                 type="text"
                                 name="name"
                                 autocomplete="off"
+                                value="{{ old('name') }}"
+                                required
                             />
                         </span>
+                        @error('name')
+                            <span class="text-tiny+ text-error">{{$message}}</span>
+                        @enderror
                     </label>
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <label class="block">
@@ -92,7 +97,8 @@
                                    placeholder="Choose date..."
                                    type="text"
                                    name="event_date_time"
-                                   value="{{old('event_date_time')}}"
+                                   value="{{ old('event_date_time') }}"
+                                    required
                                />
                                 <span
                                     class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
@@ -113,21 +119,26 @@
                                     </svg>
                                   </span>
                                 </span>
-                                @error('date')
-                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                @error('event_date_time')
+                                    <span class="text-tiny+ text-error">{{$message}}</span>
                                 @enderror
                         </label>
                         <label class="block">
-                            <span>Link</span>
+                            <span>Url Link</span>
                             <div class="relative mt-1.5 flex">
                                 <input
                                     class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                    placeholder="Link"
+                                    placeholder="Url Link"
                                     type="text"
                                     name="link"
                                     autocomplete="off"
+                                    value="{{ old('link') }}"
+                                    required
                                 />
                             </div>
+                            @error('link')
+                                <span class="text-tiny+ text-error">{{$message}}</span>
+                            @enderror
                         </label>
                     </div>
 
@@ -137,8 +148,14 @@
                             rows="4"
                             placeholder="Description"
                             autocomplete="off"
+                            name="description"
                             class="form-textarea mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent p-2.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                        ></textarea>
+                        >
+                            {{ old('description') }}
+                        </textarea>
+                        @error('description')
+                            <span class="text-tiny+ text-error">{{$message}}</span>
+                        @enderror
                     </label>
                     <div class="flex justify-end space-x-2">
                         <button
@@ -155,14 +172,5 @@
 @endsection
 
 @push('scripts')
-    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.full.min.js"></script>
-    <script src="http://cdn.craig.is/js/rainbow-custom.min.js"></script>
-    <script>
-        $('#event_date_time').datetimepicker({
-            format:'d/m/Y H:m',
-            interval: 30,
-        });
-    </script>
+
 @endpush

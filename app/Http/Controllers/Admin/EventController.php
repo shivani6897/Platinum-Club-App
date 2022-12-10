@@ -44,7 +44,9 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|max:255',
+            'link' => 'required|url',
+            'event_date_time' => 'required',
         ]);
 
         $event = Event::create([
@@ -89,7 +91,9 @@ class EventController extends Controller
     public function update(Request $request, Event $event)
     {
         $request->validate([
-            'name' => 'required',
+            'name' => 'required|max:255',
+            'link' => 'required|url',
+            'event_date_time' => 'required',
         ]);
         $event->update([
             'name' => $request->name,
