@@ -14,6 +14,6 @@ use App\Http\Controllers\Admin\EventController;
 |
 */
 
-Route::get('/admin/dashboard', [App\Http\Controllers\HomeController::class, 'adminDashboard'])->name('admin.dashboard');
+Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'adminDashboard'])->name('dashboard');
 Route::resource('/habits',HabitController::class);
 Route::resource('/events',EventController::class);

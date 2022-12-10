@@ -10,7 +10,7 @@
         <li class="flex items-center space-x-2">
             <a
                 class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-                href="#"
+                href="{{ route('admin.dashboard') }}"
             >Dashboard</a
             >
             <svg
@@ -30,7 +30,7 @@
             </svg>
             <a
                 class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-                href="#"
+                href="{{ route('admin.habits.index') }}"
             >Habits</a
             >
             <svg

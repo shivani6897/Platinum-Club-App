@@ -60,6 +60,7 @@ class LoginController extends Controller
                 }
                 else {
                     auth()->logout();
+                    return redirect()->back();
                 }
             }
         }

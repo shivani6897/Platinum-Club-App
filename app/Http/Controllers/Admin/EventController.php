@@ -51,7 +51,7 @@ class EventController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'link' => $request->link,
-            'event_date_time' => Carbon::createFromFormat('d/m/Y H:m',urldecode($request->event_date_time))->format('Y-m-d H:m:i'),
+            'event_date_time' => $request->event_date_time,
         ]);
 
         return redirect()->route('admin.events.index')->with('success', 'Event Created successfully');
@@ -95,7 +95,7 @@ class EventController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'link' => $request->link,
-            'event_date_time' => Carbon::createFromFormat('d/m/Y H:m',urldecode($request->event_date_time))->format('Y-m-d H:m:i'),
+            'event_date_time' => $request->event_date_time,
         ]);
 
         return redirect()->route('admin.events.index')->with('success', 'Event Updated Successfully');

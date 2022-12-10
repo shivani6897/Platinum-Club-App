@@ -10,7 +10,7 @@
         <li class="flex items-center space-x-2">
             <a
                 class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-                href="#"
+                href="{{ route('admin.dashboard') }}"
             >Dashboard</a
             >
             <svg
@@ -30,7 +30,7 @@
             </svg>
             <a
                 class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-                href="#"
+                href="{{ route('admin.events.index') }}"
             >Events</a
             >
             <svg
@@ -82,19 +82,42 @@
                         </label>
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <label class="block">
-                                <span>Event Date Time</span> <span>*</span>
-                                <span class="relative mt-1.5 flex">
-                              <input
-                                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                  placeholder="Event Date Time"
-                                  type="text"
-                                  autocomplete="off"
-                                  id="event_date_time"
-                                  name="event_date_time"
-                                  value="{{ $event->event_date_time?->format('d/m/Y H:m')}}"
-                                  required
-                              />
-                            </span>
+                                <span>Event Date Time</span>
+                                <span class="relative flex">
+                                <input
+                                    data-enable-time=true
+                                    x-init="$el._x_flatpickr = flatpickr($el,{altInput: true,altFormat: 'd-m-Y H:m:i',dateFormat: 'Y-m-d H:m:i'})"
+                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 mt-1.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                                    @error('event_date_time')
+                                        border-error
+                                    @enderror"
+                                    placeholder="Choose date..."
+                                    type="text"
+                                    name="event_date_time"
+                                    value="{{old('event_date_time')}}"
+                                />
+                                <span
+                                    class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        class="h-5 w-5 transition-colors duration-200"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                    >
+                                      <path
+                                          stroke-linecap="round"
+                                          stroke-linejoin="round"
+                                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                      />
+                                    </svg>
+                                  </span>
+                                </span>
+                                @error('date')
+                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                @enderror
                             </label>
                             <label class="block">
                                 <span>Link</span>
