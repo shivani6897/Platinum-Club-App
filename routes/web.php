@@ -38,6 +38,8 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
         Route::get('profile/{user}/edit', [App\Http\Controllers\UserController::class, 'profile'])->name('profile');
         Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('updateProfile');
+
+        Route::get('/tasks/calendar',[App\Http\Controllers\Customer\TaskController::class,'calendar'])->name('tasks.calendar');
         Route::resource('/tasks',App\Http\Controllers\Customer\TaskController::class);
 
 

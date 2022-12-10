@@ -135,4 +135,94 @@ class TaskController extends Controller
         $task->delete();
         return redirect()->back()->with('success','Task Deleted');
     }
+
+    public function calendar()
+    {
+        $array = [
+            'month'=>request('month',date('n')),
+            'year'=>request('year',date('Y')),
+            'operation'=>request('operation','')
+        ];
+        if($array['operation']!='')
+        {
+            if($array['operation']=='sub')
+            {
+                if($array['month']==1)
+                {
+                    $array['month']=12;
+                    $array['year']--;
+                }
+                else
+                    $array['month']--;
+            }
+            else if($array['operation']=='add')
+            {
+                if($array['month']==12)
+                {
+                    $array['month']=1;
+                    $array['year']++;
+                }
+                else
+                    $array['month']++;
+            }
+        }
+
+
+        $date = date('F Y');//Current Month Year
+        $data = [];
+        while (strtotime($date) <= strtotime(date('Y-m') . '-' . date('t', strtotime($date)))) {
+
+            // One time tasks for day 
+            $oneTimeTask = Task::whereDate('task_date',date("Y-m-d", strtotime($date)))->where('frequency',0)->get();
+            foreach($oneTimeTask as $once)
+            {
+                $data[] = [
+                    'event_date'=>date("Y-m-d", strtotime($date)),
+                    'event_title'=>$once->name.' at '.$once->task_date->format('h:i A'),
+                    'event_theme'=>'blue',
+                ];
+            }
+
+            // Recurring task for days
+            $recurring = Task::where(function($q) use ($date){
+                    $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
+                        ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
+                        ->where('frequency',1);
+                })
+                ->orWhere(function($q) use ($date){
+                    $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
+                        ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
+                        ->where(function($q2) use ($date){
+                            $q2->where('day_of_week',date("l", strtotime($date)))
+                                ->orWhere('day_of_week_2',date("l", strtotime($date)));
+                        })
+                        ->where('frequency',2);
+                })
+                ->orWhere(function($q) use ($date){
+                    $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
+                        ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
+                        ->where('day_of_week',date("l", strtotime($date)))
+                        ->where('frequency',3);
+                })
+                ->orWhere(function($q) use ($date){
+                    $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
+                        ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
+                        ->where('day_of_week',date("l", strtotime($date)))
+                        ->where('frequency',4);
+                })->get();
+            foreach($recurring as $re)
+            {
+                $data[] = [
+                    'event_date'=>date("Y-m-d", strtotime($date)),
+                    'event_title'=>$re->name.' at '.$re->task_time->format('h:i A'),
+                    'event_theme'=>'blue',
+                ];
+            }
+
+            $date = date("Y-m-d", strtotime("+1 day", strtotime($date)));//Adds 1 day onto current date
+        }
+
+        request()->merge($array);
+        return view('customer.tasks.calendar',compact('data'));
+    }
 }
