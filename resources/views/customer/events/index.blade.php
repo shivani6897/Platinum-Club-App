@@ -76,21 +76,28 @@
 {{--                            alt="avatar"--}}
 {{--                        />--}}
 {{--                    </div>--}}
-                    <div class="my-1 h-px bg-slate-200 dark:bg-navy-500" style="width: 100%;"></div>
+{{--                    <div class="my-1 h-px bg-slate-200 dark:bg-navy-500" style="width: 100%;"></div>--}}
 
                     <h4
                         class="pt-3 pb-3 text-md text-slate-700 dark:text-navy-100"
                     >
                         <span class="font-medium">Date</span> : {{ $events->event_date_time ? ($events->event_date_time?->format('d M Y')) : ''}}
                     </h4>
-                    <div class="my-1 h-px bg-slate-200 dark:bg-navy-500" style="width: 100%;"></div>
+{{--                    <div class="my-1 h-px bg-slate-200 dark:bg-navy-500" style="width: 100%;"></div>--}}
 
                     <h5
                         class="pt-3 pb-3 text-md text-slate-700 dark:text-navy-100"
                     >
                         <span class="font-medium">Time</span> : {{ $events->event_date_time ? ($events->event_date_time?->format('h:m a')) : ''}}
                     </h5>
-                    <div class="my-1 h-px bg-slate-200 dark:bg-navy-500" style="width: 100%;"></div>
+{{--                    <div class="my-1 h-px bg-slate-200 dark:bg-navy-500" style="width: 100%;"></div>--}}
+
+                    <h5
+                        class="pt-3 pb-3 text-md text-slate-700 dark:text-navy-100"
+                    >
+                    {{ $events->description ? ( substr($events->description, 0 , 40)) : '' }}
+                    </h5>
+{{--                    <div class="my-1 h-px bg-slate-200 dark:bg-navy-500" style="width: 100%;"></div>--}}
 
                     {{--                    <div class="inline-space mt-3 flex grow flex-wrap items-start">--}}
 {{--                        <a--}}
@@ -112,16 +119,27 @@
 {{--                            ReactJS--}}
 {{--                        </a>--}}
 {{--                    </div>--}}
-                    @if(isset( $events->link))
+                    @if($events->event_date_time < Carbon\Carbon::today())
+                        @if(isset( $events->link))
+                            <div class="mt-6 grid w-full grid-cols-1 gap-2">
+                                <button
+                                   target="_blank"
+                                    class="btn space-x-2 px-0 font-medium text-white" style="background-color: #e84c37;"
+                                >
+                                    <span>Join Event</span>
+                                </button>
+                            </div>
+                        @endif
+                    @else
                         <div class="mt-6 grid w-full grid-cols-1 gap-2">
                             <a href="{{ $events->link }}"
                                target="_blank"
-                                class="btn space-x-2 px-0 font-medium text-white" style="background-color: #e84c37;"
+                               class="btn space-x-2 px-0 font-medium text-white bg-success"
                             >
                                 <span>Join Event</span>
                             </a>
                         </div>
-                        @endif
+                    @endif
                 </div>
             </div>
         @empty
