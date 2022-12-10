@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->index();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('task_category_id')->index();
             $table->foreign('task_category_id')->references('id')->on('task_categories')->onDelete('cascade');
             $table->string('name');

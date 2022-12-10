@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -27,6 +28,16 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
+
+        DB::table('users')->insert([
+            'first_name'=>'Super',
+            'last_name'=>'Admin',
+            'email'=>'admin@gmail.com',
+            'phone_no'=>9000090000,
+            'city'=>'Surat',
+            'password'=>bcrypt('Admin@Platinum2022'),
+            'role'=>0
+        ]);
     }
 
     /**
