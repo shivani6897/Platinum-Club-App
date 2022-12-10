@@ -16,8 +16,12 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-//        dd($request);
-        $event = Event::where('name', 'like', '%' . request('search') . '%')->paginate(2);
+        $event = Event::when(request('search'),function($q){
+                $q->where('name','LIKE', '%'.request('search').'%')
+                ->orWhere('link','LIKE','%'.request('search').'%')
+                ->orWhere('event_date_time','LIKE','%'.request('search').'%');
+            })
+            ->paginate(10);
         return view('admin/events/index', compact('event'));
     }
 

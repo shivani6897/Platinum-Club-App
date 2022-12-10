@@ -15,7 +15,10 @@ class HabitController extends Controller
      */
     public function index(Request $request)
     {
-        $habit = Habit::all();
+        $habit = Habit::when(request('search'),function($q){
+        $q->where('name','LIKE', '%'.request('search').'%');
+    })
+        ->paginate(10);
         return view('admin/habits/index', compact('habit'));
     }
     /**

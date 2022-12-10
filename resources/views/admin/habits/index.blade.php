@@ -63,6 +63,8 @@
                                                 :class="isInputActive ? 'w-32 lg:w-48' : 'w-0'"
                                                 class="form-input bg-transparent px-1 text-right transition-all duration-100 placeholder:text-slate-500 dark:placeholder:text-navy-200"
                                                 placeholder="Search here..."
+                                                onchange="tableSearch(this)"
+                                                value="{{request('search','')}}"
                                                 type="text"
                                             />
                                         </label>
@@ -176,11 +178,11 @@
                                         </tbody>
                                     </table>
                                 </div>
-{{--                                <div--}}
-{{--                                    class="flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5"--}}
-{{--                                >--}}
-{{--                                    {{$habit->links()}}--}}
-{{--                                </div>--}}
+                                <div
+                                    class="flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5"
+                                >
+                                    {{$habit->links()}}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -188,4 +190,14 @@
             </div>
         </div>
 @endsection
+
+@push('scripts')
+    <script>
+        function tableSearch(obj)
+        {
+            $('<form action=""></form>').append('<input type="hidden" name="search" value="'+$(obj).val()+'">').appendTo('body').submit().remove();
+        }
+    </script>
+@endpush
+
 

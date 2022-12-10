@@ -56,16 +56,17 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex">
                                     <div class="flex items-center" x-data="{isInputActive:false}">
-                                            <label class="block">
-                                                <input
-                                                    x-effect="isInputActive === true && $nextTick(() => { $el.focus()});"
-                                                    :class="isInputActive ? 'w-32 lg:w-48' : 'w-0'"
-                                                    class="form-input bg-transparent px-1 text-right transition-all duration-100 placeholder:text-slate-500 dark:placeholder:text-navy-200"
-                                                    placeholder="Search here..."
-                                                    type="text"
-                                                    name="search"
-                                                />
-                                            </label>
+                                        <label class="block">
+                                            <input
+                                                x-effect="isInputActive === true && $nextTick(() => { $el.focus()});"
+                                                :class="isInputActive ? 'w-32 lg:w-48' : 'w-0'"
+                                                class="form-input bg-transparent px-1 text-right transition-all duration-100 placeholder:text-slate-500 dark:placeholder:text-navy-200"
+                                                placeholder="Search here..."
+                                                onchange="tableSearch(this)"
+                                                value="{{request('search','')}}"
+                                                type="text"
+                                            />
+                                        </label>
                                             <button
                                                 @click="isInputActive = !isInputActive"
                                                 class="btn h-8 w-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
@@ -195,3 +196,12 @@
             </div>
         </div>
     @endsection
+
+    @push('scripts')
+        <script>
+            function tableSearch(obj)
+            {
+                $('<form action=""></form>').append('<input type="hidden" name="search" value="'+$(obj).val()+'">').appendTo('body').submit().remove();
+            }
+        </script>
+    @endpush
