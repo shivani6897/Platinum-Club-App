@@ -438,13 +438,13 @@
                   name="day_of_week"
                   required
                 >
-                  <option value="Monday" @selected(old('day_of_week_1','Monday')=='Monday')>Monday</option>
-                  <option value="Tuesday" @selected(old('day_of_week_1','Monday')=='Tuesday')>Tuesday</option>
-                  <option value="Wednesday" @selected(old('day_of_week_1','Monday')=='Wednesday')>Wednesday</option>
-                  <option value="Thursday" @selected(old('day_of_week_1','Monday')=='Thursday')>Thursday</option>
-                  <option value="Friday" @selected(old('day_of_week_1','Monday')=='Friday')>Friday</option>
-                  <option value="Saturday" @selected(old('day_of_week_1','Monday')=='Saturday')>Saturday</option>
-                  <option value="Sunday" @selected(old('day_of_week_1','Monday')=='Sunday')>Sunday</option>
+                  <option value="Monday" @selected(old('day_of_week_2','Monday')=='Monday')>Monday</option>
+                  <option value="Tuesday" @selected(old('day_of_week_2','Monday')=='Tuesday')>Tuesday</option>
+                  <option value="Wednesday" @selected(old('day_of_week_2','Monday')=='Wednesday')>Wednesday</option>
+                  <option value="Thursday" @selected(old('day_of_week_2','Monday')=='Thursday')>Thursday</option>
+                  <option value="Friday" @selected(old('day_of_week_2','Monday')=='Friday')>Friday</option>
+                  <option value="Saturday" @selected(old('day_of_week_2','Monday')=='Saturday')>Saturday</option>
+                  <option value="Sunday" @selected(old('day_of_week_2','Monday')=='Sunday')>Sunday</option>
                 </select>
                 @error('day_of_week')
                   <span class="text-tiny+ text-error">{{$message}}</span>

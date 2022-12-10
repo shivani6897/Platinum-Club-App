@@ -85,7 +85,8 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        return view('customer.tasks.edit',compact('task'));
+        $categories = TaskCategory::all(['id','name']);
+        return view('customer.tasks.edit',compact('task','categories'));
     }
 
     /**
@@ -97,7 +98,30 @@ class TaskController extends Controller
      */
     public function update(UpdateRequest $request, Task $task)
     {
-        //
+        $array = $request->only([
+            'task_category_id',
+            'name',
+            'type'
+        ]);
+        $array['user_id'] = auth()->id();
+
+        if($array['type']==0)
+        {
+            $array['task_date'] = $request->date.' '.$request->time;
+        }
+        else
+        {
+            $array['start_date'] = $request->start_date;
+            $array['end_date'] = $request->end_date;
+            $array['task_time'] = $request->recurring_time;
+            $array['frequency'] = $request->frequency;
+            $array['day_of_week'] = ($request->frequency==1?$request->day_of_week_1:$request->day_of_week);
+            $array['day_of_week_2'] = $request->day_of_week_2;
+            $array['month_day'] = $request->day_of_month;
+        }
+
+        $task->update($array);
+        return redirect()->route('tasks.index')->with('success','Task Updated');
     }
 
     /**

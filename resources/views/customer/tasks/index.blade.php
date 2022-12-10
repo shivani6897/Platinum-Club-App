@@ -46,7 +46,7 @@
       </h2>
       <div class="flex">
         <div class="flex items-center" x-data="{isInputActive:false}">
-          {{-- <label class="block">
+          <label class="block">
             <span class="relative mr-1.5 flex">
               <input
                 class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
@@ -57,8 +57,8 @@
                 value="{{request('search','')}}"
               />
             </span>
-          </label> --}}
-          <label class="block">
+          </label>
+          {{-- <label class="block">
             <input
               x-effect="isInputActive === true && $nextTick(() => { $el.focus()});"
               :class="isInputActive ? 'w-32 lg:w-48' : 'w-0'"
@@ -87,7 +87,7 @@
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
-          </button>
+          </button> --}}
         </div>
         <div
           class="inline-flex"
@@ -222,11 +222,15 @@
                             >
                           </li>
                           <li>
-                            <a
-                              href="{{route('tasks.destroy',$task->id)}}"
-                              class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
-                              >Delete</a
-                            >
+                            <form method="post" action="{{route('tasks.destroy',$task->id)}}">
+                              @method('delete')
+                              @csrf
+                              <button
+                                type="button"
+                                onclick="taskDelete(this)"
+                                class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
+                                >Delete</button>
+                              </form>
                           </li>
                         </ul>
                       </div>
@@ -336,10 +340,33 @@
 @endsection
 
 @push('scripts')
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
   function tableSearch(obj)
   {
     $('<form action=""></form>').append('<input type="hidden" name="search" value="'+$(obj).val()+'">').appendTo('body').submit().remove();
+  }
+  function taskDelete(obj)
+  {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Warning!',
+          'Deleting Task',
+          'warning'
+        );
+        $(obj).closest('form').submit();
+      }
+    })
   }
 </script>
 @endpush
