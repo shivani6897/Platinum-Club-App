@@ -9,7 +9,7 @@ class Task extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
-    protected $dates = ['created_at','updated_at','date','start_date','end_date','task_time'];
+    protected $dates = ['created_at','updated_at','task_date','start_date','end_date','task_time'];
 
     public function task_category()
     {

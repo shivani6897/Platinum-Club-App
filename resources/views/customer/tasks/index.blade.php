@@ -46,16 +46,31 @@
       </h2>
       <div class="flex">
         <div class="flex items-center" x-data="{isInputActive:false}">
+          {{-- <label class="block">
+            <span class="relative mr-1.5 flex">
+              <input
+                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                placeholder="Search here..."
+                onchange="tableSearch(this)"
+                name="search"
+                type="text"
+                value="{{request('search','')}}"
+              />
+            </span>
+          </label> --}}
           <label class="block">
             <input
               x-effect="isInputActive === true && $nextTick(() => { $el.focus()});"
               :class="isInputActive ? 'w-32 lg:w-48' : 'w-0'"
               class="form-input bg-transparent px-1 text-right transition-all duration-100 placeholder:text-slate-500 dark:placeholder:text-navy-200"
               placeholder="Search here..."
+              onchange="tableSearch(this)"
+              value="{{request('search','')}}"
               type="text"
             />
           </label>
           <button
+            @click="isInputActive = !isInputActive"
             class="btn h-8 w-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
           >
             <svg
@@ -136,7 +151,7 @@
               </th>
             </tr>
           </thead>
-            @foreach($tasks as $task)
+            @forelse($tasks as $task)
               <tr
                 class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500"
               >
@@ -155,13 +170,13 @@
                   class="whitespace-nowrap px-4 py-3 sm:px-5"
                 >{{$task->getFrequency()}}</td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
-                  {{($task->type==1?$task->start_date?->format('d-m-Y'):$task->date?->format('d-m-Y'))}}
+                  {{($task->type==1?$task->start_date->format('d-m-Y'):$task->task_date->format('d-m-Y'))}}
                 </td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
-                  {{($task->type==1?$task->end_date?->format('d-m-Y'):$task->date?->format('d-m-Y'))}}
+                  {{($task->type==1?$task->end_date->format('d-m-Y'):'')}}
                 </td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
-                  {{($task->type==1?$task->task_time?->format('h:i A'):$task->date?->format('h:i A'))}}
+                  {{($task->type==1?$task->task_time->format('h:i A'):$task->task_date->format('h:i A'))}}
                 </td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                   <div
@@ -201,35 +216,16 @@
                         <ul>
                           <li>
                             <a
-                              href="#"
+                              href="{{route('tasks.edit',$task->id)}}"
                               class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
-                              >Action</a
+                              >Edit</a
                             >
                           </li>
                           <li>
                             <a
-                              href="#"
+                              href="{{route('tasks.destroy',$task->id)}}"
                               class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
-                              >Another Action</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              href="#"
-                              class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
-                              >Something else</a
-                            >
-                          </li>
-                        </ul>
-                        <div
-                          class="my-1 h-px bg-slate-150 dark:bg-navy-500"
-                        ></div>
-                        <ul>
-                          <li>
-                            <a
-                              href="#"
-                              class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
-                              >Separated Link</a
+                              >Delete</a
                             >
                           </li>
                         </ul>
@@ -238,13 +234,17 @@
                   </div>
                 </td>
               </tr>
-              @endforeach
+              @empty
+              <tr>
+                <td class="text-center p-5" colspan="9">No Data...</td>
+              </tr>
+              @endforelse
           </tbody>
         </table>
       </div>
 
       <div
-        class="flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5"
+        class="paginate-div flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5"
       >
         {{-- <div class="text-xs+">1 - 10 of 10 entries</div> --}}
 
@@ -334,3 +334,12 @@
   </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+  function tableSearch(obj)
+  {
+    $('<form action=""></form>').append('<input type="hidden" name="search" value="'+$(obj).val()+'">').appendTo('body').submit().remove();
+  }
+</script>
+@endpush

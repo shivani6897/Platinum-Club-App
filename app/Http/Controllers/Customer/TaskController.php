@@ -18,7 +18,16 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::with('task_category')->paginate(10);
+
+        $tasks = Task::with('task_category')
+            ->when(request('search'),function($q){
+                $q->whereHas('task_category',function($q2){
+                    $q2->where('name','LIKE', '%'.request('search').'%');
+                })
+                ->orWhere('name','LIKE','%'.request('search').'%')
+                ->orWhere('day_of_week','LIKE','%'.request('search').'%')
+                ->orWhere('day_of_week_2','LIKE','%'.request('search').'%');
+            })->paginate(10);
         return view('customer.tasks.index',compact('tasks'));
     }
 
@@ -64,7 +73,7 @@ class TaskController extends Controller
         }
 
         $task = Task::create($array);
-        return redirect()->back()->with('success','Task Created');
+        return redirect()->route('tasks.index')->with('success','Task Created');
     }
 
 
