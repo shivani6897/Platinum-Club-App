@@ -53,9 +53,9 @@ class LoginController extends Controller
             'email' => $request->email,
             'password' => $request->password
         ];
-        if ($request->role == 1) {
+        if ($request->role < 2) {
             if (Auth::attempt($cred)) {
-                if (auth()->user()->role == 1) {
+                if (auth()->user()->role < 2) {
                     return redirect()->route('admin.dashboard');
                 }
                 else {
@@ -68,7 +68,6 @@ class LoginController extends Controller
                 ->withErrors("Combination Of Email And Password Do Not Match");
         }
         return redirect()->route('adminLogin.index')
-            ->with(auth()->user()->role == 1)
             ->withErrors("Combination Of Email And Password Do Not Match");
     }
 

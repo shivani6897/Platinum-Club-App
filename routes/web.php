@@ -22,7 +22,7 @@ Auth::routes(['verify' => true]);
 Route::group([
     'prefix'=>'admin',
     'as'=>'admin.',
-    'middleware'=>['auth']
+    'middleware'=>['auth','auth.admin']
 ],base_path('routes/admin.php'));
 
 Route::get('/login',[LoginController::class,'customer'])->name('customerLogin.index');
