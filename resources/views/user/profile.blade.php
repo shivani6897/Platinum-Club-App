@@ -20,7 +20,11 @@
                   	>
                     	{{Auth::user()->first_name}} {{Auth::user()->last_name}}
                   	</h3>
-                  	<p class="text-xs+">User</p>
+                    @if(Auth::user()->role == 2)
+                  	    <p class="text-xs+">User</p>
+                    @else
+                        <p class="text-xs+">Admin</p>
+                    @endif
                 </div>
           	</div>
            	<ul class="mt-6 space-y-1.5 font-inter font-medium">
@@ -29,17 +33,17 @@
                     	class="group flex space-x-2 rounded-lg px-4 py-2.5 tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
                     	href="#"
                   	>
-	                    <svg 
-	                    	xmlns="http://www.w3.org/2000/svg" 
-	                    	class="h-4 w-4" 
-	                    	fill="none" 
-	                    	viewBox="0 0 24 24" 
+	                    <svg
+	                    	xmlns="http://www.w3.org/2000/svg"
+	                    	class="h-4 w-4"
+	                    	fill="none"
+	                    	viewBox="0 0 24 24"
 	                    	stroke="currentColor"
 	                    >
-		                  	<path 
-		                  		stroke-linecap="round" 
-		                  		stroke-linejoin="round" 
-		                  		stroke-width="1.5" 
+		                  	<path
+		                  		stroke-linecap="round"
+		                  		stroke-linejoin="round"
+		                  		stroke-width="1.5"
 		                  		d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
 		                  	</path>
                 		</svg>
@@ -75,7 +79,7 @@
           		<input type="hidden" name="user_id" value="{{$user ? $user->id : ''}}">
 	          	<div class="p-4 sm:p-5">
 	            	<div class="flex flex-col">
-	                  	<span 
+	                  	<span
 	                  		class="text-base font-medium text-slate-600 dark:text-navy-100">
 	                  		Avatar
 	                  	</span>
@@ -120,8 +124,8 @@
 				                  	id="first_name"
 				                  	name="first_name"
 				                  	value="{{ $user ? $user->first_name : '' }}"
-				                  	required 
-				                  	autocomplete="first_name" 
+				                  	required
+				                  	autocomplete="first_name"
 				                  	autofocus
 	              				/>
 	                  			<span
@@ -141,7 +145,7 @@
 					                  	id="last_name"
 					                  	name="last_name"
 					                  	value="{{ $user ? $user->last_name : '' }}"
-					                  	autocomplete="last_name" 
+					                  	autocomplete="last_name"
 					                  	autofocus
 	                      			/>
 	                  			<span
@@ -170,8 +174,8 @@
 				                  	id="phone_no"
 				                  	name="phone_no"
 				                  	value="{{ $user ? $user->phone_no : '' }}"
-				                  	required 
-				                  	autocomplete="phone_no" 
+				                  	required
+				                  	autocomplete="phone_no"
 				                  	autofocus
 				                />
 	                		</span>
@@ -186,8 +190,8 @@
 				                  	id="city"
 				                  	name="city"
 				                  	value="{{ $user ? $user->city : '' }}"
-				                  	required 
-				                  	autocomplete="city" 
+				                  	required
+				                  	autocomplete="city"
 				                  	autofocus
 	              				/>
 	                  			<span
