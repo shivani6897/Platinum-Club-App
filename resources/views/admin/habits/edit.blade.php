@@ -67,14 +67,16 @@
                 <div class="card p-4 sm:p-5">
                     <div class="mt-4 space-y-4">
                         <label class="block">
-                            <span>Name</span>
+                            <span>Name</span> <span>*</span>
                             <span class="relative mt-1.5 flex">
                                 <input
                                     class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                     placeholder="Habit"
                                     type="text"
                                     name="name"
+                                    autocomplete="off"
                                     value="{{ $habit->name }}"
+                                    required
                                 />
                             </span>
                         </label>

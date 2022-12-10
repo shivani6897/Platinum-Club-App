@@ -11,6 +11,9 @@
 
     <title>{{config('app.name') }}</title>
 
+
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/jquery.datetimepicker.min.css" />
+
     <link rel="icon" type="image/png" href="{{asset('images/favicon.png')}}" />
 
     <!-- CSS Assets -->
@@ -93,8 +96,8 @@
         @yield('content')
       </main>
     </div>
-    <!-- 
-        This is a place for Alpine.js Teleport feature 
+    <!--
+        This is a place for Alpine.js Teleport feature
         @see https://alpinejs.dev/directives/teleport
       -->
     <div id="x-teleport-target"></div>

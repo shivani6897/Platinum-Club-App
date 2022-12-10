@@ -16,7 +16,8 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        $event = Event::all();
+//        dd($request);
+        $event = Event::where('name', 'like', '%' . request('search') . '%')->paginate(2);
         return view('admin/events/index', compact('event'));
     }
 
@@ -46,7 +47,7 @@ class EventController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'link' => $request->link,
-            'event_date_time' => Carbon::createFromFormat('d/m/Y H:i',urldecode($request->event_date_time)),
+            'event_date_time' => Carbon::createFromFormat('d/m/Y H:m',urldecode($request->event_date_time))->format('Y-m-d H:m:i'),
         ]);
 
         return redirect()->route('admin.events.index')->with('success', 'Event Created successfully');
@@ -90,7 +91,7 @@ class EventController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'link' => $request->link,
-            'event_date_time' => Carbon::createFromFormat('d/m/Y H:i',urldecode($request->event_date_time)),
+            'event_date_time' => Carbon::createFromFormat('d/m/Y H:m',urldecode($request->event_date_time))->format('Y-m-d H:m:i'),
         ]);
 
         return redirect()->route('admin.events.index')->with('success', 'Event Updated Successfully');

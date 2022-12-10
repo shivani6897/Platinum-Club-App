@@ -67,28 +67,32 @@
                 <div class="card p-4 sm:p-5">
                     <div class="mt-4 space-y-4">
                         <label class="block">
-                            <span>Event name</span>
+                            <span>Event name</span> <span>*</span>
                             <span class="relative mt-1.5 flex">
                             <input
                                 class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                 placeholder="Event Name"
                                 type="text"
                                 name="name"
+                                autocomplete="off"
                                 value="{{ $event->name }}"
+                                required
                             />
                         </span>
                         </label>
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <label class="block">
-                                <span>Event Date Time</span>
+                                <span>Event Date Time</span> <span>*</span>
                                 <span class="relative mt-1.5 flex">
                               <input
                                   class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                   placeholder="Event Date Time"
                                   type="text"
-                                  id="datetimepicker"
+                                  autocomplete="off"
+                                  id="event_date_time"
                                   name="event_date_time"
-                                  value="{{ $event->event_date_time?->format('d/m/Y H:i')}}"
+                                  value="{{ $event->event_date_time?->format('d/m/Y H:m')}}"
+                                  required
                               />
                             </span>
                             </label>
@@ -101,6 +105,7 @@
                                         type="text"
                                         name="link"
                                         value="{{ $event->link }}"
+                                        autocomplete="off"
                                     />
                                 </div>
                             </label>
@@ -111,6 +116,7 @@
                             <textarea
                                 rows="4"
                                 placeholder="Description"
+                                autocomplete="off"
                                 class="form-textarea mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent p-2.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                             >{{ $event->description }}</textarea>
                         </label>
@@ -127,11 +133,17 @@
         </div>
     </form>
 
-    <script type="text/javascript">
-        $(function () {
-            $('#datetimepicker').datetimepicker();
+@endsection
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/build/jquery.datetimepicker.full.min.js"></script>
+    <script src="http://cdn.craig.is/js/rainbow-custom.min.js"></script>
+    <script>
+        $('#event_date_time').datetimepicker({
+            format:'d/m/Y H:m',
         });
     </script>
-@endsection
+@endpush
 
 
