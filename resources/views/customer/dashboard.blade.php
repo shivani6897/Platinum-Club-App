@@ -34,12 +34,16 @@
           <div class="h-3 w-3 rounded-full" style="background-color: #febc3b;"></div>
           <p>Previous Period</p>
         </div> --}}
+        <form>
         <select
+          name="duration"
           class="form-select h-8 rounded-full border border-slate-300 bg-white px-2.5 pr-9 text-xs+ hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
         >
-          <option value="0" selected>All Time</option>
-          <option value="1">Last year</option>
+          <option value="0" @selected(request('duration',0)==0)>All Time</option>
+          <option value="1" @selected(request('duration',0)==1)>Last year</option>
+          <option value="2" @selected(request('duration',0)==2)>Last Month</option>
         </select>
+        </form>
       </div>
     </div>
     <div class="mt-3 grid grid-cols-12">
@@ -251,5 +255,11 @@ var options = {
 
         var chart = new ApexCharts(document.querySelector("#statisticChart"), options);
         chart.render();
+
+$(document).ready(function(){
+    $('select[name="duration"]').change(function(e){
+        $(this).closest('form').submit();
+    });
+});
 </script>
 @endpush

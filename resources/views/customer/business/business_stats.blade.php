@@ -96,6 +96,46 @@
           <div id="adSpendChart"></div>
         </div>
       </div>
+      <div class="card col-span-2">
+        <div
+          class="mt-3 flex items-center justify-between px-4 sm:px-5"
+        >
+          <h2
+            class="font-medium tracking-wide text-slate-700 dark:text-navy-100"
+          >
+            Overheads
+          </h2>
+          <div
+            x-data="usePopper({placement:'bottom-end',offset:4})"
+            @click.outside="if(isShowPopper) isShowPopper = false"
+            class="inline-flex"
+          >
+          </div>
+        </div>
+        <div class="pr-3 sm:pl-2">
+          <div id="overheadsChart"></div>
+        </div>
+      </div>
+      <div class="card col-span-2">
+        <div
+          class="mt-3 flex items-center justify-between px-4 sm:px-5"
+        >
+          <h2
+            class="font-medium tracking-wide text-slate-700 dark:text-navy-100"
+          >
+            Net Profit
+          </h2>
+          <div
+            x-data="usePopper({placement:'bottom-end',offset:4})"
+            @click.outside="if(isShowPopper) isShowPopper = false"
+            class="inline-flex"
+          >
+          </div>
+        </div>
+        <div class="pr-3 sm:pl-2">
+          <div id="netProfitChart"></div>
+        </div>
+      </div>
     </div>
 </div>
 @endsection

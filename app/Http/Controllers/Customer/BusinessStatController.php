@@ -107,8 +107,16 @@ class BusinessStatController extends Controller
     {
         $revenue_earned['x'] = BusinessStat::select((DB::raw('sum(revenue_earned) as revenue_earned')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"))->groupBy('month')->pluck('month')->all();
         $revenue_earned['y'] = BusinessStat::select((DB::raw('sum(revenue_earned) as revenue_earned')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"))->groupBy('month')->pluck('revenue_earned')->all();
+
         $ad_spends['x'] = BusinessStat::select((DB::raw('sum(ad_spends) as ad_spends')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"))->groupBy('month')->pluck('month')->all();
         $ad_spends['y'] = BusinessStat::select((DB::raw('sum(ad_spends) as ad_spends')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"))->groupBy('month')->pluck('ad_spends')->all();
-        return view('customer.business.business_stats', compact('revenue_earned','ad_spends'));
+
+        $net_profit['x'] = BusinessStat::select((DB::raw('sum(net_profit) as net_profit')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"))->groupBy('month')->pluck('month')->all();
+        $net_profit['y'] = BusinessStat::select((DB::raw('sum(net_profit) as net_profit')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"))->groupBy('month')->pluck('net_profit')->all();
+
+        $overheads['x'] = BusinessStat::select((DB::raw('sum(overheads) as overheads')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"))->groupBy('month')->pluck('month')->all();
+        $overheads['y'] = BusinessStat::select((DB::raw('sum(overheads) as overheads')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"))->groupBy('month')->pluck('overheads')->all();
+
+        return view('customer.business.business_stats', compact('revenue_earned','ad_spends','net_profit','overheads'));
     }
 }
