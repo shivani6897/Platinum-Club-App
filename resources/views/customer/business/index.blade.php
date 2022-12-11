@@ -132,7 +132,17 @@
               <th
                 class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
-                ROAS
+                Overheads
+              </th> 
+              <th
+                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+              >
+                Net Profit
+              </th> 
+              <th
+                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+              >
+                Profitability%
               </th> 
               <th
                 class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
@@ -156,7 +166,9 @@
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$business_stat->leads_generated}}</td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{$business_stat->paid_customer}}</td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{$business_stat->group_size}}</td>
-                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{$business_stat->roas}}</td>
+                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{$business_stat->overheads}}</td>
+                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{$business_stat->net_profit}}</td>
+                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{$business_stat->profitability}}</td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                   <div
                     x-data="usePopper({placement:'bottom-end',offset:4})"

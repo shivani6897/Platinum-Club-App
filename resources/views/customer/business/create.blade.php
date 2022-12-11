@@ -195,15 +195,15 @@
           </div>
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label class="block">
-              <span class="required">ROAS</span>
+              <span class="required">Ovderhead</span>
               <span class="relative mt-1.5 flex">
                 <input
                   class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                  float_value
+                  float_value"
                   placeholder="Return On Ad Spends"
-                  name="roas"
+                  name="overheads"
                   type="text"
-                  value="{{(isset($businessStat) ? $businessStat->roas : '')}}"
+                  value="{{(isset($businessStat) ? $businessStat->overheads : '')}}"
                   required
                 />
               </span>
