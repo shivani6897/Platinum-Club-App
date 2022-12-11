@@ -63,7 +63,7 @@
           <h2
             class="font-medium tracking-wide text-slate-700 dark:text-navy-100"
           >
-            History
+            Revenue Earned
           </h2>
           <div
             x-data="usePopper({placement:'bottom-end',offset:4})"
@@ -73,11 +73,33 @@
           </div>
         </div>
         <div class="pr-3 sm:pl-2">
+          <div id="revenueChart"></div>
+        </div>
+      </div>
+      <div class="card col-span-2">
+        <div
+          class="mt-3 flex items-center justify-between px-4 sm:px-5"
+        >
+          <h2
+            class="font-medium tracking-wide text-slate-700 dark:text-navy-100"
+          >
+            Ad Spends
+          </h2>
           <div
-            x-init="$nextTick(() => { $el._x_chart = new ApexCharts($el,pages.charts.historyTransactions); $el._x_chart.render() });"
-          ></div>
+            x-data="usePopper({placement:'bottom-end',offset:4})"
+            @click.outside="if(isShowPopper) isShowPopper = false"
+            class="inline-flex"
+          >
+          </div>
+        </div>
+        <div class="pr-3 sm:pl-2">
+          <div id="adSpendChart"></div>
         </div>
       </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+  @include('customer.business.chartJs')
+@endpush

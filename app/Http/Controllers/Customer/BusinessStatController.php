@@ -7,6 +7,7 @@ use App\Models\BusinessStat;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Auth;
+use DB;
 
 class BusinessStatController extends Controller
 {
@@ -41,7 +42,7 @@ class BusinessStatController extends Controller
     {
         $input = $request->all();
         $input['user_id'] = Auth::id();
-        $input['month'] = Carbon::createFromFormat('M-Y', $input['month'])->firstOfMonth();
+        $input['month'] = Carbon::createFromFormat('F Y', $input['month'])->firstOfMonth();
         BusinessStat::create($input);
         return redirect('business')->with('success','Business Stat Added');
     }
@@ -91,13 +92,19 @@ class BusinessStatController extends Controller
      * @param  \App\Models\BusinessStat  $businessStat
      * @return \Illuminate\Http\Response
      */
-    public function destroy(BusinessStat $businessStat)
+    public function destroy($id)
     {
-        //
+        $businessStat = BusinessStat::find($id);
+        $businessStat->delete();
+        return redirect('business')->with('success','Business Stat Deleted');
     }
 
     public function businessStats()
     {
-        return view('customer.business.business_stats');
+        $revenue_earned['x'] = BusinessStat::select((DB::raw('sum(revenue_earned) as revenue_earned')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"))->groupBy('month')->pluck('month')->all();
+        $revenue_earned['y'] = BusinessStat::select((DB::raw('sum(revenue_earned) as revenue_earned')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"))->groupBy('month')->pluck('revenue_earned')->all();
+        $ad_spends['x'] = BusinessStat::select((DB::raw('sum(ad_spends) as ad_spends')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"))->groupBy('month')->pluck('month')->all();
+        $ad_spends['y'] = BusinessStat::select((DB::raw('sum(ad_spends) as ad_spends')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"))->groupBy('month')->pluck('ad_spends')->all();
+        return view('customer.business.business_stats', compact('revenue_earned','ad_spends'));
     }
 }
