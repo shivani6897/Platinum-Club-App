@@ -72,3 +72,7 @@ pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5p
 .paginate-div nav div div:last-child {
 	text-align: end;
 }
+
+.fa-2x {
+	font-size: 1.5rem!important;
+}
