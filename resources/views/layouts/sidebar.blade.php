@@ -111,6 +111,44 @@
         </svg>
       </a>
 
+      <!-- Habits -->
+        <a
+            href="{{route('habits.index')}}"
+            class="flex h-11 w-11 items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
+            x-tooltip.placement.right="'Habits'"
+        >
+
+            <svg
+                class="h-7 w-7"
+                viewBox="0 0 152 152"
+                xmlns="http://www.w3.org/2000/svg">
+                <g
+                    id="Layer_2"
+                    data-name="Layer 2"
+                >
+                <g
+                    id="_02.bullseye"
+                    data-name="02.bullseye"
+                >
+                    <circle
+                        id="background"
+                        cx="76"
+                        cy="76"
+                        fill="#5e3ace"
+                        r="76"
+                    />
+                    <g fill="#fff">
+                        <path
+                            d="m76 44a32 32 0 1 1 -32 32 32 32 0 0 1 32-32m0-13a45 45 0 1 0 45 45 45 45 0 0 0 -45-45z"
+                        />
+                        <path
+                            d="m76 68.37a7.63 7.63 0 1 1 -7.63 7.63 7.64 7.64 0 0 1 7.63-7.63m0-13a20.66 20.66 0 1 0 20.66 20.63 20.66 20.66 0 0 0 -20.66-20.66z"/>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </a>
+
       <!-- Events -->
       <a
           href="{{route('events')}}"

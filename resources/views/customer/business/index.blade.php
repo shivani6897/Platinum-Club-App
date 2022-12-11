@@ -200,13 +200,18 @@
                               >Edit
                             </a>
                           </li>
-                          <li>
-                            <a
-                              href="#"
-                              class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100" 
-                              >Delete
-                            </a>
-                          </li>
+                          <form method="post" action="{{route('business.destroy',$business_stat->id)}}">
+                            @method('delete')
+                            @csrf
+                            <li>
+                              <button
+                                type="button"
+                                onclick="businessStatDelete(this)"
+                                class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100" 
+                                >Delete
+                              </a>
+                            </li>
+                          </form>
                         </ul>
                       </div>
                     </div>
@@ -226,3 +231,31 @@
   </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  function businessStatDelete(obj)
+  {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Warning!',
+          'Deleting Business Stat',
+          'warning'
+        );
+        $(obj).closest('form').submit();
+      }
+    })
+  }
+</script>
+@endpush
