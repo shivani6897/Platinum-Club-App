@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HabitController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\ClubController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,3 +18,4 @@ use App\Http\Controllers\Admin\EventController;
 Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'adminDashboard'])->name('dashboard');
 Route::resource('/habits',HabitController::class);
 Route::resource('/events',EventController::class);
+Route::resource('/clubs',ClubController::class);

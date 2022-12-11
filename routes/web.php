@@ -42,7 +42,6 @@ Route::middleware(['auth'])->group(function(){
         Route::get('/tasks/calendar',[App\Http\Controllers\Customer\TaskController::class,'calendar'])->name('tasks.calendar');
         Route::resource('/tasks',App\Http\Controllers\Customer\TaskController::class);
 
-
         Route::get('/events', [App\Http\Controllers\Customer\EventController::class, 'index'])->name('events');
 
     });
