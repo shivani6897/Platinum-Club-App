@@ -43,6 +43,7 @@ Route::middleware(['auth'])->group(function(){
         Route::resource('/tasks',App\Http\Controllers\Customer\TaskController::class);
 
         Route::get('/events', [App\Http\Controllers\Customer\EventController::class, 'index'])->name('events');
-
+        Route::resource('business',App\Http\Controllers\Customer\BusinessStatController::class);
+        Route::get('business-stats', [App\Http\Controllers\Customer\BusinessStatController::class, 'businessStats']);
     });
 });
