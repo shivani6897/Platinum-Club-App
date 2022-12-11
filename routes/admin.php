@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HabitController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\ClubController;
+use App\Http\Controllers\Admin\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,3 +20,4 @@ Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'adminDash
 Route::resource('/habits',HabitController::class);
 Route::resource('/events',EventController::class);
 Route::resource('/clubs',ClubController::class);
+Route::resource('/users',UserController::class);

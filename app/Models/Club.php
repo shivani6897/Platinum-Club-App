@@ -11,4 +11,10 @@ class Club extends Model
     use HasFactory,SoftDeletes;
 
     protected $guarded = [];
+
+
+    public function users()
+    {
+        return $this->hasMany('App\Models\User','club_id','id');
+    }
 }

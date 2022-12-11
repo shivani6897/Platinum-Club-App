@@ -18,15 +18,22 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array<int, string>
      */
     protected $fillable = [
+        'club_id',
         'first_name',
         'last_name',
         'email',
         'phone_no',
         'city',
-        'password',
+//        'password',
         'profile',
         'role',
     ];
+
+
+    public function club()
+    {
+        return $this->belongsTo(Club::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
