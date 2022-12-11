@@ -29,6 +29,7 @@
       rel="stylesheet"
     />
     @stack('styles')
+    @include('layouts.alertMsg')
   </head>
 
   <body x-data class="is-header-blur" x-bind="$store.global.documentBody">
