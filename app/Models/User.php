@@ -34,6 +34,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(Club::class);
     }
+    public function userToken(){
+        return $this->belongsTo(UserToken::class);
+    }
+
 
     /**
      * The attributes that should be hidden for serialization.

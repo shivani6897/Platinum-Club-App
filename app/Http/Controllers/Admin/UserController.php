@@ -7,7 +7,10 @@ use App\Http\Requests\Admin\User\StoreRequest;
 use \App\Http\Requests\Admin\User\UpdateRequest;
 use App\Models\Club;
 use App\Models\User;
+use App\Models\UserToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 
 class UserController extends Controller
 {
@@ -31,7 +34,10 @@ class UserController extends Controller
     public function store(StoreRequest $request)
     {
         $user = User::create($request->all());
-
+        UserToken::create([
+            'user_id' => $user->id,
+            'token' => uniqid(base64_encode(Str::random(60))),
+        ]);
         return redirect()->route('admin.users.index')->with('success','User Created successfully');
     }
 
@@ -41,10 +47,13 @@ class UserController extends Controller
         return view('admin.users.edit',compact('clubs','user'));
     }
 
-    public function update(UpdateRequest $request,User $user)
+    public function update(UpdateRequest $request,User $user, UserToken $userToken)
     {
-        $user = $user->update($request->validated());
-//dd($user);
+        $user->update($request->validated());
+        $userToken->update([
+            'user_id' => $user->id,
+            'token' => uniqid(base64_encode(Str::random(60))),
+        ]);
         return redirect()->route('admin.users.index')->with('success','User Updated Successfully');
     }
 
