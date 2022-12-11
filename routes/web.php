@@ -35,7 +35,7 @@ Route::post('/admin', [LoginController::class,'adminLogin'])->name('admin-login'
 
 Route::group(['middleware' => ['auth','verified']], function () {
 
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/home', [App\Http\Controllers\Customer\DashboardController::class, 'index'])->name('home');
 
     // Profile Management
     Route::get('profile/{user}/edit', [App\Http\Controllers\UserController::class, 'profile'])->name('profile');
