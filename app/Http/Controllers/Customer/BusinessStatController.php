@@ -43,6 +43,8 @@ class BusinessStatController extends Controller
         $input = $request->all();
         $input['user_id'] = Auth::id();
         $input['month'] = Carbon::createFromFormat('F Y', $input['month'])->firstOfMonth();
+        $input['net_profit'] = $input['revenue_earned'] - $input['ad_spends'] - $input['overheads'];
+        $input['profitability'] = $input['net_profit']*100/$input['revenue_earned'];
         BusinessStat::create($input);
         return redirect('business')->with('success','Business Stat Added');
     }
@@ -82,6 +84,8 @@ class BusinessStatController extends Controller
         $businessStat = BusinessStat::findOrFail($id);
         $input = $request->all();
         $input['month'] = Carbon::createFromFormat('F Y', $input['month'])->firstOfMonth();
+        $input['net_profit'] = $input['revenue_earned'] - $input['ad_spends'] - $input['overheads'];
+        $input['profitability'] = $input['net_profit']*100/$input['revenue_earned'];
         $businessStat->update($input);
         return redirect('business')->with('success','Business Stat Updated');
     }

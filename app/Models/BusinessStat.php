@@ -31,7 +31,7 @@ class BusinessStat extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'user_id', 'month', 'revenue_earned', 'ad_spends', 'avg_cost_per_lead', 'leads_generated', 'paid_customer', 'group_size', 'roas'
+        'user_id', 'month', 'revenue_earned', 'ad_spends', 'avg_cost_per_lead', 'leads_generated', 'paid_customer', 'group_size', 'overheads', 'net_profit', 'profitability'
     ];
 
     public function getMonthAttribute($value)
