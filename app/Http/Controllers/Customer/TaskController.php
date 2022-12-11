@@ -168,9 +168,10 @@ class TaskController extends Controller
         }
 
 
-        $date = date('F Y');//Current Month Year
+        $date = date('Y-m-d',strtotime($array['year'].'-'.$array['month'].'-01'));//Current Month Year
+        
         $data = [];
-        while (strtotime($date) <= strtotime(date('Y-m') . '-' . date('t', strtotime($date)))) {
+        while (strtotime($date) <= strtotime(date($array['year'].'-'.$array['month']) . '-' . date('t', strtotime($date)))) {
 
             // One time tasks for day 
             $oneTimeTask = Task::whereDate('task_date',date("Y-m-d", strtotime($date)))->where('frequency',0)->get();
