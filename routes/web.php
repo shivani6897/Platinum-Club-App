@@ -57,4 +57,6 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::resource('business',App\Http\Controllers\Customer\BusinessStatController::class);
     Route::get('business-stats', [App\Http\Controllers\Customer\BusinessStatController::class, 'businessStats']);
 
+    Route::get('/customer/setpassword/{userToken}', [\App\Http\Controllers\Admin\UserController::class, 'userPassword'])->name('setuserpassword');
+    Route::post('/customer/setpassword/{userToken}', [\App\Http\Controllers\Admin\UserController::class, 'userPasswordUpdate'])->name('userpassword.update');
 });

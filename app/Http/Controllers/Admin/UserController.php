@@ -9,7 +9,9 @@ use App\Models\Club;
 use App\Models\User;
 use App\Models\UserToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use App\Mail\CustomerPasswordEmail;
 
 
 class UserController extends Controller
@@ -34,10 +36,17 @@ class UserController extends Controller
     public function store(StoreRequest $request)
     {
         $user = User::create($request->all());
-        UserToken::create([
+        $usertoken = UserToken::create([
             'user_id' => $user->id,
             'token' => uniqid(base64_encode(Str::random(60))),
         ]);
+
+        $userToken = $usertoken->token;
+
+        if ($usertoken) {
+            Mail::to($request->all()['email'])->send(new CustomerPasswordEmail($userToken));
+            return redirect()->back()->with('success', 'Email has been sent');
+        }
         return redirect()->route('admin.users.index')->with('success','User Created successfully');
     }
 
@@ -61,5 +70,14 @@ class UserController extends Controller
     {
         $user->delete();
         return redirect()->route('admin.users.index')->with('success','User Deleted Successfully');
+    }
+
+    public function userpassword(UserToken $userToken)
+    {
+        return view('auth.passwords.customer_password_set',compact('userToken'));
+    }
+    public function setuserpassword(UserToken $userToken)
+    {
+        return view('auth.passwords.customer_password_set',compact('userToken'));
     }
 }
