@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Event\StoreRequest;
+use App\Http\Requests\Admin\Event\UpdateRequest;
 use App\Models\Event;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -41,21 +43,9 @@ class EventController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-            'link' => 'required|url',
-            'event_date_time' => 'required',
-        ]);
-
-        $event = Event::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'link' => $request->link,
-            'event_date_time' => $request->event_date_time,
-        ]);
-
+        $event = Event::create($request->validated());
         return redirect()->route('admin.events.index')->with('success', 'Event Created successfully');
     }
 
@@ -88,20 +78,9 @@ class EventController extends Controller
      * @param \App\Models\Event $event
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Event $event)
+    public function update(UpdateRequest $request, Event $event)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-            'link' => 'required|url',
-            'event_date_time' => 'required',
-        ]);
-        $event->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'link' => $request->link,
-            'event_date_time' => $request->event_date_time,
-        ]);
-
+        $event = $event->update($request->validated());
         return redirect()->route('admin.events.index')->with('success', 'Event Updated Successfully');
     }
 
