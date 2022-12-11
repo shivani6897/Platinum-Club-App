@@ -31,19 +31,30 @@ Route::post('/login', [LoginController::class,'customerLogin'])->name('customer-
 Route::get('/admin',[LoginController::class,'admin'])->name('adminLogin.index');
 Route::post('/admin', [LoginController::class,'adminLogin'])->name('admin-login');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::middleware(['auth'])->group(function(){
-    Route::group(['middleware' => ['verified']], function () {
-        Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-        Route::get('profile/{user}/edit', [App\Http\Controllers\UserController::class, 'profile'])->name('profile');
-        Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('updateProfile');
+Route::group(['middleware' => ['auth','verified']], function () {
 
-        Route::get('/tasks/calendar',[App\Http\Controllers\Customer\TaskController::class,'calendar'])->name('tasks.calendar');
-        Route::resource('/tasks',App\Http\Controllers\Customer\TaskController::class);
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-        Route::get('/events', [App\Http\Controllers\Customer\EventController::class, 'index'])->name('events');
-        Route::resource('business',App\Http\Controllers\Customer\BusinessStatController::class);
-        Route::get('business-stats', [App\Http\Controllers\Customer\BusinessStatController::class, 'businessStats']);
-    });
+    // Profile Management
+    Route::get('profile/{user}/edit', [App\Http\Controllers\UserController::class, 'profile'])->name('profile');
+    Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('updateProfile');
+
+    // Tasks management
+    Route::get('/tasks/calendar',[App\Http\Controllers\Customer\TaskController::class,'calendar'])->name('tasks.calendar');
+    Route::resource('/tasks',App\Http\Controllers\Customer\TaskController::class);
+
+    // Habit management
+    Route::get('/habits',[App\Http\Controllers\Customer\HabitController::class, 'index'])->name('habits.index');
+    Route::post('/habits/complete/{habit}',[App\Http\Controllers\Customer\HabitController::class,'complete'])->name('habits.complete');
+    Route::delete('/habits/destroy/{habit}',[App\Http\Controllers\Customer\HabitController::class,'destroy'])->name('habits.destroy');
+
+    // Events View
+    Route::get('/events', [App\Http\Controllers\Customer\EventController::class, 'index'])->name('events');
+
+    // Business State
+    Route::resource('business',App\Http\Controllers\Customer\BusinessStatController::class);
+    Route::get('business-stats', [App\Http\Controllers\Customer\BusinessStatController::class, 'businessStats']);
+
 });
