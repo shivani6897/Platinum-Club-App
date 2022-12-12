@@ -16,7 +16,7 @@ use App\Http\Controllers\Admin\UserController;
 |
 */
 
-Route::get('/dashboard', [App\Http\Controllers\HomeController::class, 'adminDashboard'])->name('dashboard');
+Route::get('/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
 Route::resource('/habits',HabitController::class);
 Route::resource('/events',EventController::class);
 Route::resource('/clubs',ClubController::class);

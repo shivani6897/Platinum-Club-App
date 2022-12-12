@@ -5,16 +5,22 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BusinessStat;
+use App\Models\User;
+use DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
+        $users = User::all(['id','first_name','last_name']);
+
         $stat = BusinessStat::query();
         if(request('duration',0)==1)
             $stat = $stat->whereYear('month',date('Y', strtotime('-1 year')));
         elseif(request('duration',0)==2)
             $stat = $stat->whereYear('month',date('Y', strtotime('-1 month')))->whereMonth('month',date('m', strtotime('-1 month')));
+        if(request('user',0)!=0)
+            $stat = $stat->where('user_id',request('user'));
 
         $stat = $stat->first([
                     DB::raw('SUM(revenue_earned) AS revenue_earned'),
@@ -33,6 +39,8 @@ class DashboardController extends Controller
             $profitability['x'] = $profitability['x']->whereYear('month',date('Y', strtotime('-1 year')));
         elseif(request('duration',0)==2)
             $profitability['x'] = $profitability['x']->whereYear('month',date('Y', strtotime('-1 month')))->whereMonth('month',date('m', strtotime('-1 month')));
+        if(request('user',0)!=0)
+            $profitability['x'] = $profitability['x']->where('user_id',request('user'));
         $profitability['x'] = $profitability['x']->groupBy('month')
             ->pluck('date')
             ->all();
@@ -42,10 +50,12 @@ class DashboardController extends Controller
             $profitability['y'] = $profitability['y']->whereYear('month',date('Y', strtotime('-1 year')));
         elseif(request('duration',0)==2)
             $profitability['y'] = $profitability['y']->whereYear('month',date('Y', strtotime('-1 month')))->whereMonth('month',date('m', strtotime('-1 month')));
+        if(request('user',0)!=0)
+            $profitability['y'] = $profitability['y']->where('user_id',request('user'));
         $profitability['y'] = $profitability['y']->groupBy('month')
             ->pluck('profitability')
             ->all();
 
-        return view('customer.dashboard',compact('stat','profitability'));
+        return view('admin.dashboard',compact('stat','profitability','users'));
     }
 }
