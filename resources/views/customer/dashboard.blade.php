@@ -159,7 +159,7 @@
           <div
             class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-3.5"
           >
-            <p class="text-xs uppercase text-sky-100">Total Customers</p>
+            <p class="text-xs uppercase text-sky-100">Total Group Size</p>
             <div class="flex items-end justify-between space-x-2">
               <p class="mt-4 text-2xl font-medium text-white">{{number_format($stat->total_customer)}}</p>
             </div>

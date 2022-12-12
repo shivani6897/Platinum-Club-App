@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\BusinessStat;
 use App\Models\User;
+use App\Models\Club;
 use DB;
 
 class DashboardController extends Controller
@@ -13,6 +14,8 @@ class DashboardController extends Controller
     public function index()
     {
         $users = User::all(['id','first_name','last_name']);
+        $clubs = Club::all(['id','name']);
+        $userIds = User::where('club_id',request('club'))->get(['id'])->pluck('id')->toArray();
 
         $stat = BusinessStat::query();
         if(request('duration',0)==1)
@@ -21,6 +24,9 @@ class DashboardController extends Controller
             $stat = $stat->whereYear('month',date('Y', strtotime('-1 month')))->whereMonth('month',date('m', strtotime('-1 month')));
         if(request('user',0)!=0)
             $stat = $stat->where('user_id',request('user'));
+        if(request('club',0)!=0)
+            $stat = $stat->whereIn('user_id',$userIds);
+
 
         $stat = $stat->first([
                     DB::raw('SUM(revenue_earned) AS revenue_earned'),
@@ -41,6 +47,8 @@ class DashboardController extends Controller
             $profitability['x'] = $profitability['x']->whereYear('month',date('Y', strtotime('-1 month')))->whereMonth('month',date('m', strtotime('-1 month')));
         if(request('user',0)!=0)
             $profitability['x'] = $profitability['x']->where('user_id',request('user'));
+        if(request('club',0)!=0)
+            $profitability['x'] = $profitability['x']->whereIn('user_id',$userIds);
         $profitability['x'] = $profitability['x']->groupBy('month')
             ->pluck('date')
             ->all();
@@ -52,10 +60,12 @@ class DashboardController extends Controller
             $profitability['y'] = $profitability['y']->whereYear('month',date('Y', strtotime('-1 month')))->whereMonth('month',date('m', strtotime('-1 month')));
         if(request('user',0)!=0)
             $profitability['y'] = $profitability['y']->where('user_id',request('user'));
+        if(request('club',0)!=0)
+            $profitability['y'] = $profitability['y']->whereIn('user_id',$userIds);
         $profitability['y'] = $profitability['y']->groupBy('month')
             ->pluck('profitability')
             ->all();
 
-        return view('admin.dashboard',compact('stat','profitability','users'));
+        return view('admin.dashboard',compact('stat','profitability','users','clubs'));
     }
 }

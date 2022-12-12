@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('admin.layouts.app')
 
 @section('heading', 'Dashboard')
 
@@ -35,6 +35,15 @@
           <p>Previous Period</p>
         </div> --}}
         <form>
+        <select
+          name="club"
+          class="form-select h-8 rounded-full border border-slate-300 bg-white px-2.5 pr-9 text-xs+ hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+        >
+          <option value="0" @selected(request('club',0)==0)>All Clubs</option>
+          @foreach($clubs as $club)
+          <option value="{{$club->id}}" @selected(request('club',0)==$club->id)>{{$club->name}}</option>
+          @endforeach
+        </select>
         <select
           name="user"
           class="form-select h-8 rounded-full border border-slate-300 bg-white px-2.5 pr-9 text-xs+ hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
@@ -157,7 +166,7 @@
           <div
             class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-3.5"
           >
-            <p class="text-xs uppercase text-sky-100">Total Customers</p>
+            <p class="text-xs uppercase text-sky-100">Total Group Size</p>
             <div class="flex items-end justify-between space-x-2">
               <p class="mt-4 text-2xl font-medium text-white">{{number_format($stat->total_customer)}}</p>
             </div>
@@ -247,7 +256,7 @@ var options = {
         chart.render();
 
 $(document).ready(function(){
-    $('select[name="duration"],select[name="user"]').change(function(e){
+    $('select[name="duration"],select[name="user"],select[name="club"]').change(function(e){
         $(this).closest('form').submit();
     });
 });
