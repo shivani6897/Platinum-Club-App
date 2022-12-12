@@ -44,6 +44,9 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::get('profile/{user}/edit', [App\Http\Controllers\UserController::class, 'profile'])->name('profile');
     Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('updateProfile');
 
+    // Top Performers
+    ROute::get('top-performers',[App\Http\Controllers\Customer\TopPerformerController::class,'index'])->name('top_performers');
+
     // Tasks management
     Route::get('/tasks/calendar',[App\Http\Controllers\Customer\TaskController::class,'calendar'])->name('tasks.calendar');
     Route::resource('/tasks',App\Http\Controllers\Customer\TaskController::class);

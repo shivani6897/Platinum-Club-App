@@ -29,7 +29,7 @@ class DashboardController extends Controller
                     DB::raw('SUM(group_size) AS total_customer'),
                 ]);
 
-        $profitability['x'] = BusinessStat::select((DB::raw('avg(profitability) as profitability')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"),DB::raw('month as date'));
+        $profitability['x'] = BusinessStat::select((DB::raw('avg(profitability) as profitability')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"),DB::raw('month as date'))->where('user_id',auth()->id());
         if(request('duration',0)==1)
             $profitability['x'] = $profitability['x']->whereYear('month',date('Y', strtotime('-1 year')));
         elseif(request('duration',0)==2)
@@ -38,7 +38,7 @@ class DashboardController extends Controller
             ->pluck('date')
             ->all();
 
-        $profitability['y'] = BusinessStat::select((DB::raw('avg(profitability) as profitability')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"));
+        $profitability['y'] = BusinessStat::select((DB::raw('avg(profitability) as profitability')),DB::raw("DATE_FORMAT(month, '%b-%Y') as month"))->where('user_id',auth()->id());
         if(request('duration',0)==1)
             $profitability['y'] = $profitability['y']->whereYear('month',date('Y', strtotime('-1 year')));
         elseif(request('duration',0)==2)
