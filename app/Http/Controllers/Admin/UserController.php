@@ -78,6 +78,6 @@ class UserController extends Controller
     }
     public function setuserpassword(UserToken $userToken)
     {
-        return view('auth.passwords.customer_password_set',compact('userToken'));
+        //password reset
     }
 }
