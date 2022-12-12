@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use App\Http\Requests\Customer\Auth\SetPasswordRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Models\UserToken;
 
 class LoginController extends Controller
 {
@@ -101,6 +103,29 @@ class LoginController extends Controller
         }
         return redirect()->route('customerLogin.index')
             ->withErrors("Combination Of Email And Password Do Not Match");
+    }
+
+    public function passwordSet($token)
+    {
+        $userToken = UserToken::where('token',$token)->first();
+        if(empty($userToken))
+            abort(400,'Password Set Token Invalid!');
+        else
+            return view('customer.password_set',compact('token'));
+    }
+
+    public function passwordSetAttempt($token, SetPasswordRequest $request)
+    {
+        $userToken = UserToken::where('token',$token)->first();
+        if(empty($userToken))
+            abort(400,'Password Set Token Invalid!');  
+
+        $user = $userToken->user;
+        $userToken->delete();
+        $user->update(['password'=>bcrypt($request->password)]);
+        auth()->login($user);
+
+        return redirect()->route('home')->with('success','Password set!');
     }
 
 }

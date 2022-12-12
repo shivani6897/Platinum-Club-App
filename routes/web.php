@@ -16,7 +16,7 @@ use App\Http\Controllers\Auth\LoginController;
 
 Route::redirect('/', 'login');
 
-Auth::routes(['verify' => true]);
+Auth::routes(['verify' => true,'register' => false]);
 
 // Admin Route
 Route::group([
@@ -27,6 +27,9 @@ Route::group([
 
 Route::get('/login',[LoginController::class,'customer'])->name('customerLogin.index');
 Route::post('/login', [LoginController::class,'customerLogin'])->name('customer-login');
+
+Route::get('/customer/password/set/{token}',[LoginController::class,'passwordSet'])->name('customer.password.set');
+Route::post('/customer/password/set/{token}',[LoginController::class,'passwordSetAttempt'])->name('customer.password.set');
 
 Route::get('/admin',[LoginController::class,'admin'])->name('adminLogin.index');
 Route::post('/admin', [LoginController::class,'adminLogin'])->name('admin-login');

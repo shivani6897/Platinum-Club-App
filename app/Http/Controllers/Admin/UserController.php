@@ -11,7 +11,8 @@ use App\Models\UserToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use App\Mail\CustomerPasswordEmail;
+// use App\Mail\CustomerPasswordEmail;
+use App\Notifications\Customer\SetPassword;
 
 
 class UserController extends Controller
@@ -35,16 +36,21 @@ class UserController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $user = User::create($request->all());
+        $user = User::create($request->validated());
+
+        // Generate Prfectly uniue token for idenitification
+        $token = uniqid(base64_encode(Str::random(60)));
+        while(!empty(UserToken::where('token',$token)->first()))
+            $token = uniqid(base64_encode(Str::random(60)));
+
         $usertoken = UserToken::create([
             'user_id' => $user->id,
-            'token' => uniqid(base64_encode(Str::random(60))),
+            'token' => $token,
         ]);
 
-        $userToken = $usertoken->token;
-
-        if ($usertoken) {
-            Mail::to($request->all()['email'])->send(new CustomerPasswordEmail($userToken));
+        if ($token) {
+            $user->notify(new SetPassword($token));
+            // Mail::to($request->all()['email'])->send(new CustomerPasswordEmail($userToken));
             return redirect()->back()->with('success', 'Email has been sent');
         }
         return redirect()->route('admin.users.index')->with('success','User Created successfully');

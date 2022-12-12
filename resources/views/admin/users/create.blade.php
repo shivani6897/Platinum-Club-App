@@ -157,6 +157,10 @@
                                 <span>Phone Number</span>
                                 <span class="relative mt-1.5 flex">
                             <input
+                                x-input-mask="{
+                                    numeric:true,
+                                    blocks: [3, 3, 4],
+                                }"
                                 class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
                               @error('phone_no')
                                     border-error
