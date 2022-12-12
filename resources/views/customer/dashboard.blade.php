@@ -60,120 +60,112 @@
           <option>Server Status Page</option>
         </select> --}}
         <div class="mt-6 grid grid-cols-2 gap-x-4 gap-y-8">
-          <div>
-            <p
-              class="text-xs uppercase text-slate-400 dark:text-navy-300"
-            >
-              Revenue Earned
-            </p>
-            <p
-              class="mt-1 text-xl font-medium text-slate-700 dark:text-navy-100"
-            >
-              <i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->revenue_earned,2)}}
-            </p>
+          <div
+            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-info to-info-focus p-3.5"
+          >
+            <p class="text-xs uppercase text-sky-100">Revenue Earned</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white"><i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->revenue_earned,2)}}</p>
+            </div>
+            <div
+              class="mask is-diamond absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
+            ></div>
           </div>
 
-          <div>
-            <p
-              class="text-xs uppercase text-slate-400 dark:text-navy-300"
-            >
-              Ad spends
-            </p>
-            <p class="mt-1">
-              <span
-                class="text-xl font-medium text-slate-700 dark:text-navy-100"
-              >
-                <i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->ad_spends,2)}}
-              </span>
-              {{-- <span class="text-xs text-success">+3%</span> --}}
-            </p>
+          <div
+            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 p-3.5"
+          >
+            <p class="text-xs uppercase text-sky-100">Ad spends</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white"><i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->ad_spends,2)}}</p>
+            </div>
+            <div
+              class="mask is-reuleaux-triangle absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
+            ></div>
           </div>
-          <div>
-            <p
-              class="text-xs uppercase text-slate-400 dark:text-navy-300"
-            >
-              Overheads
-            </p>
-            <p class="mt-1">
-              <span
-                class="text-xl font-medium text-slate-700 dark:text-navy-100"
-              >
-                <i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->overheads,2)}}
-              </span>
-              {{-- <span class="text-xs text-success">+3%</span> --}}
-            </p>
+
+          <div
+            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 p-3.5"
+          >
+            <p class="text-xs uppercase text-sky-100">Overheads</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white"><i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->overheads,2)}}</p>
+            </div>
+            <div
+              class="mask is-hexagon-2 absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
+            ></div>
           </div>
-          <div>
-            <p
-              class="text-xs uppercase text-slate-400 dark:text-navy-300"
-            >
-              Net Profit
-            </p>
-            <p
-              class="mt-1 text-xl font-medium text-slate-700 dark:text-navy-100"
-            >
-              <i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->net_profit,2)}}
-            </p>
+
+          <div
+            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-indigo-400 p-3.5"
+          >
+            <p class="text-xs uppercase text-sky-100">Net Profit</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white"><i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->net_profit,2)}}</p>
+            </div>
+            <div
+              class="mask is-diamond absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
+            ></div>
           </div>
-          <div>
-            <p
-              class="text-xs uppercase text-slate-400 dark:text-navy-300"
-            >
-              Profitability%
-            </p>
-            <p
-              class="mt-1 text-xl font-medium text-slate-700 dark:text-navy-100"
-            >
-              {{number_format($stat->profitability,2)}} %
-            </p>
+
+          <div
+            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-3.5"
+          >
+            <p class="text-xs uppercase text-sky-100">Profitability%</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white">{{number_format($stat->profitability,2)}} %</p>
+            </div>
+            <div
+              class="mask is-reuleaux-triangle absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
+            ></div>
           </div>
-          <div>
-            <p
-              class="text-xs uppercase text-slate-400 dark:text-navy-300"
-            >
-              Average cost per lead
-            </p>
-            <p
-              class="mt-1 text-xl font-medium text-slate-700 dark:text-navy-100"
-            >
-              <i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->cost_per_lead,2)}}
-            </p>
+
+          <div
+            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 p-3.5"
+          >
+            <p class="text-xs uppercase text-sky-100">Average cost per lead</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white"><i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->cost_per_lead,2)}}</p>
+            </div>
+            <div
+              class="mask is-hexagon-2 absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
+            ></div>
           </div>
-          <div>
-            <p
-              class="text-xs uppercase text-slate-400 dark:text-navy-300"
-            >
-              Leads Generated
-            </p>
-            <p
-              class="mt-1 text-xl font-medium text-slate-700 dark:text-navy-100"
-            >
-              {{number_format($stat->leads_generated)}}
-            </p>
+
+          <div
+            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 p-3.5"
+          >
+            <p class="text-xs uppercase text-sky-100">Leads Generated</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white"><i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->leads_generated)}}</p>
+            </div>
+            <div
+              class="mask is-diamond absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
+            ></div>
           </div>
-          <div>
-            <p
-              class="text-xs uppercase text-slate-400 dark:text-navy-300"
-            >
-              Paid Customers
-            </p>
-            <p
-              class="mt-1 text-xl font-medium text-slate-700 dark:text-navy-100"
-            >
-              {{number_format($stat->paid_customer)}}
-            </p>
+
+          <div
+            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-info to-info-focus p-3.5"
+          >
+            <p class="text-xs uppercase text-sky-100">Paid Customers</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white">{{number_format($stat->paid_customer)}}</p>
+            </div>
+            <div
+              class="mask is-reuleaux-triangle absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
+            ></div>
           </div>
-          <div>
-            <p
-              class="text-xs uppercase text-slate-400 dark:text-navy-300"
-            >
-              Total Customers
-            </p>
-            <p
-              class="mt-1 text-xl font-medium text-slate-700 dark:text-navy-100"
-            >
-              {{number_format($stat->total_customer)}}
-            </p>
+
+          <div
+            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-3.5"
+          >
+            <p class="text-xs uppercase text-sky-100">Total Customers</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white">{{number_format($stat->total_customer)}}</p>
+            </div>
+            <div
+              class="mask is-hexagon-2 absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
+            ></div>
           </div>
         </div>
       </div>
