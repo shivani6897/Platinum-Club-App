@@ -101,7 +101,7 @@
         class="is-scrollbar-hidden min-w-full overflow-x-auto"
         x-data="pages.tables.initExample1"
       >
-        <table class="is-hoverable w-full text-left">
+        <table id="reminders-table" class="is-hoverable w-full text-left">
           <thead>
             <tr>
               <th
@@ -110,32 +110,44 @@
                 #
               </th>
               <th
-                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                data-title="category"
+                data-order=""
+                class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
                 Category
               </th>
               <th
-                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                date-title="name"
+                data-order=""
+                class="sort-by whitespace-nowrap flex bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
                 Name
               </th>
               <th
-                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                date-title="type"
+                data-order=""
+                class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
                 Type
               </th>
               <th
-                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                date-title="frequency"
+                data-order=""
+                class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
                 Frequency
               </th>
               <th
-                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                date-title="start_date"
+                data-order=""
+                class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
                 Start Date
               </th>
               <th
-                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                date-title="end_date"
+                data-order=""
+                class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
                 End Date
               </th>
@@ -145,9 +157,11 @@
                 Time
               </th>
               <th
-                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                date-title="status"
+                data-order=""
+                class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
-                Completed
+                Status
               </th> 
               <th
                 class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
@@ -155,6 +169,10 @@
                 Action
               </th>
             </tr>
+            <form>
+              <input type="hidden" id="table_sort" name="sort">
+              <input type="hidden" id="table_order" name="order">
+            </form>
           </thead>
             @forelse($tasks as $task)
               <tr
@@ -356,6 +374,25 @@
 </div>
 @endsection
 
+@push('styles')
+<style>
+  .sort-by {
+    position: relative;
+    cursor: pointer;
+  }
+  .sort-by:after {
+    font-family: "Font Awesome 6 Free";
+   content: "\f0dc";
+   display: inline-block;
+   padding-right: 3px;
+   vertical-align: middle;
+   font-weight: 900;
+   position: absolute;
+   right: 5px;
+  }
+</style>
+@endpush
+
 @push('scripts')
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -385,5 +422,38 @@
       }
     })
   }
+  $(document).ready(function(){
+    $('#reminders-table th.sort-by').click(function(e){
+      if($(this).data('order')=='asc')
+      {
+        $('#reminders-table th.th-sort span').data('order','').html('<i class="fa fa-sort" aria-hidden="true"></i>');
+        $(this).find('before').data('order','desc').html('<i class="fa fa-caret-down" aria-hidden="true"></i>');
+        $('#reminders-table #table_sort').val($(this).find('span').data('title'));
+        $('#reminders-table #table_order').val('desc');
+      }
+      else
+      {
+        $('#reminders-table th.th-sort span').data('order','').html('<i class="fa fa-sort" aria-hidden="true"></i>');
+        $(this).find('span').data('order','asc').html('<i class="fa fa-caret-up" aria-hidden="true"></i>');
+        $('#reminders-table #table_sort').val($(this).find('span').data('title'));
+        $('#reminders-table #table_order').val('asc');
+      }
+      $('#filterForm').submit();
+    });
+
+    // Filter on load
+    var filter_span = $('th.th-sort span[data-title="{{request('sort','id')}}"]');
+    @if(request('order','asc')=='asc')
+      $('#reminders-table th.th-sort span').data('order','').html('<i class="fa fa-sort" aria-hidden="true"></i>');
+      filter_span.data('order','asc').html('<i class="fa fa-caret-up" aria-hidden="true"></i>');
+      $('#reminders-table #table_sort').val(filter_span.data('title'));
+      $('#reminders-table #table_order').val('asc');
+    @else
+      $('#reminders-table th.th-sort span').data('order','').html('<i class="fa fa-sort" aria-hidden="true"></i>');
+      filter_span.data('order','desc').html('<i class="fa fa-caret-down" aria-hidden="true"></i>');
+      $('#reminders-table #table_sort').val(filter_span.data('title'));
+      $('#reminders-table #table_order').val('desc');
+    @endif
+  })
 </script>
 @endpush
