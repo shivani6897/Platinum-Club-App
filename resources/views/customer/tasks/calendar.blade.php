@@ -144,7 +144,9 @@
                         'border-red-200 text-red-800 bg-red-100': event.event_theme === 'red',
                         'border-yellow-200 text-yellow-800 bg-yellow-100': event.event_theme === 'yellow',
                         'border-green-200 text-green-800 bg-green-100': event.event_theme === 'green',
-                        'border-purple-200 text-purple-800 bg-purple-100': event.event_theme === 'purple'
+                        'border-purple-200 text-purple-800 bg-purple-100': event.event_theme === 'purple',
+                        'border border-info text-info': event.event_theme == 'info',
+                        'border border-success text-success': event.event_theme == 'success',
                       }"
                     >
                       <p x-text="event.event_title" class="text-sm truncate leading-tight"></p>
@@ -253,7 +255,7 @@
           {
             event_date: new Date({{explode('-',$value['event_date'])[0]}}, {{explode('-',$value['event_date'])[1]-1}}, {{explode('-',$value['event_date'])[2]}}),
             event_title: "{{$value['event_title']}}",
-            event_theme: '{{$value['event_theme']}}'
+            event_theme: '{{$value['event_theme']}}',
           }@if(!$loop->last),
           @endif
           @endforeach

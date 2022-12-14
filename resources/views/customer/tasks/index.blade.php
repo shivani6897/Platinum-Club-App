@@ -143,6 +143,11 @@
                 class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
                 Time
+              </th>
+              <th
+                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+              >
+                Completed
               </th> 
               <th
                 class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
@@ -177,6 +182,9 @@
                 </td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                   {{($task->type==1?$task->task_time->format('h:i A'):$task->task_date->format('h:i A'))}}
+                </td>
+                <td class="whitespace-nowrap px-4 py-3 sm:px-5">
+                  {!!($task->completed==1?'<div class="badge rounded-full border border-success text-success">Completed</div>':'<div class="badge rounded-full border border-info text-info">Pending</div>')!!}
                 </td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                   <div
@@ -221,6 +229,15 @@
                               >Edit</a
                             >
                           </li>
+                          @if($task->completed==0)
+                          <li>
+                            <a
+                              href="{{route('tasks.complete',$task->id)}}"
+                              class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
+                              >Complete</a
+                            >
+                          </li>
+                          @endif
                           <li>
                             <form method="post" action="{{route('tasks.destroy',$task->id)}}">
                               @method('delete')
@@ -240,7 +257,7 @@
               </tr>
               @empty
               <tr>
-                <td class="text-center p-5" colspan="9">No Data...</td>
+                <td class="text-center p-5" colspan="10">No Data...</td>
               </tr>
               @endforelse
           </tbody>

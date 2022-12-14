@@ -49,6 +49,7 @@ Route::group(['middleware' => ['auth','verified']], function () {
 
     // Tasks management
     Route::get('/tasks/calendar',[App\Http\Controllers\Customer\TaskController::class,'calendar'])->name('tasks.calendar');
+    Route::get('/tasks/complete/{task}',[App\Http\Controllers\Customer\TaskController::class,'complete'])->name('tasks.complete');
     Route::resource('/tasks',App\Http\Controllers\Customer\TaskController::class);
 
     // Habit management

@@ -28,7 +28,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('frequency')->default(0)->comment('0=no repeat, 1=daily, 2=bi-weekly, 3=weekly, 4=monthly');
             $table->string('day_of_week')->nullable()->comment('For Recurring');
             $table->string('day_of_week_2')->nullable()->comment('For Recurring');
-            $table->unsignedInteger('month_day')->nullable()->comment('FOr recurring');
+            $table->unsignedInteger('month_day')->nullable()->comment('For recurring');
 
             $table->timestamps();
         });

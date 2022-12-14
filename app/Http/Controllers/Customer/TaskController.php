@@ -136,6 +136,12 @@ class TaskController extends Controller
         return redirect()->back()->with('success','Task Deleted');
     }
 
+    public function complete(Task $task)
+    {
+        $task->update(['completed'=>1]);
+        return redirect()->back()->with('success','Task Completed');
+    }
+
     public function calendar()
     {
         $array = [
@@ -180,7 +186,7 @@ class TaskController extends Controller
                 $data[] = [
                     'event_date'=>date("Y-m-d", strtotime($date)),
                     'event_title'=>$once->name.' at '.$once->task_date->format('h:i A'),
-                    'event_theme'=>'blue',
+                    'event_theme'=>$once->completed==1?'success':'info',
                 ];
             }
 
@@ -216,7 +222,7 @@ class TaskController extends Controller
                 $data[] = [
                     'event_date'=>date("Y-m-d", strtotime($date)),
                     'event_title'=>$re->name.' at '.$re->task_time->format('h:i A'),
-                    'event_theme'=>'blue',
+                    'event_theme'=>$re->completed==1?'success':'info',
                 ];
             }
 
