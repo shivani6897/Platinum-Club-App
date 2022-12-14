@@ -184,6 +184,7 @@ class TaskController extends Controller
             foreach($oneTimeTask as $once)
             {
                 $data[] = [
+                    'event_id'=>$once->id,
                     'event_date'=>date("Y-m-d", strtotime($date)),
                     'event_title'=>$once->name.' at '.$once->task_date->format('h:i A'),
                     'event_theme'=>$once->completed==1?'success':'info',
@@ -220,6 +221,7 @@ class TaskController extends Controller
             foreach($recurring as $re)
             {
                 $data[] = [
+                    'event_id'=>$re->id,
                     'event_date'=>date("Y-m-d", strtotime($date)),
                     'event_title'=>$re->name.' at '.$re->task_time->format('h:i A'),
                     'event_theme'=>$re->completed==1?'success':'info',

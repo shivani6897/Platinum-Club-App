@@ -125,6 +125,8 @@
             <template x-for="(date, dateIndex) in no_of_days" :key="dateIndex"> 
               <div style="width: 14.28%; height: 120px" class="px-4 pt-2 border-r border-b relative">
                 <div
+                  style="cursor: pointer;"
+                  x-bind:onclick="`completeTask(this,${event.event_theme})`"
                   {{-- @click="showEventModal(date)" --}}
                   x-text="date"
                   class="inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100"
@@ -137,7 +139,10 @@
                     x-text="events.filter(e => e.event_date === new Date(year, month, date).toDateString()).length"></div> -->
 
                   <template x-for="event in events.filter(e => new Date(e.event_date).toDateString() ===  new Date(year, month, date).toDateString() )">  
+                  <form method="get" x-bind:action="`{{url('/tasks/complete')}}/${event.event_id}`">
                     <div
+                      style="cursor: pointer;"
+                       x-bind:onclick="`completeTask(this,'${event.event_theme}')`"
                       class="px-2 py-1 rounded-lg mt-1 overflow-hidden border"
                       :class="{
                         'border-blue-200 text-blue-800 bg-blue-100': event.event_theme === 'blue',
@@ -227,6 +232,7 @@
 @endpush
 
 @push('scripts')
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -242,6 +248,39 @@
         .remove();
     }
 
+    function completeTask(obj,flg)
+    {
+      if(flg=='success')
+      {
+        Swal.fire(
+              'info!',
+              'Task Completed',
+              'info'
+            );
+      }
+      else
+      {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "Do you want to complete this task?!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#5e3ace',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, Complete it!'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            Swal.fire(
+              'Warning!',
+              'Completing Task',
+              'warning'
+            );
+            $(obj).closest('form').submit();
+          }
+        });
+      }
+    }
+
     function app() {
       return {
         month: '',
@@ -253,6 +292,7 @@
         events: [
           @foreach($data as $value)
           {
+            event_id: {{$value['event_id']}},
             event_date: new Date({{explode('-',$value['event_date'])[0]}}, {{explode('-',$value['event_date'])[1]-1}}, {{explode('-',$value['event_date'])[2]}}),
             event_title: "{{$value['event_title']}}",
             event_theme: '{{$value['event_theme']}}',
