@@ -47,23 +47,12 @@
       </div>
     </div>
     <div class="mt-3 grid grid-cols-12">
-      <div class="col-span-12 px-4 sm:col-span-6 sm:px-5 lg:col-span-4">
-        {{-- <select
-          class="mt-1.5 w-full"
-          x-init="$el._x_tom = new Tom($el,{sortField: {field: 'text',direction: 'asc'}})"
-        >
-          <option>Travel Blog Page</option>
-          <option>Courses Page</option>
-          <option>Grammar Page</option>
-          <option>Sport Page</option>
-          <option>Jobs Page</option>
-          <option>Server Status Page</option>
-        </select> --}}
-        <div class="mt-6 grid grid-cols-2 gap-x-4 gap-y-8">
+      <div class="col-span-12 px-4 sm:px-5">
+        <div class="mt-6 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-8">
           <div
             class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-info to-info-focus p-3.5"
           >
-            <p class="text-xs uppercase text-sky-100">Revenue Earned</p>
+            <p class="text-xs uppercase text-sky-100">Total Revenue</p>
             <div class="flex items-end justify-between space-x-2">
               <p class="mt-4 text-2xl font-medium text-white"><i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->revenue_earned,2)}}</p>
             </div>
@@ -75,7 +64,7 @@
           <div
             class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 p-3.5"
           >
-            <p class="text-xs uppercase text-sky-100">Ad spends</p>
+            <p class="text-xs uppercase text-sky-100">Ad spend</p>
             <div class="flex items-end justify-between space-x-2">
               <p class="mt-4 text-2xl font-medium text-white"><i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->ad_spends,2)}}</p>
             </div>
@@ -109,30 +98,6 @@
           </div>
 
           <div
-            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-3.5"
-          >
-            <p class="text-xs uppercase text-sky-100">Profitability%</p>
-            <div class="flex items-end justify-between space-x-2">
-              <p class="mt-4 text-2xl font-medium text-white">{{number_format($stat->profitability,2)}} %</p>
-            </div>
-            <div
-              class="mask is-reuleaux-triangle absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
-            ></div>
-          </div>
-
-          <div
-            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 p-3.5"
-          >
-            <p class="text-xs uppercase text-sky-100">Average cost per lead</p>
-            <div class="flex items-end justify-between space-x-2">
-              <p class="mt-4 text-2xl font-medium text-white"><i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->cost_per_lead,2)}}</p>
-            </div>
-            <div
-              class="mask is-hexagon-2 absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
-            ></div>
-          </div>
-
-          <div
             class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 p-3.5"
           >
             <p class="text-xs uppercase text-sky-100">Leads Generated</p>
@@ -145,9 +110,21 @@
           </div>
 
           <div
+            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 p-3.5"
+          >
+            <p class="text-xs uppercase text-sky-100">Cost per lead</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white"><i class="fa-sharp fa-solid fa-indian-rupee-sign"></i> {{number_format($stat->cost_per_lead,2)}}</p>
+            </div>
+            <div
+              class="mask is-hexagon-2 absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
+            ></div>
+          </div>
+
+          <div
             class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-info to-info-focus p-3.5"
           >
-            <p class="text-xs uppercase text-sky-100">Paid Customers</p>
+            <p class="text-xs uppercase text-sky-100">Converted to Customers</p>
             <div class="flex items-end justify-between space-x-2">
               <p class="mt-4 text-2xl font-medium text-white">{{number_format($stat->paid_customer)}}</p>
             </div>
@@ -159,7 +136,7 @@
           <div
             class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-3.5"
           >
-            <p class="text-xs uppercase text-sky-100">Total Group Size</p>
+            <p class="text-xs uppercase text-sky-100">Total Customers</p>
             <div class="flex items-end justify-between space-x-2">
               <p class="mt-4 text-2xl font-medium text-white">{{number_format($stat->total_customer)}}</p>
             </div>
@@ -167,10 +144,22 @@
               class="mask is-hexagon-2 absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
             ></div>
           </div>
+
+          <div
+            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-3.5"
+          >
+            <p class="text-xs uppercase text-sky-100">Profitability%</p>
+            <div class="flex items-end justify-between space-x-2">
+              <p class="mt-4 text-2xl font-medium text-white">{{number_format($stat->profitability,2)}} %</p>
+            </div>
+            <div
+              class="mask is-reuleaux-triangle absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"
+            ></div>
+          </div>
         </div>
       </div>
       <div
-        class="ax-transparent-gridline col-span-12 px-2 sm:col-span-6 lg:col-span-8"
+        class="ax-transparent-gridline col-span-12 px-2"
       >
       <div id="statisticChart"></div>
         {{-- <div
