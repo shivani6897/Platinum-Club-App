@@ -140,55 +140,18 @@
           <div id="oneTimeDiv" class="block">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <label class="block">
-                <span>Date</span>
-                <span class="relative flex">
+                <span>DateTime</span><br>
+                <label class="relative flex">
                   <input
-                    x-init="$el._x_flatpickr = flatpickr($el,{altInput: true,altFormat: 'd-m-Y',dateFormat: 'Y-m-d'})"
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 mt-1.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                    @error('date')
+                    x-init="$el._x_flatpickr = flatpickr($el,{enableTime: true,altInput: true,altFormat: 'd-m-Y H:i',dateFormat: 'Y-m-d H:i'})"
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                    @error('task_date')
                     border-error
                     @enderror"
-                    placeholder="Choose date..."
+                    placeholder="Choose datetime..."
                     type="text"
-                    name="date"
-                    value="{{$task->task_date?->format('Y-m-d')}}"
-                  />
-                  <span
-                      class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
-                    >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 transition-colors duration-200"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </span>
-                </span>
-                @error('date')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
-              </label>
-              <label class="block">
-                <span>Time</span>
-                <span class="relative flex">
-                  <input
-                    x-init="$el._x_flatpickr = flatpickr($el,{enableTime: true,noCalendar: true,dateFormat: 'H:i'})"
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 mt-1.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                    @error('time')
-                    border-error
-                    @enderror"
-                    placeholder="Choose time..."
-                    type="text"
-                    name="time"
-                    value="{{$task->task_date?->format('H:i')}}"
+                    name="task_date"
+                    value="{{$task->task_date?->format('Y-m-d H:i')}}"
                   />
                   <span
                     class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
@@ -204,12 +167,12 @@
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
                   </span>
-                </span>
-                @error('time')
+                </label>
+                @error('task_date')
                   <span class="text-tiny+ text-error">{{$message}}</span>
                 @enderror
               </label>
@@ -219,92 +182,18 @@
           <div id="recurringDiv" class="space-y-4 block" style="display: none;">
             <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <label class="block">
-                <span>Start Date</span>
-                <span class="relative flex">
+                <span>Start DateTime</span><br>
+                <label class="relative flex">
                   <input
-                    x-init="$el._x_flatpickr = flatpickr($el,{altInput: true,altFormat: 'd-m-Y',dateFormat: 'Y-m-d'})"
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 mt-1.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                    x-init="$el._x_flatpickr = flatpickr($el,{enableTime: true,altInput: true,altFormat: 'd-m-Y H:i',dateFormat: 'Y-m-d H:i'})"
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
                     @error('start_date')
                     border-error
                     @enderror"
-                    placeholder="Choose start date..."
+                    placeholder="Choose start datetime..."
                     type="text"
                     name="start_date"
-                    value="{{$task->start_date?->format('Y-m-d')}}"
-                  />
-                  <span
-                      class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
-                    >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 transition-colors duration-200"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </span>
-                </span>
-                @error('start_date')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
-              </label>
-              <label class="block">
-                <span>End Date</span>
-                <span class="relative flex">
-                  <input
-                    x-init="$el._x_flatpickr = flatpickr($el,{altInput: true,altFormat: 'd-m-Y',dateFormat: 'Y-m-d'})"
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 mt-1.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                    @error('end_date')
-                    border-error
-                    @enderror"
-                    placeholder="Choose end date..."
-                    type="text"
-                    name="end_date"
-                    value="{{$task->end_date?->format('Y-m-d')}}"
-                  />
-                  <span
-                      class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
-                    >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 transition-colors duration-200"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </span>
-                </span>
-                @error('end_date')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
-              </label>
-              <label class="block">
-                <span>Time</span>
-                <span class="relative flex">
-                  <input
-                    x-init="$el._x_flatpickr = flatpickr($el,{enableTime: true,noCalendar: true,dateFormat: 'H:i'})"
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 mt-1.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                    @error('recurring_time')
-                    border-error
-                    @enderror"
-                    placeholder="Choose time..."
-                    type="text"
-                    name="recurring_time"
-                    value="{{$task->task_time?->format('H:i')}}"
+                    value="{{$task->start_date?->format('Y-m-d H:i')}}"
                   />
                   <span
                     class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
@@ -320,12 +209,49 @@
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
                   </span>
-                </span>
-                @error('recurring_time')
+                </label>
+                @error('start_date')
+                  <span class="text-tiny+ text-error">{{$message}}</span>
+                @enderror
+              </label>
+              <label class="block">
+                <span>End DateTime</span><br>
+                <label class="relative flex">
+                  <input
+                    x-init="$el._x_flatpickr = flatpickr($el,{enableTime: true,altInput: true,altFormat: 'd-m-Y H:i',dateFormat: 'Y-m-d H:i'})"
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                    @error('end_date')
+                    border-error
+                    @enderror"
+                    placeholder="Choose end datetime..."
+                    type="text"
+                    name="end_date"
+                    value="{{$task->end_date?->format('Y-m-d H:i')}}"
+                  />
+                  <span
+                    class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </span>
+                </label>
+                @error('end_date')
                   <span class="text-tiny+ text-error">{{$message}}</span>
                 @enderror
               </label>

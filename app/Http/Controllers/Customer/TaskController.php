@@ -20,7 +20,6 @@ class TaskController extends Controller
     {
 
         $tasks = Task::with('task_category')
-            ->join('task_categories','tasks.task_category_id','=','task_categories.id')
             ->when(request('search'),function($q){
                 $q->whereHas('task_category',function($q2){
                     $q2->where('name','LIKE', '%'.request('search').'%');
@@ -35,6 +34,11 @@ class TaskController extends Controller
         // Sorting
         switch(request('sort','tasks.id'))
         {
+            case 'category':
+                $taskIds = TaskCategory::orderBy('name',request('order','asc'))->get(['id'])->pluck('id')->toArray();
+                $tasks = $tasks->orderByRaw('FIELD (task_category_id,'.implode(',',$taskIds).')');
+            break;
+
             case 'frequency':
             if(request('order','asc')=='asc')
                 $tasks = $tasks->orderByRaw('FIELD (frequency,2,1,4,0,3)');
@@ -58,8 +62,7 @@ class TaskController extends Controller
             $tasks = $tasks->orderBy(request('sort','tasks.id'),request('order','asc'));
         }
 
-        $tasks = $tasks->select('tasks.*','task_categories.id')
-            ->paginate(10);
+        $tasks = $tasks->paginate(10);
         return view('customer.tasks.index',compact('tasks'));
     }
 
@@ -85,20 +88,16 @@ class TaskController extends Controller
         $array = $request->only([
             'task_category_id',
             'name',
-            'type'
+            'type',
+            'task_date',
+            'start_date',
+            'end_date',
+            'frequency',
         ]);
         $array['user_id'] = auth()->id();
 
-        if($array['type']==0)
+        if($array['type']==1)
         {
-            $array['task_date'] = $request->date.' '.$request->time;
-        }
-        else
-        {
-            $array['start_date'] = $request->start_date;
-            $array['end_date'] = $request->end_date;
-            $array['task_time'] = $request->recurring_time;
-            $array['frequency'] = $request->frequency;
             $array['day_of_week'] = ($request->frequency==1?$request->day_of_week_1:$request->day_of_week);
             $array['day_of_week_2'] = $request->day_of_week_2;
             $array['month_day'] = $request->day_of_month;
@@ -133,20 +132,16 @@ class TaskController extends Controller
         $array = $request->only([
             'task_category_id',
             'name',
-            'type'
+            'type',
+            'task_date',
+            'start_date',
+            'end_date',
+            'frequency',
         ]);
         $array['user_id'] = auth()->id();
 
-        if($array['type']==0)
+        if($array['type']==1)
         {
-            $array['task_date'] = $request->date.' '.$request->time;
-        }
-        else
-        {
-            $array['start_date'] = $request->start_date;
-            $array['end_date'] = $request->end_date;
-            $array['task_time'] = $request->recurring_time;
-            $array['frequency'] = $request->frequency;
             $array['day_of_week'] = ($request->frequency==1?$request->day_of_week_1:$request->day_of_week);
             $array['day_of_week_2'] = $request->day_of_week_2;
             $array['month_day'] = $request->day_of_month;

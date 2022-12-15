@@ -110,14 +110,14 @@
                 #
               </th>
               <th
-                data-title="task_categories.name"
+                data-title="category"
                 data-order=""
                 class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
                 Category
               </th>
               <th
-                data-title="tasks.name"
+                data-title="name"
                 data-order=""
                 class="sort-by whitespace-nowrap flex bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
@@ -152,11 +152,6 @@
                 End Date
               </th>
               <th
-                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
-              >
-                Time
-              </th>
-              <th
                 data-title="status"
                 data-order=""
                 class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
@@ -172,72 +167,23 @@
             <form id="filterForm">
               <input type="hidden" id="table_sort" name="sort">
               <input type="hidden" id="table_order" name="order">
-              {{-- <tr>
-                <th
-                  class="whitespace-nowrap rounded-tl-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
-                >
-                  
+              <tr>
+                <th></th>
+                <th>
+                  <label class="block">
+                    <span class="relative mr-1.5 flex">
+                      <input
+                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                        placeholder="Search here..."
+                        onchange="tableSearch(this)"
+                        name="search"
+                        type="text"
+                        value="{{request('search','')}}"
+                      />
+                    </span>
+                  </label>
                 </th>
-                <th
-                  data-title="category"
-                  data-order=""
-                  class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
-                >
-                  
-                </th>
-                <th
-                  data-title="name"
-                  data-order=""
-                  class="sort-by whitespace-nowrap flex bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
-                >
-                  Name
-                </th>
-                <th
-                  data-title="type"
-                  data-order=""
-                  class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
-                >
-                  Type
-                </th>
-                <th
-                  data-title="frequency"
-                  data-order=""
-                  class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
-                >
-                  Frequency
-                </th>
-                <th
-                  data-title="start_date"
-                  data-order=""
-                  class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
-                >
-                  Start Date
-                </th>
-                <th
-                  data-title="end_date"
-                  data-order=""
-                  class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
-                >
-                  End Date
-                </th>
-                <th
-                  class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
-                >
-                  Time
-                </th>
-                <th
-                  data-title="status"
-                  data-order=""
-                  class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
-                >
-                  Status
-                </th> 
-                <th
-                  class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
-                >
-                  Action
-                </th>
-              </tr> --}}
+              </tr>
 
             </form>
           </thead>
@@ -260,13 +206,10 @@
                   class="whitespace-nowrap px-4 py-3 sm:px-5"
                 >{{$task->getFrequency()}}</td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
-                  {{($task->type==1?$task->start_date->format('d-m-Y'):$task->task_date->format('d-m-Y'))}}
+                  {{($task->type==1?$task->start_date->format('d-m-Y H:i'):$task->task_date->format('d-m-Y H:i'))}}
                 </td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
-                  {{($task->type==1?$task->end_date->format('d-m-Y'):'')}}
-                </td>
-                <td class="whitespace-nowrap px-4 py-3 sm:px-5">
-                  {{($task->type==1?$task->task_time->format('h:i A'):$task->task_date->format('h:i A'))}}
+                  {{($task->type==1?$task->end_date->format('d-m-Y H:i'):'')}}
                 </td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                   {!!($task->completed==1?'<div class="badge rounded-full border border-success text-success">Completed</div>':'<div class="badge rounded-full border border-info text-info">Pending</div>')!!}
