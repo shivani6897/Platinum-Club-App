@@ -156,6 +156,7 @@
                     >
                       <p x-text="event.event_title" class="text-sm truncate leading-tight"></p>
                     </div>
+                  </form>
                   </template>
                 </div>
               </div>

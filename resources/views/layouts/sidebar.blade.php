@@ -39,19 +39,19 @@
       <a
         href="{{route('tasks.index')}}"
         class="flex h-11 w-11 items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
-        x-tooltip.placement.right="'Tasks'"
+        x-tooltip.placement.right="'Reminders'"
       >
         <i class="fa-solid fa-rectangle-list fa-2x"></i>
       </a>
 
       <!-- Tasks Calendar -->
-      <a
+      {{-- <a
         href="{{route('tasks.calendar')}}"
         class="flex h-11 w-11 items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
         x-tooltip.placement.right="'Tasks Calender'"
       >
         <i class="fa-solid fa-calendar-days fa-2x"></i>
-      </a>
+      </a> --}}
 
       <!-- Habits -->
         <a

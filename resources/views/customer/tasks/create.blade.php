@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('heading', 'Tasks')
+@section('heading', 'Reminder Create')
 
 @section('breadcrums')
 <div class="hidden h-full py-1 sm:flex">
@@ -31,7 +31,7 @@
     <a
       class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
       href="{{route('tasks.index')}}"
-      >Tasks</a
+      >Reminders</a
     >
     <svg
       x-ignore
@@ -60,14 +60,14 @@
       <p
         class="text-base font-medium text-slate-700 dark:text-navy-100"
       >
-        Task Create
+        Reminder Create
       </p>
       <form method="post" action="{{route('tasks.store')}}">
         @csrf
         <div class="mt-4 space-y-4">
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label class="block">
-              <span>Task Category</span>
+              <span>Reminder Category</span>
               <select
                 class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
                 @error('task_category_id')

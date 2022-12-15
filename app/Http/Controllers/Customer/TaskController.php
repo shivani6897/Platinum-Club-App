@@ -18,6 +18,96 @@ class TaskController extends Controller
      */
     public function index()
     {
+        $array = [
+            'month'=>request('month',date('n')),
+            'year'=>request('year',date('Y')),
+            'operation'=>request('operation','')
+        ];
+        if($array['operation']!='')
+        {
+            if($array['operation']=='sub')
+            {
+                if($array['month']==1)
+                {
+                    $array['month']=12;
+                    $array['year']--;
+                }
+                else
+                    $array['month']--;
+            }
+            else if($array['operation']=='add')
+            {
+                if($array['month']==12)
+                {
+                    $array['month']=1;
+                    $array['year']++;
+                }
+                else
+                    $array['month']++;
+            }
+        }
+
+
+        $date = date('Y-m-d',strtotime($array['year'].'-'.$array['month'].'-01'));//Current Month Year
+        
+        $data = [];
+        while (strtotime($date) <= strtotime(date($array['year'].'-'.$array['month']) . '-' . date('t', strtotime($date)))) {
+
+            // One time tasks for day 
+            $oneTimeTask = Task::whereDate('task_date',date("Y-m-d", strtotime($date)))->where('frequency',0)->get();
+            foreach($oneTimeTask as $once)
+            {
+                $data[] = [
+                    'event_id'=>$once->id,
+                    'event_date'=>date("Y-m-d", strtotime($date)),
+                    'event_title'=>$once->name.' at '.$once->task_date->format('h:i A'),
+                    'event_theme'=>$once->completed==1?'success':'info',
+                ];
+            }
+
+            // Recurring task for days
+            $recurring = Task::where(function($q) use ($date){
+                    $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
+                        ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
+                        ->where('frequency',1);
+                })
+                ->orWhere(function($q) use ($date){
+                    $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
+                        ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
+                        ->where(function($q2) use ($date){
+                            $q2->where('day_of_week',date("l", strtotime($date)))
+                                ->orWhere('day_of_week_2',date("l", strtotime($date)));
+                        })
+                        ->where('frequency',2);
+                })
+                ->orWhere(function($q) use ($date){
+                    $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
+                        ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
+                        ->where('day_of_week',date("l", strtotime($date)))
+                        ->where('frequency',3);
+                })
+                ->orWhere(function($q) use ($date){
+                    $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
+                        ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
+                        ->where('day_of_week',date("l", strtotime($date)))
+                        ->where('frequency',4);
+                })->get();
+            foreach($recurring as $re)
+            {
+                $data[] = [
+                    'event_id'=>$re->id,
+                    'event_date'=>date("Y-m-d", strtotime($date)),
+                    'event_title'=>$re->name.' at '.$re->task_time->format('h:i A'),
+                    'event_theme'=>$re->completed==1?'success':'info',
+                ];
+            }
+
+            $date = date("Y-m-d", strtotime("+1 day", strtotime($date)));//Adds 1 day onto current date
+        }
+
+        request()->merge($array);
+
+
 
         $tasks = Task::with('task_category')
             ->when(request('search'),function($q){
@@ -27,6 +117,55 @@ class TaskController extends Controller
                 ->orWhere('name','LIKE','%'.request('search').'%')
                 ->orWhere('day_of_week','LIKE','%'.request('search').'%')
                 ->orWhere('day_of_week_2','LIKE','%'.request('search').'%');
+            })
+            ->when(request('category'),function($q){
+                $q->whereHas('task_category',function($q2){
+                    $q2->where('name','LIKE','%'.request('category').'%');
+                });
+            })
+            ->when(request('name'),function($q){
+                $q->where('name','LIKE','%'.request('name').'%');
+            })
+            ->when(request('type','')!='',function($q){
+                $q->where('type',request('type'));
+            })
+            ->when(request('frequency','')!='',function($q){
+                $q->where('frequency',request('frequency'));
+            })
+            ->when(request('start_date'),function($q){
+                if(isset(explode(' to ', request('start_date'))[1]))
+                {
+                    $q->whereRaw(
+                        'CASE WHEN type=0 THEN DATE(task_date) >= "'.explode(' to ', request('start_date'))[0].'"
+                            AND DATE(task_date) <= "'.explode(' to ', request('start_date'))[1].'"
+                        ELSE DATE(start_date) >= "'.explode(' to ', request('start_date'))[0].'" 
+                            AND DATE(start_date) <= "'.explode(' to ', request('start_date'))[1].'"
+                        END');
+                }
+                else
+                    $q->whereRaw(
+                        'CASE WHEN type=0 THEN DATE(task_date) = "'.request('start_date').'" 
+                        ELSE DATE(start_date) = "'.request('start_date').'"
+                        END');
+            })
+            ->when(request('end_date'),function($q){
+                if(isset(explode(' to ', request('end_date'))[1]))
+                {
+                    $q->whereRaw(
+                        'CASE WHEN type=0 THEN DATE(task_date) >= "'.explode(' to ', request('end_date'))[0].'" 
+                            AND DATE(task_date) <= "'.explode(' to ', request('end_date'))[1].'"
+                        ELSE  DATE(end_date) >= "'.explode(' to ', request('end_date'))[0].'" 
+                            AND DATE(end_date) <= "'.explode(' to ', request('end_date'))[1].'"
+                        END');
+                }
+                else
+                    $q->whereRaw(
+                        'CASE WHEN type=0 THEN DATE(task_date) = "'.request('end_date').'" 
+                        ELSE  DATE(end_date) = "'.request('end_date').'"
+                        END');
+            })
+            ->when(request('status','')!='',function($q){
+                $q->where('completed',request('status'));
             });
 
         // $tasks = $tasks->orderBy(request('sort','tasks.id'),request('order','asc'));
@@ -63,7 +202,7 @@ class TaskController extends Controller
         }
 
         $tasks = $tasks->paginate(10);
-        return view('customer.tasks.index',compact('tasks'));
+        return view('customer.tasks.index',compact('tasks','data'));
     }
 
     /**
