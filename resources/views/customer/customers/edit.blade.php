@@ -166,7 +166,6 @@
                                         name="gst_no"
                                         autocomplete="off"
                                         value="{{$customer->gst_no }}"
-                                        required
                                     />
                                 </span>
                                 @error('gst_no')

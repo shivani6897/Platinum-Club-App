@@ -23,5 +23,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call(TaskCategorySeeder::class);
+        $this->call(IncomeCategorySeeder::class);
+        $this->call(ExpenseCategorySeeder::class);
     }
 }
