@@ -20,6 +20,7 @@ class TaskController extends Controller
     {
 
         $tasks = Task::with('task_category')
+            ->join('task_categories','tasks.task_category_id','=','task_categories.id')
             ->when(request('search'),function($q){
                 $q->whereHas('task_category',function($q2){
                     $q2->where('name','LIKE', '%'.request('search').'%');
@@ -27,7 +28,38 @@ class TaskController extends Controller
                 ->orWhere('name','LIKE','%'.request('search').'%')
                 ->orWhere('day_of_week','LIKE','%'.request('search').'%')
                 ->orWhere('day_of_week_2','LIKE','%'.request('search').'%');
-            })->paginate(10);
+            });
+
+        // $tasks = $tasks->orderBy(request('sort','tasks.id'),request('order','asc'));
+
+        // Sorting
+        switch(request('sort','tasks.id'))
+        {
+            case 'frequency':
+            if(request('order','asc')=='asc')
+                $tasks = $tasks->orderByRaw('FIELD (frequency,2,1,4,0,3)');
+            else
+                $tasks = $tasks->orderByRaw('FIELD (frequency,3,0,4,1,2)');
+            break;
+
+            case 'start_date':
+                $tasks = $tasks->orderByRaw('type=0 '.request('order','asc').', task_date '.request('order','asc').', start_date '.request('order','asc'));
+                break;
+
+            case 'status':
+            if(request('order','asc')=='asc')
+                $tasks = $tasks->orderByRaw('FIELD (completed,1,0)');
+            else
+                $tasks = $tasks->orderByRaw('FIELD (completed,0,1)');
+            break;
+
+
+            default:
+            $tasks = $tasks->orderBy(request('sort','tasks.id'),request('order','asc'));
+        }
+
+        $tasks = $tasks->select('tasks.*','task_categories.id')
+            ->paginate(10);
         return view('customer.tasks.index',compact('tasks'));
     }
 

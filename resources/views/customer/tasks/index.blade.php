@@ -110,42 +110,42 @@
                 #
               </th>
               <th
-                data-title="category"
+                data-title="task_categories.name"
                 data-order=""
                 class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
                 Category
               </th>
               <th
-                date-title="name"
+                data-title="tasks.name"
                 data-order=""
                 class="sort-by whitespace-nowrap flex bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
                 Name
               </th>
               <th
-                date-title="type"
+                data-title="type"
                 data-order=""
                 class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
                 Type
               </th>
               <th
-                date-title="frequency"
+                data-title="frequency"
                 data-order=""
                 class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
                 Frequency
               </th>
               <th
-                date-title="start_date"
+                data-title="start_date"
                 data-order=""
                 class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
                 Start Date
               </th>
               <th
-                date-title="end_date"
+                data-title="end_date"
                 data-order=""
                 class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
@@ -157,7 +157,7 @@
                 Time
               </th>
               <th
-                date-title="status"
+                data-title="status"
                 data-order=""
                 class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
@@ -169,9 +169,76 @@
                 Action
               </th>
             </tr>
-            <form>
+            <form id="filterForm">
               <input type="hidden" id="table_sort" name="sort">
               <input type="hidden" id="table_order" name="order">
+              {{-- <tr>
+                <th
+                  class="whitespace-nowrap rounded-tl-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                >
+                  
+                </th>
+                <th
+                  data-title="category"
+                  data-order=""
+                  class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                >
+                  
+                </th>
+                <th
+                  data-title="name"
+                  data-order=""
+                  class="sort-by whitespace-nowrap flex bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                >
+                  Name
+                </th>
+                <th
+                  data-title="type"
+                  data-order=""
+                  class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                >
+                  Type
+                </th>
+                <th
+                  data-title="frequency"
+                  data-order=""
+                  class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                >
+                  Frequency
+                </th>
+                <th
+                  data-title="start_date"
+                  data-order=""
+                  class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                >
+                  Start Date
+                </th>
+                <th
+                  data-title="end_date"
+                  data-order=""
+                  class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                >
+                  End Date
+                </th>
+                <th
+                  class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                >
+                  Time
+                </th>
+                <th
+                  data-title="status"
+                  data-order=""
+                  class="sort-by whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                >
+                  Status
+                </th> 
+                <th
+                  class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                >
+                  Action
+                </th>
+              </tr> --}}
+
             </form>
           </thead>
             @forelse($tasks as $task)
@@ -390,6 +457,26 @@
    position: absolute;
    right: 5px;
   }
+  .sort-by.asc:after {
+    font-family: "Font Awesome 6 Free";
+   content: "\f0d8";
+   display: inline-block;
+   padding-right: 3px;
+   vertical-align: middle;
+   font-weight: 900;
+   position: absolute;
+   right: 5px;
+  }
+  .sort-by.desc:after {
+    font-family: "Font Awesome 6 Free";
+   content: "\f0d7";
+   display: inline-block;
+   padding-right: 3px;
+   vertical-align: middle;
+   font-weight: 900;
+   position: absolute;
+   right: 5px;
+  }
 </style>
 @endpush
 
@@ -424,35 +511,38 @@
   }
   $(document).ready(function(){
     $('#reminders-table th.sort-by').click(function(e){
+      console.log($(this).data('title'),$(this).data('order'));
       if($(this).data('order')=='asc')
       {
-        $('#reminders-table th.th-sort span').data('order','').html('<i class="fa fa-sort" aria-hidden="true"></i>');
-        $(this).find('before').data('order','desc').html('<i class="fa fa-caret-down" aria-hidden="true"></i>');
-        $('#reminders-table #table_sort').val($(this).find('span').data('title'));
+        $('#reminders-table th.sort-by').data('order','').removeClass('asc desc');
+        $(this).data('order','desc').removeClass('asc').addClass('desc');
+        $('#reminders-table #table_sort').val($(this).data('title'));
         $('#reminders-table #table_order').val('desc');
       }
       else
       {
-        $('#reminders-table th.th-sort span').data('order','').html('<i class="fa fa-sort" aria-hidden="true"></i>');
-        $(this).find('span').data('order','asc').html('<i class="fa fa-caret-up" aria-hidden="true"></i>');
-        $('#reminders-table #table_sort').val($(this).find('span').data('title'));
+        $('#reminders-table th.sort-by').data('order','').removeClass('asc desc');
+        $(this).data('order','asc').removeClass('desc').addClass('asc');
+        $('#reminders-table #table_sort').val($(this).data('title'));
         $('#reminders-table #table_order').val('asc');
       }
       $('#filterForm').submit();
     });
 
     // Filter on load
-    var filter_span = $('th.th-sort span[data-title="{{request('sort','id')}}"]');
+    var filter_span = $('th.sort-by[data-title="{{request('sort','id')}}"]');
     @if(request('order','asc')=='asc')
-      $('#reminders-table th.th-sort span').data('order','').html('<i class="fa fa-sort" aria-hidden="true"></i>');
-      filter_span.data('order','asc').html('<i class="fa fa-caret-up" aria-hidden="true"></i>');
+      $('#reminders-table th.sort-by').data('order','').removeClass('asc desc');
+      filter_span.data('order','asc').removeClass('desc').addClass('asc');
       $('#reminders-table #table_sort').val(filter_span.data('title'));
       $('#reminders-table #table_order').val('asc');
+
     @else
-      $('#reminders-table th.th-sort span').data('order','').html('<i class="fa fa-sort" aria-hidden="true"></i>');
-      filter_span.data('order','desc').html('<i class="fa fa-caret-down" aria-hidden="true"></i>');
+      $('#reminders-table th.sort-by').data('order','').removeClass('asc desc');
+      filter_span.data('order','desc').removeClass('asc').addClass('desc');
       $('#reminders-table #table_sort').val(filter_span.data('title'));
       $('#reminders-table #table_order').val('desc');
+
     @endif
   })
 </script>
