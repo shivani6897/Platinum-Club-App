@@ -9,17 +9,17 @@
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
 
-    <title>{{config('app.name') }}</title>
+    <title><?php echo e(config('app.name')); ?></title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.4/jquery.datetimepicker.min.css" />
 
-    <link rel="icon" type="image/png" href="{{asset('images/favicon.png')}}" />
+    <link rel="icon" type="image/png" href="<?php echo e(asset('images/favicon.png')); ?>" />
 
     <!-- CSS Assets -->
-    <link rel="stylesheet" href="{{asset('css/app.css')}}" />
+    <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>" />
 
     <!-- Javascript Assets -->
-    <script src="{{asset('js/app.js')}}" defer></script>
+    <script src="<?php echo e(asset('js/app.js')); ?>" defer></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" />
     <!-- Fonts -->
@@ -29,7 +29,7 @@
     />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
-    @stack('styles')
+    <?php echo $__env->yieldPushContent('styles'); ?>
   </head>
 
   <body x-data class="is-header-blur" x-bind="$store.global.documentBody">
@@ -49,7 +49,7 @@
       <!-- Sidebar -->
       <div class="sidebar print:hidden">
         <!-- Main Sidebar -->
-          @include('admin.layouts.sidebar')
+          <?php echo $__env->make('admin.layouts.sidebar', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
         <!-- Sidebar Panel -->
         <div class="sidebar-panel">
@@ -84,17 +84,17 @@
         </div>
       </div>
 
-      @include('admin.layouts.header')
+      <?php echo $__env->make('admin.layouts.header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 
       <!-- Main Content Wrapper -->
       <main class="main-content w-full px-[var(--margin-x)] pb-8">
         <div class="flex items-center space-x-4 py-5 lg:py-6">
           <h2 class="text-xl font-medium text-slate-800 dark:text-navy-50 lg:text-2xl">
-            @yield('heading')
+            <?php echo $__env->yieldContent('heading'); ?>
           </h2>
-          @yield('breadcrums')
+          <?php echo $__env->yieldContent('breadcrums'); ?>
         </div>
-        @yield('content')
+        <?php echo $__env->yieldContent('content'); ?>
       </main>
     </div>
     <!--
@@ -112,6 +112,7 @@
         })
       });
     </script>
-    @stack('scripts')
+    <?php echo $__env->yieldPushContent('scripts'); ?>
   </body>
 </html>
+<?php /**PATH /media/deepx/deepx/codepaper/Platinum-Club-App/resources/views/admin/layouts/app.blade.php ENDPATH**/ ?>
