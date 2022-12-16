@@ -69,6 +69,8 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::post('/customer/setpassword/{userToken}', [\App\Http\Controllers\Admin\UserController::class, 'userPasswordUpdate'])->name('userpassword.update');
 
     Route::resource('/customers',CustomerController::class);
+    Route::resource('/incomes',\App\Http\Controllers\Customer\IncomeController::class);
+    Route::resource('/expenses',\App\Http\Controllers\Customer\ExpenseController::class);
 
     Route::get('/invoices/create',[\App\Http\Controllers\Customer\InvoiceController::class,'create'])->name('invoices.create');
     Route::put('/invoices/store',[\App\Http\Controllers\Customer\InvoiceController::class,'store'])->name('invoices.store');

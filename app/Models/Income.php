@@ -10,6 +10,13 @@ class Income extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $guarded = ['id', 'income_category_id'];
+    protected $guarded = ['id'];
+    protected $dates = ['date'];
+
+
+    public function incomeCategory()
+    {
+        return $this->belongsTo(IncomeCategory::class);
+    }
 
 }

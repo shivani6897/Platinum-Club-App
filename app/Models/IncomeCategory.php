@@ -12,4 +12,8 @@ class IncomeCategory extends Model
 
     protected $guarded = ['id'];
 
+    public function incomes()
+    {
+        return $this->hasMany('App\Models\Income','income_category_id','id');
+    }
 }
