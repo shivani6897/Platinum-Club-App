@@ -19,4 +19,9 @@ class Invoice extends Model
     {
         return $this->hasMany('App\Models\ProductLog','invoice_id','id');
     }
+
+    public function customer()
+    {
+        return $this->belongsTo('App\Models\Customer');
+    }
 }

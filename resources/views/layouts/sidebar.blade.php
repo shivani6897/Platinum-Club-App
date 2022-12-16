@@ -26,6 +26,24 @@
         <i class="fa-solid fa-house fa-2x"></i>
       </a>
 
+      <!-- Customer -->
+      <a
+        href="{{route('customers.index')}}"
+        class="flex h-11 w-11 items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:bg-navy-600 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+        x-tooltip.placement.right="'Customers'"
+      >
+        <i class="fa-solid fa-users fa-2x"></i>
+      </a>
+
+      <!-- Invoice -->
+      <a
+        href="{{route('invoices.index')}}"
+        class="flex h-11 w-11 items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:bg-navy-600 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+        x-tooltip.placement.right="'Invoices'"
+      >
+        <i class="fa-solid fa-file-invoice fa-2x"></i>
+      </a>
+
       <!-- Dashobards -->
       <a
         href="{{route('top_performers')}}"
@@ -54,13 +72,13 @@
       </a> --}}
 
       <!-- Habits -->
-        <a
+        {{-- <a
             href="{{route('habits.index')}}"
             class="flex h-11 w-11 items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
             x-tooltip.placement.right="'Habits'"
         >
             <i class="fa-solid fa-clock fa-2x"></i>
-        </a>
+        </a> --}}
 
       <!-- Events -->
       <a

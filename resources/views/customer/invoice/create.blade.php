@@ -77,7 +77,7 @@
                 required
               >
               @foreach($customers as $customer)
-                <option value="{{$customer->id}}" @selected(old('customer_id',0)==$customer->id)>{{$customer->customer_name}}</option>
+                <option value="{{$customer->id}}" @selected(old('customer_id',0)==$customer->id)>{{$customer->name}}</option>
               @endforeach
               </select>
               @error('customer_id')

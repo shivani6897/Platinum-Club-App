@@ -1,7 +1,7 @@
+@extends('layouts.app')
 
-
-<?php $__env->startSection('heading', 'Customer'); ?>
-<?php $__env->startSection('breadcrums'); ?>
+@section('heading', 'Invoices')
+@section('breadcrums')
     <div class="hidden h-full py-1 sm:flex">
         <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
     </div>
@@ -9,7 +9,7 @@
         <li class="flex items-center space-x-2">
             <a
                 class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-                href="<?php echo e(route('home')); ?>"
+                href="{{route('home')}}"
             >Dashboard</a
             >
             <svg
@@ -27,32 +27,12 @@
                     d="M9 5l7 7-7 7"
                 />
             </svg>
-            <a
-                class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-                href="<?php echo e(route('customers.index')); ?>"
-            >Customer</a
-            >
-            <svg
-                x-ignore
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-            >
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5l7 7-7 7"
-                />
-            </svg>
         </li>
-        <li>Customer</li>
+        <li>Invoices</li>
     </ul>
-<?php $__env->stopSection(); ?>
+@endsection
 
-<?php $__env->startSection('content'); ?>
+@section('content')
     <div class="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6">
         <!-- Customer Table -->
         <div>
@@ -60,7 +40,7 @@
                 <h2
                     class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"
                 >
-                    Customer Table
+                    Invoice Table
                 </h2>
                 <div class="flex">
                     <div class="flex items-center" x-data="{isInputActive:false}">
@@ -72,7 +52,7 @@
                                   onchange="tableSearch(this)"
                                   name="search"
                                   type="text"
-                                  value="<?php echo e(request('search','')); ?>"
+                                  value="{{request('search','')}}"
                               />
                             </span>
                         </label>
@@ -80,7 +60,7 @@
                     <div
                         class="inline-flex"
                     >
-                        <a href="<?php echo e(route('customers.create')); ?>" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Customers</a>
+                        <a href="{{route('invoices.create')}}" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Invoice</a>
                     </div>
                 </div>
             </div>
@@ -93,13 +73,19 @@
                                 #
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                Name
+                                Invoice Number
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                              Company's Name
+                              Customer Name
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                State
+                                Total Amount
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Payment Method
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Status
                             </th>
                             <th class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Action
@@ -107,12 +93,34 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <?php $__empty_1 = true; $__currentLoopData = $customer; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$single_customer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                        @forelse($invoices as $invoice)
                              <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"><?php echo e(((request('page',1)-1)*10+$loop->iteration)); ?></td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> <?php echo e($single_customer->customer_name); ?> </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> <?php echo e($single_customer->company_name); ?> </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > <?php echo e($single_customer->state); ?> </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->invoice_number }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->customer->name }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $invoice->total_amount}} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > 
+                                    @if($invoice->payment_method==0)
+                                    Offline
+                                    @elseif($invoice->payment_method==1)
+                                    Credit Card
+                                    @elseif($invoice->payment_method==2)
+                                    Debit Card
+                                    @else
+                                    Unknown
+                                    @endif
+                                 </td>
+                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > 
+                                    @if($invoice->status==0)
+                                    Sent
+                                    @elseif($invoice->status==1)
+                                    Succeeded
+                                    @elseif($invoice->status==2)
+                                    Pending
+                                    @else
+                                    Unknown
+                                    @endif
+                                 </td>
 
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                                         <div
@@ -150,23 +158,10 @@
                                                     <ul>
                                                         <li>
                                                             <a
-                                                                href="<?php echo e(route('customers.edit', $single_customer->id)); ?>"
+                                                                href="{{ route('invoices.pdf', $invoice->id) }}"
                                                                 class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
-                                                                Edit
+                                                                PDF
                                                             </a>
-                                                        </li>
-                                                        <li>
-                                                            <form
-                                                                class="d-inline"
-                                                                action="<?php echo e(route('customers.destroy',$single_customer->id)); ?>"
-                                                                method="POST">
-                                                                <?php echo csrf_field(); ?>
-                                                                <input name="_method" type="hidden" value="DELETE">
-                                                                <button
-                                                                    type="button"
-                                                                    onclick="customerDelete(this)"
-                                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
-                                                                >Delete</button>                                                            </form>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -174,50 +169,25 @@
                                         </div>
                                     </td>
                                 </tr>
-                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                        @empty
                             <td colspan="5" class="text-center">No record found</td>
-                        <?php endif; ?>
+                        @endforelse
                         </tbody>
                     </table>
                 </div>
                 <div class="flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5">
-                    <?php echo e($customer->links()); ?>
-
+                    {{$invoices->links()}}
                 </div>
             </div>
         </div>
-    <?php $__env->stopSection(); ?>
+    @endsection
 
-    <?php $__env->startPush('scripts'); ?>
+    @push('scripts')
         <script>
             function tableSearch(obj)
             {
                 $('<form action=""></form>').append('<input type="hidden" name="search" value="'+$(obj).val()+'">').appendTo('body').submit().remove();
             }
 
-
-            function customerDelete(obj)
-            {
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire(
-                            'Warning!',
-                            'Deleting Club',
-                            'warning'
-                        );
-                        $(obj).closest('form').submit();
-                    }
-                })
-            }
         </script>
-    <?php $__env->stopPush(); ?>
-
-<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/vagrant/web/platinum-club-app/Platinum-Club-App/resources/views/customer/customers/index.blade.php ENDPATH**/ ?>
+    @endpush

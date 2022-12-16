@@ -155,7 +155,7 @@
 
 @push('styles')
     <style>
-        .bg-tr {
+        /*.bg-tr {
             background: rgb(73, 90, 228);
             background: linear-gradient(90deg, rgba(73, 90, 228, 1) 15%, rgba(7, 24, 157, 0.9654061453683036) 93%);
         }
@@ -195,7 +195,7 @@
         .bg-pb {
             background: rgb(67, 212, 65);
             background: linear-gradient(90deg, rgba(67, 212, 65, 1) 15%, rgba(7, 133, 12, 1) 93%);
-        }
+        }*/
     </style>
 @endpush
 

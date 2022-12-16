@@ -74,6 +74,8 @@ Route::group(['middleware' => ['auth','verified']], function () {
 
     Route::resource('/leads',\App\Http\Controllers\Customer\LeadController::class);
 
+    Route::get('/invoices',[\App\Http\Controllers\Customer\InvoiceController::class,'index'])->name('invoices.index');
+    Route::get('/invoices/{invoice}/pdf',[\App\Http\Controllers\Customer\InvoiceController::class,'getPdf'])->name('invoices.pdf');
     Route::get('/invoices/create',[\App\Http\Controllers\Customer\InvoiceController::class,'create'])->name('invoices.create');
     Route::post('/invoices/store',[\App\Http\Controllers\Customer\InvoiceController::class,'store'])->name('invoices.store');
     Route::post('/customer/invoices/test/{amount}',[\App\Http\Controllers\Customer\InvoiceController::class,'paymentIntent'])->name('customer.invoices.paymentIntent');

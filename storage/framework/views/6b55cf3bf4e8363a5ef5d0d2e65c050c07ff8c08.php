@@ -84,7 +84,7 @@ unset($__errorArgs, $__bag); ?>"
                 required
               >
               <?php $__currentLoopData = $customers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $customer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <option value="<?php echo e($customer->id); ?>" <?php if(old('customer_id',0)==$customer->id): echo 'selected'; endif; ?>><?php echo e($customer->customer_name); ?></option>
+                <option value="<?php echo e($customer->id); ?>" <?php if(old('customer_id',0)==$customer->id): echo 'selected'; endif; ?>><?php echo e($customer->name); ?></option>
               <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
               </select>
               <?php $__errorArgs = ['customer_id'];

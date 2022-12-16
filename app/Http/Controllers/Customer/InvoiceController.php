@@ -10,17 +10,28 @@ use App\Models\Invoice;
 use App\Models\Payment;
 use App\Http\Requests\Customer\Invoice\StoreRequest;
 use App\Http\Requests\Customer\Invoice\UpdateRequest;
+use LaravelDaily\Invoices\Invoice AS InvoicePDF;
+use LaravelDaily\Invoices\Classes\Party;
+use LaravelDaily\Invoices\Classes\InvoiceItem;
 
 class InvoiceController extends Controller
 {
     public function index()
     {
-        dd('index');
+        $invoices = Invoice::with('customer')
+            ->when(request('search'),function($q){
+                $q->where('invoice_number','LIKE','%'.request('search').'%')
+                    ->orWhereHas('customer',function($q2){
+                        $q2->where('name','LIKE','%'.request('search').'%');
+                    })
+                    ->orWhere('total_amount','LIKE','%'.request('search').'%');
+            })->latest()->paginate(10);
+        return view('customer.invoice.index',compact('invoices'));
     }
 
     public function create()
     {
-        $customers = Customer::all(['id','customer_name']);
+        $customers = Customer::all(['id','name']);
         return view('customer.invoice.create',compact('customers'));
     }
 
@@ -123,7 +134,7 @@ class InvoiceController extends Controller
         // }
         $productLog = ProductLog::insert($productData);
 
-        return redirect()->back()->with('success','Invoice created');
+        return redirect()->route('invoices.index')->with('success','Invoice created');
     }
 
     public function paymentIntent($amount)
@@ -190,7 +201,6 @@ class InvoiceController extends Controller
               $request->payment_intent,
               []
             );
-
             // Store Details after payment success
             $invoiceData = $request->only([
                 'customer_id',
@@ -199,7 +209,7 @@ class InvoiceController extends Controller
             ]);
             $invoiceData['invoice_number'] = date('Ymd').rand(10000,99999);
             $invoiceData['total_amount'] = $paymentIntent->amount/100;
-            $invoiceData['status'] = 1;
+            $invoiceData['status'] = ($paymentIntent->status=="succeeded"?1:2);
             $invoice = Invoice::create($invoiceData);
 
             //Create Product Log and calculate total amount
@@ -228,11 +238,73 @@ class InvoiceController extends Controller
                 'gateway'=>'stripe'
             ]);
 
-            return redirect()->route('invoices.create')->with('success','Invoice Paid');
+            return redirect()->route('invoices.index')->with('success','Invoice Paid');
         }
         catch(\Exception $e)
         {
             return redirect()->route('invoices.create')->withInput($request->all())->with('error',$e->getMessage());
         }
+    }
+
+    public function getPDF(Invoice $invoice)
+    {
+        $client = new Party([
+            'name'          => 'Platinum',
+            // 'phone'         => '(520) 318-9486',
+            'custom_fields' => [
+                // 'note'        => 'IDDQD',
+                // 'business id' => '365#GG',
+            ],
+        ]);
+
+        $customer = new Party([
+            'name'          => $invoice->customer?->name,
+            'custom_fields' => [
+                'email' => $invoice->customer?->email,
+                'Contact Number' => $invoice->customer?->phone_no,
+                'GST Number' => $invoice->customer?->gst_no,
+            ],
+        ]);
+
+        $items = [];
+        foreach($invoice->product_log as $product)
+            $items[] = (new InvoiceItem())->title($product->name)->pricePerUnit($product->price)->quantity($product->qty);
+
+        $notes = [
+            'your multiline',
+            'additional notes',
+            'in regards of delivery or something else',
+        ];
+        $notes = implode("<br>", $notes);
+
+        $invoicePDF = InvoicePDF::make('receipt')
+            ->series('BIG');
+
+        if($invoice->status==1)
+            $invoicePDF = $invoicePDF->status(__('invoices::invoice.paid'));
+
+         $invoicePDF = $invoicePDF->serialNumberFormat($invoice->invoice_number)
+            ->seller($client)
+            ->buyer($customer)
+            // ->date(now()->subWeeks(3))
+            ->dateFormat('m/d/Y')
+            // ->payUntilDays(14)
+            ->currencySymbol('₹')
+            ->currencyCode('INR')
+            ->currencyFormat('{SYMBOL}{VALUE}')
+            ->currencyThousandsSeparator(',')
+            ->currencyDecimalPoint('.')
+            ->filename($invoice->invoice_number.'_invoice')
+            ->addItems($items);
+            // ->notes($notes)
+            // ->logo(public_path('vendor/invoices/sample-logo.png'))
+            // You can additionally save generated invoice to configured disk
+            // ->save('public');
+
+        $link = $invoicePDF->url();
+        // Then send email to party with link
+
+        // And return invoice itself to browser or have a different view
+        return $invoicePDF->stream();
     }
 }

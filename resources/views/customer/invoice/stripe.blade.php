@@ -45,7 +45,6 @@ async function initialize() {
     body: JSON.stringify({ items }),
   }).then((r) => r.json());
 
-  console.log(clientSecret);
 
   elements = stripe.elements({ clientSecret });
 

@@ -52,7 +52,7 @@
 </ul>
 <?php $__env->stopSection(); ?>
 <?php $__env->startSection('content'); ?>
-<div class="col-span-12 lg:col-span-8">
+    <div class="col-span-12 lg:col-span-8">
     <div
       class="grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-5 lg:gap-6"
     >

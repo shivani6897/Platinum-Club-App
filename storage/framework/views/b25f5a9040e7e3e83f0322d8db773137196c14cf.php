@@ -5,14 +5,15 @@
 
   var options = {
     chart: {
-      type: 'line'
+      type: 'bar'
     },
     series: [{
       name: 'Revenue',
       data: revenueY
     }],
     xaxis: {
-      categories: revenueX
+        // type: 'datetime',
+        categories: revenueX
     }
   }
 
@@ -24,14 +25,15 @@
 
   var options = {
     chart: {
-      type: 'line'
+      type: 'bar'
     },
     series: [{
       name: 'Ad Spends',
       data: ad_spendsY
     }],
     xaxis: {
-      categories: ad_spendsX
+        // type: 'datetime',
+        categories: ad_spendsX
     }
   }
 
@@ -43,14 +45,15 @@
 
   var options = {
     chart: {
-      type: 'line'
+      type: 'bar'
     },
     series: [{
       name: 'Overhead',
       data: overheadsY
     }],
     xaxis: {
-      categories: overheadsX
+        // type: 'datetime',
+        categories: overheadsX
     }
   }
 
@@ -62,7 +65,7 @@
 
   var options = {
     chart: {
-      type: 'line'
+      type: 'bar'
     },
     series: [{
       name: 'Profit',
@@ -75,4 +78,5 @@
 
   var chart = new ApexCharts(document.querySelector("#netProfitChart"), options);
   chart.render();
-</script><?php /**PATH /home/vagrant/web/platinum-club-app/Platinum-Club-App/resources/views/customer/business/chartJs.blade.php ENDPATH**/ ?>
+</script>
+<?php /**PATH /home/vagrant/web/platinum-club-app/Platinum-Club-App/resources/views/customer/business/chartJs.blade.php ENDPATH**/ ?>
