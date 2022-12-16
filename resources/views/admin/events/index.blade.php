@@ -189,13 +189,13 @@
                         </div>
             </div>
         </div>
-    @endsection
+@endsection
 
-    @push('scripts')
-        <script>
-            function tableSearch(obj)
-            {
-                $('<form action=""></form>').append('<input type="hidden" name="search" value="'+$(obj).val()+'">').appendTo('body').submit().remove();
-            }
-        </script>
-    @endpush
+@push('scripts')
+    <script>
+        function tableSearch(obj)
+        {
+            $('<form action=""></form>').append('<input type="hidden" name="search" value="'+$(obj).val()+'">').appendTo('body').submit().remove();
+        }
+    </script>
+@endpush

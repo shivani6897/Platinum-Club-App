@@ -10,5 +10,13 @@ class Expense extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $guarded = ['id', 'expense_category_id'];
+    protected $guarded = ['id'];
+    protected $dates = ['date'];
+
+
+    public function expenseCategory()
+    {
+        return $this->belongsTo(ExpenseCategory::class);
+    }
+
 }
