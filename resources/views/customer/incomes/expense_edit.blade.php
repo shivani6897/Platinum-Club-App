@@ -129,7 +129,7 @@
                                       placeholder="Choose Date.."
                                       name="date"
                                       type="text"
-                                      value="{{ old('date') }}"
+                                      value="{{ $expense->date }}"
                                       required
                                       autocomplete="off"
                                   />

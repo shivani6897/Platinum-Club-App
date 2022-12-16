@@ -509,14 +509,14 @@
                             <div class="col-span-12">
                                 <div class="card p-4 sm:p-5">
                                     <div class="mt-4 space-y-4">
-                                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                                             <label class="block">
                                                 <span>Generated Lead</span> <span>*</span>
                                                 <span class="relative mt-1.5 flex">
                                                     <input
                                                         class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                                         placeholder="Lead Generated"
-                                                        type="text"
+                                                        type="number"
                                                         name="lead_generated"
                                                         autocomplete="off"
                                                         value="{{ old('lead_generated') }}"
@@ -543,6 +543,22 @@
                                                 @error('converted_customer')
                                                 <span class="text-tiny+ text-error">{{$message}}</span>
                                                 @enderror
+                                            </label>
+                                            <label class="block">
+                                                <span class="required">Date</span>
+                                                <span class="relative flex">
+                                                    <input
+                                                        x-init="$el._x_flatpickr = flatpickr($el,{altInput: true,altFormat: 'd-m-Y',dateFormat: 'Y-m-d'})"
+                                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 mt-1.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                                                        float_value"
+                                                        placeholder="Choose Date.."
+                                                        name="date"
+                                                        type="text"
+                                                        value="{{ old('date') }}"
+                                                        required
+                                                        autocomplete="off"
+                                                    />
+                                                </span>
                                             </label>
                                         </div>
                                         <div class="flex justify-end space-x-2">

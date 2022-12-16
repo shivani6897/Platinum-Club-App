@@ -127,11 +127,11 @@
                                   <input
                                       x-init="$el._x_flatpickr = flatpickr($el,{altInput: true,altFormat: 'd-m-Y',dateFormat: 'Y-m-d'})"
                                       class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 mt-1.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                                    float_value"
+                                        float_value"
                                       placeholder="Choose Date.."
                                       name="date"
                                       type="text"
-                                      {{--                                              value="{{ $income->date->format('d-m-Y') }}"--}}
+                                      value="{{ $income->date}}"
                                       required
                                       autocomplete="off"
                                   />
