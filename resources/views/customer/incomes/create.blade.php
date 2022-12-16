@@ -59,7 +59,7 @@
                 />
             </svg>
         </li>
-        <li>@isset($businessStat) Edit @else Add @endisset Stats</li>
+        <li>Add Business</li>
     </ul>
 @endsection
 
@@ -315,7 +315,7 @@
                                                  @enderror"
                                             placeholder="income"
                                             name="income"
-                                            type="text"
+                                            type="number"
                                             value="{{old('income')}}"
                                             required
                                             autocomplete="off"
@@ -433,14 +433,14 @@
                                              @enderror"
                                              placeholder="expense"
                                              name="expense"
-                                             type="text"
+                                             type="number"
                                              value="{{old('expense')}}"
                                              required
                                              autocomplete="off"
                                         />
                                     </span>
                                     @error('expense')
-                                    <span class="text-tiny+ text-error">{{$message}}</span>
+                                        <span class="text-tiny+ text-error">{{$message}}</span>
                                     @enderror
                                 </label>
                                 <label class="block">

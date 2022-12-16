@@ -14,12 +14,14 @@ use Illuminate\Http\Request;
 class IncomeController extends Controller{
     public function index(Request $request)
     {
-        $income = Income::with('incomeCategory')->when(request('search'),function($q){
-            $q->where('income','LIKE', '%'.request('search').'%');
-        })->paginate(10);
+        $income = Income::with('incomeCategory')
+            ->when(request('search'),function($q){
+                $q->where('income','LIKE', '%'.request('search').'%');
+            })
+            ->paginate(10);
 
         $expense = Expense::with('expenseCategory')->when(request('search'),function($q){
-            $q->where('income','LIKE', '%'.request('search').'%');
+            $q->where('expense','LIKE', '%'.request('search').'%');
         })->paginate(10);
         return view('customer.incomes.index', compact('income','expense'));
     }
@@ -44,7 +46,7 @@ class IncomeController extends Controller{
         $incomeCateogries = IncomeCategory::all(['id','name']);
         $expenseCateogries = ExpenseCategory::all(['id','name']);
 
-        return view('customer.incomes.edit',compact('incomeCateogries','expenseCateogries','income', ));
+        return view('customer.incomes.income_edit',compact('incomeCateogries','expenseCateogries','income', ));
     }
 
     public function update(UpdateRequest $request,Income $income)

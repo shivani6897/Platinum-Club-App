@@ -7,6 +7,7 @@ use App\Http\Requests\Customer\Expense\StoreRequest;
 use App\Http\Requests\Customer\Expense\UpdateRequest;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
+use App\Models\Income;
 use App\Models\IncomeCategory;
 use Illuminate\Http\Request;
 
@@ -41,7 +42,7 @@ class ExpenseController extends Controller
         $expenseCateogries = ExpenseCategory::all(['id','name']);
         $incomeCateogries = IncomeCategory::all(['id','name']);
 
-        return view('customer.incomes.edit',compact('expenseCateogries','incomeCateogries','income', 'expense'));
+        return view('customer.incomes.expense_edit',compact('expenseCateogries','incomeCateogries', 'expense'));
     }
 
     public function update(UpdateRequest $request,Expense $expense)

@@ -82,27 +82,27 @@
                                         >
                                             Income Table
                                         </h2>
-{{--                                        <div class="flex">--}}
-{{--                                            <div class="flex items-center" x-data="{isInputActive:false}">--}}
-{{--                                                <label class="block">--}}
-{{--                                                    <span class="relative mr-1.5 flex">--}}
-{{--                                                        <input--}}
-{{--                                                          class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"--}}
-{{--                                                          placeholder="Search here..."--}}
-{{--                                                          onchange="tableSearch(this)"--}}
-{{--                                                          name="search"--}}
-{{--                                                          type="text"--}}
-{{--                                                          value="{{request('search','')}}"--}}
-{{--                                                        />--}}
-{{--                                                    </span>--}}
-{{--                                                </label>--}}
-{{--                                            </div>--}}
-{{--                                            <div--}}
-{{--                                                class="inline-flex"--}}
-{{--                                            >--}}
-{{--                                                <a href="{{route('incomes.create')}}" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Income</a>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
+                                        <div class="flex">
+                                            <div class="flex items-center" x-data="{isInputActive:false}">
+                                                <label class="block">
+                                                    <span class="relative mr-1.5 flex">
+                                                        <input
+                                                          class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                          placeholder="Search here..."
+                                                          onchange="tableSearch(this)"
+                                                          name="search"
+                                                          type="text"
+                                                          value="{{request('search','')}}"
+                                                        />
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <div
+                                                class="inline-flex"
+                                            >
+                                                <a href="{{route('incomes.create')}}" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Income/Expense</a>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="card mt-3">
                                         <div
@@ -403,4 +403,11 @@
                     })
                 }
             </script>
+            <script>
+                function tableSearch(obj)
+                {
+                    $('<form action=""></form>').append('<input type="hidden" name="search" value="'+$(obj).val()+'">').appendTo('body').submit().remove();
+                }
+            </script>
+
     @endpush
