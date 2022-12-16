@@ -62,7 +62,7 @@
       >
         Customer Details
       </p>
-      <form method="post" action="{{route('invoices.store')}}">
+      <form id="createInvoiceForm" method="post" action="{{route('invoices.store')}}">
         @csrf
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label class="block">
@@ -103,6 +103,8 @@
           </div>
 
           <div id="products_div">
+            @forelse(old('product_name',[]) as $data)
+            @if($loop->first)
             <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
               <label class="block sm:col-span-6">
                 <span>Product Name</span>
@@ -115,7 +117,7 @@
                     placeholder="Product Name"
                     name="product_name[]"
                     type="text"
-                    value="{{old('product_name')}}"
+                    value="{{old('product_name')[0]}}"
                     required
                   />
                 </span>
@@ -136,7 +138,7 @@
                     type="number"
                     step="1"
                     min="1"
-                    value="{{old('product_qty')}}"
+                    value="{{old('product_qty')[0]}}"
                     required
                   />
                 </span>
@@ -157,7 +159,7 @@
                     type="number"
                     step="0.01"
                     min="1"
-                    value="{{old('product_price')}}"
+                    value="{{old('product_price')[0]}}"
                     required
                   />
                 </span>
@@ -166,6 +168,126 @@
                 @enderror
               </label>
             </div>
+            @else
+            <div class="product_div grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
+              <label class="block sm:col-span-6">
+                <span>Product Name</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                    placeholder="Product Name"
+                    name="product_name[]"
+                    type="text"
+                    value="{{old('product_name')[$loop->index]}}"
+                    required
+                  />
+                </span>
+              </label>
+              <label class="block sm:col-span-2">
+                <span>Product Qty</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                    placeholder="Product Qty"
+                    name="product_qty[]"
+                    type="number"
+                    step="1"
+                    min="1"
+                    value="{{old('product_qty')[$loop->index]}}"
+                    required
+                  />
+                </span>
+              </label>
+              <label class="block sm:col-span-2">
+                <span>Product Price</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                    placeholder="Product Price"
+                    name="product_price[]"
+                    type="number"
+                    step="0.01"
+                    min="1"
+                    value="{{old('product_price')[$loop->index]}}"
+                    required
+                  />
+                </span>
+              </label>
+              <div class="sm:col-span-2 flex justify-end items-end">
+                <button
+                  class="btn space-x-2 bg-error font-medium text-white hover:bg-error-focus focus:bg-error-focus active:bg-error-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90 text-end"
+                  type="button"
+                  onclick="deleteProduct(this)"
+                >
+                  <span>Delete</span>
+                </button>
+            </div>
+            @endif
+            @empty
+            <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
+              <label class="block sm:col-span-6">
+                <span>Product Name</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    @error('product_name')
+                    border-error
+                    @enderror"
+                    placeholder="Product Name"
+                    name="product_name[]"
+                    type="text"
+                    value=""
+                    required
+                  />
+                </span>
+                @error('product_name')
+                  <span class="text-tiny+ text-error">{{$message}}</span>
+                @enderror
+              </label>
+              <label class="block sm:col-span-2">
+                <span>Product Qty</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    @error('product_qty')
+                    border-error
+                    @enderror"
+                    placeholder="Product Qty"
+                    name="product_qty[]"
+                    type="number"
+                    step="1"
+                    min="1"
+                    value=""
+                    required
+                  />
+                </span>
+                @error('product_qty')
+                  <span class="text-tiny+ text-error">{{$message}}</span>
+                @enderror
+              </label>
+              <label class="block sm:col-span-4">
+                <span>Product Price</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    @error('product_price')
+                    border-error
+                    @enderror"
+                    placeholder="Product Price"
+                    name="product_price[]"
+                    type="number"
+                    step="0.01"
+                    min="1"
+                    value=""
+                    required
+                  />
+                </span>
+                @error('product_price')
+                  <span class="text-tiny+ text-error">{{$message}}</span>
+                @enderror
+              </label>
+            </div>
+            @endforelse
           </div>
 
           <p class="text-base font-medium text-slate-700 dark:text-navy-100">
@@ -183,7 +305,7 @@
                 @enderror"
                 placeholder="Invoice Description"
                 name="description"
-                required
+                
               >{{old('description')}}</textarea>
             </span>
             @error('product_name')
@@ -230,8 +352,9 @@
           </label>
 
           <div id="payment_fields" style="display: none;">
+            {{-- <div id="stripeForm"></div> --}}
             <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-4">
-              <label class="block mt-2 sm:col-span-2">
+              {{-- <label class="block mt-2 sm:col-span-2">
                 <span>Name on card</span>
                 <span class="relative mt-1.5 flex">
                   <input
@@ -243,7 +366,7 @@
                     name="name_on_card"
                     type="text"
                     value="{{old('name_on_card')}}"
-                    required
+                    
                   />
                 </span>
                 @error('name_on_card')
@@ -266,7 +389,7 @@
                     name="card_number"
                     type="text"
                     value="{{old('card_number')}}"
-                    required
+                    
                   />
                 </span>
                 @error('card_number')
@@ -290,7 +413,7 @@
                     name="expiry_date"
                     type="text"
                     value="{{old('expiry_date')}}"
-                    required
+                    
                   />
                 </span>
                 @error('expiry_date')
@@ -311,19 +434,19 @@
                     min="0"
                     max="9999"
                     value="{{old('security_code')}}"
-                    required
+                    
                   />
                 </span>
                 @error('security_code')
                   <span class="text-tiny+ text-error">{{$message}}</span>
                 @enderror
-              </label>
+              </label> --}}
             </div>
           </div>
 
           <div class="flex justify-end mt-2 space-x-2">
             <button
-              class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+              class="pay-btn btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
               type="submit"
             >
               <span>Submit</span>
@@ -337,6 +460,7 @@
 @endsection
 
 @push('scripts')
+{{-- <script src="https://js.stripe.com/v3/"></script> --}}
 <script>
   function addProduct()
   {
@@ -396,12 +520,35 @@
     $(obj).closest('.product_div').remove();
   }
   $(document).ready(function(){
-    $('input[name="payment_method"]').click(function(e){
-      if($(this).val()==0)
+    $('input[name="payment_method"]').change(function(e){
+      if($('input[name="payment_method"]:checked').val()==0)
         $('#payment_fields').slideUp('slow');
       else
         $('#payment_fields').slideDown('slow');
-    });
+    }).trigger('change');
   });
+
+// const stripe = Stripe("{{config('payment.STRIPE_PUBLIC')}}");
+// // Fetches a payment intent and captures the client secret
+// async function initialize() {
+//   const { clientSecret } = await fetch("/customer/invoices/test", {
+//     method: "post",
+//     headers: { "Content-Type": "application/json" },
+//     body: {},
+//   }).then((r) => r.json());
+
+//   console.log(clientSecret);
+
+//   elements = stripe.elements({ clientSecret });
+
+//   const paymentElementOptions = {
+//     layout: "tabs",
+//   };
+
+//   const paymentElement = elements.create("payment", paymentElementOptions);
+//   paymentElement.mount("#stripeForm");
+// }
+
+// initialize();
 </script>
 @endpush
