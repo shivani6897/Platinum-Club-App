@@ -71,5 +71,5 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::resource('/customers',CustomerController::class);
 
     Route::get('/invoices/create',[\App\Http\Controllers\Customer\InvoiceController::class,'create'])->name('invoices.create');
-    Route::put('/invoices/store',[\App\Http\Controllers\Customer\InvoiceController::class,'store'])->name('invoices.store');
+    Route::post('/invoices/store',[\App\Http\Controllers\Customer\InvoiceController::class,'store'])->name('invoices.store');
 });

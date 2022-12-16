@@ -1,6 +1,6 @@
 
 
-<?php $__env->startSection('heading', 'Reminder Create'); ?>
+<?php $__env->startSection('heading', 'Invoice Create'); ?>
 
 <?php $__env->startSection('breadcrums'); ?>
 <div class="hidden h-full py-1 sm:flex">
@@ -60,7 +60,7 @@
       <p
         class="text-base font-medium text-slate-700 dark:text-navy-100"
       >
-        Invoice Create
+        Customer Details
       </p>
       <form method="post" action="<?php echo e(route('invoices.store')); ?>">
         <?php echo csrf_field(); ?>
@@ -98,111 +98,136 @@ endif;
 unset($__errorArgs, $__bag); ?>
             </label>
           </div>
-          <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
-            <label class="block sm:col-span-6">
-              <span>Product Name</span>
-              <span class="relative mt-1.5 flex">
-                <input
-                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                  <?php $__errorArgs = ['product_name'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                  border-error
-                  <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>"
-                  placeholder="Product Name"
-                  name="product_name"
-                  type="text"
-                  value="<?php echo e(old('product_name')); ?>"
-                  required
-                />
-              </span>
-              <?php $__errorArgs = ['product_name'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
-              <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-            </label>
-            <label class="block sm:col-span-2">
-              <span>Product Qty</span>
-              <span class="relative mt-1.5 flex">
-                <input
-                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                  <?php $__errorArgs = ['product_qty'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                  border-error
-                  <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>"
-                  placeholder="Product Qty"
-                  name="product_name"
-                  type="number"
-                  step="1"
-                  min="1"
-                  value="<?php echo e(old('product_qty')); ?>"
-                  required
-                />
-              </span>
-              <?php $__errorArgs = ['product_qty'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
-              <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-            </label>
-            <label class="block sm:col-span-4">
-              <span>Product Price</span>
-              <span class="relative mt-1.5 flex">
-                <input
-                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                  <?php $__errorArgs = ['product_price'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                  border-error
-                  <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>"
-                  placeholder="Product Price"
-                  name="product_price"
-                  type="number"
-                  step="0.01"
-                  min="1"
-                  value="<?php echo e(old('product_price')); ?>"
-                  required
-                />
-              </span>
-              <?php $__errorArgs = ['product_name'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?>
-                <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
-              <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?>
-            </label>
+
+          <div class="grid mt-2 grid-cols-1 mt-5 gap-4 sm:grid-cols-12">
+            <div class="sm:col-span-8">
+              <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+                Product Details
+              </p>
+            </div>
+            <div class="sm:col-span-4 justify-end flex">
+              <button
+                class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90 text-end"
+                type="button"
+                onclick="addProduct()"
+              >
+                <span>Add</span>
+              </button>
+            </div>
           </div>
+
+          <div id="products_div">
+            <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
+              <label class="block sm:col-span-6">
+                <span>Product Name</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    <?php $__errorArgs = ['product_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    border-error
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                    placeholder="Product Name"
+                    name="product_name[]"
+                    type="text"
+                    value="<?php echo e(old('product_name')); ?>"
+                    required
+                  />
+                </span>
+                <?php $__errorArgs = ['product_name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                  <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+              </label>
+              <label class="block sm:col-span-2">
+                <span>Product Qty</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    <?php $__errorArgs = ['product_qty'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    border-error
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                    placeholder="Product Qty"
+                    name="product_qty[]"
+                    type="number"
+                    step="1"
+                    min="1"
+                    value="<?php echo e(old('product_qty')); ?>"
+                    required
+                  />
+                </span>
+                <?php $__errorArgs = ['product_qty'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                  <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+              </label>
+              <label class="block sm:col-span-4">
+                <span>Product Price</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    <?php $__errorArgs = ['product_price'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    border-error
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
+                    placeholder="Product Price"
+                    name="product_price[]"
+                    type="number"
+                    step="0.01"
+                    min="1"
+                    value="<?php echo e(old('product_price')); ?>"
+                    required
+                  />
+                </span>
+                <?php $__errorArgs = ['product_price'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                  <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+              </label>
+            </div>
+          </div>
+
+          <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+            Payment Details
+          </p>
+
 
           <label class="block mt-2 sm:col-span-4">
             <span>Invoice Description</span>
@@ -447,6 +472,63 @@ unset($__errorArgs, $__bag); ?>
 
 <?php $__env->startPush('scripts'); ?>
 <script>
+  function addProduct()
+  {
+    $('#products_div').append(`<div class="product_div grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
+              <label class="block sm:col-span-6">
+                <span>Product Name</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                    placeholder="Product Name"
+                    name="product_name[]"
+                    type="text"
+                    required
+                  />
+                </span>
+              </label>
+              <label class="block sm:col-span-2">
+                <span>Product Qty</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                    placeholder="Product Qty"
+                    name="product_qty[]"
+                    type="number"
+                    step="1"
+                    min="1"
+                    required
+                  />
+                </span>
+              </label>
+              <label class="block sm:col-span-2">
+                <span>Product Price</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                    placeholder="Product Price"
+                    name="product_price[]"
+                    type="number"
+                    step="0.01"
+                    min="1"
+                    required
+                  />
+                </span>
+              </label>
+              <div class="sm:col-span-2 flex justify-end items-end">
+                <button
+                  class="btn space-x-2 bg-error font-medium text-white hover:bg-error-focus focus:bg-error-focus active:bg-error-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90 text-end"
+                  type="button"
+                  onclick="deleteProduct(this)"
+                >
+                  <span>Delete</span>
+                </button>
+            </div>`);
+  }
+  function deleteProduct(obj)
+  {
+    $(obj).closest('.product_div').remove();
+  }
   $(document).ready(function(){
     $('input[name="payment_method"]').click(function(e){
       if($(this).val()==0)

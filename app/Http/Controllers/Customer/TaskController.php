@@ -97,7 +97,7 @@ class TaskController extends Controller
                 $data[] = [
                     'event_id'=>$re->id,
                     'event_date'=>date("Y-m-d", strtotime($date)),
-                    'event_title'=>$re->name.' at '.$re->task_time->format('h:i A'),
+                    'event_title'=>$re->name,
                     'event_theme'=>$re->completed==1?'success':'info',
                 ];
             }

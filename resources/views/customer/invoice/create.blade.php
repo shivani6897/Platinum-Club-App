@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('heading', 'Reminder Create')
+@section('heading', 'Invoice Create')
 
 @section('breadcrums')
 <div class="hidden h-full py-1 sm:flex">
@@ -60,7 +60,7 @@
       <p
         class="text-base font-medium text-slate-700 dark:text-navy-100"
       >
-        Invoice Create
+        Customer Details
       </p>
       <form method="post" action="{{route('invoices.store')}}">
         @csrf
@@ -84,69 +84,93 @@
               @enderror
             </label>
           </div>
-          <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
-            <label class="block sm:col-span-6">
-              <span>Product Name</span>
-              <span class="relative mt-1.5 flex">
-                <input
-                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                  @error('product_name')
-                  border-error
-                  @enderror"
-                  placeholder="Product Name"
-                  name="product_name"
-                  type="text"
-                  value="{{old('product_name')}}"
-                  required
-                />
-              </span>
-              @error('product_name')
-                <span class="text-tiny+ text-error">{{$message}}</span>
-              @enderror
-            </label>
-            <label class="block sm:col-span-2">
-              <span>Product Qty</span>
-              <span class="relative mt-1.5 flex">
-                <input
-                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                  @error('product_qty')
-                  border-error
-                  @enderror"
-                  placeholder="Product Qty"
-                  name="product_name"
-                  type="number"
-                  step="1"
-                  min="1"
-                  value="{{old('product_qty')}}"
-                  required
-                />
-              </span>
-              @error('product_qty')
-                <span class="text-tiny+ text-error">{{$message}}</span>
-              @enderror
-            </label>
-            <label class="block sm:col-span-4">
-              <span>Product Price</span>
-              <span class="relative mt-1.5 flex">
-                <input
-                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                  @error('product_price')
-                  border-error
-                  @enderror"
-                  placeholder="Product Price"
-                  name="product_price"
-                  type="number"
-                  step="0.01"
-                  min="1"
-                  value="{{old('product_price')}}"
-                  required
-                />
-              </span>
-              @error('product_name')
-                <span class="text-tiny+ text-error">{{$message}}</span>
-              @enderror
-            </label>
+
+          <div class="grid mt-2 grid-cols-1 mt-5 gap-4 sm:grid-cols-12">
+            <div class="sm:col-span-8">
+              <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+                Product Details
+              </p>
+            </div>
+            <div class="sm:col-span-4 justify-end flex">
+              <button
+                class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90 text-end"
+                type="button"
+                onclick="addProduct()"
+              >
+                <span>Add</span>
+              </button>
+            </div>
           </div>
+
+          <div id="products_div">
+            <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
+              <label class="block sm:col-span-6">
+                <span>Product Name</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    @error('product_name')
+                    border-error
+                    @enderror"
+                    placeholder="Product Name"
+                    name="product_name[]"
+                    type="text"
+                    value="{{old('product_name')}}"
+                    required
+                  />
+                </span>
+                @error('product_name')
+                  <span class="text-tiny+ text-error">{{$message}}</span>
+                @enderror
+              </label>
+              <label class="block sm:col-span-2">
+                <span>Product Qty</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    @error('product_qty')
+                    border-error
+                    @enderror"
+                    placeholder="Product Qty"
+                    name="product_qty[]"
+                    type="number"
+                    step="1"
+                    min="1"
+                    value="{{old('product_qty')}}"
+                    required
+                  />
+                </span>
+                @error('product_qty')
+                  <span class="text-tiny+ text-error">{{$message}}</span>
+                @enderror
+              </label>
+              <label class="block sm:col-span-4">
+                <span>Product Price</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    @error('product_price')
+                    border-error
+                    @enderror"
+                    placeholder="Product Price"
+                    name="product_price[]"
+                    type="number"
+                    step="0.01"
+                    min="1"
+                    value="{{old('product_price')}}"
+                    required
+                  />
+                </span>
+                @error('product_price')
+                  <span class="text-tiny+ text-error">{{$message}}</span>
+                @enderror
+              </label>
+            </div>
+          </div>
+
+          <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+            Payment Details
+          </p>
 
           <label class="block mt-2 sm:col-span-4">
             <span>Invoice Description</span>
@@ -314,6 +338,63 @@
 
 @push('scripts')
 <script>
+  function addProduct()
+  {
+    $('#products_div').append(`<div class="product_div grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
+              <label class="block sm:col-span-6">
+                <span>Product Name</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                    placeholder="Product Name"
+                    name="product_name[]"
+                    type="text"
+                    required
+                  />
+                </span>
+              </label>
+              <label class="block sm:col-span-2">
+                <span>Product Qty</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                    placeholder="Product Qty"
+                    name="product_qty[]"
+                    type="number"
+                    step="1"
+                    min="1"
+                    required
+                  />
+                </span>
+              </label>
+              <label class="block sm:col-span-2">
+                <span>Product Price</span>
+                <span class="relative mt-1.5 flex">
+                  <input
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                    placeholder="Product Price"
+                    name="product_price[]"
+                    type="number"
+                    step="0.01"
+                    min="1"
+                    required
+                  />
+                </span>
+              </label>
+              <div class="sm:col-span-2 flex justify-end items-end">
+                <button
+                  class="btn space-x-2 bg-error font-medium text-white hover:bg-error-focus focus:bg-error-focus active:bg-error-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90 text-end"
+                  type="button"
+                  onclick="deleteProduct(this)"
+                >
+                  <span>Delete</span>
+                </button>
+            </div>`);
+  }
+  function deleteProduct(obj)
+  {
+    $(obj).closest('.product_div').remove();
+  }
   $(document).ready(function(){
     $('input[name="payment_method"]').click(function(e){
       if($(this).val()==0)
