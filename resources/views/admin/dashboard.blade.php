@@ -68,7 +68,7 @@
                 <div class="col-span-12 px-4 sm:px-5">
                     <div class="mt-6 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-4 gap-y-8">
                         <div
-                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-blue-500 to-red-focus p-3.5">
+                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-blue-500 to-red-focus p-3.5 bg-tr">
                             <p class="text-xs uppercase text-sky-100">Total Revenue</p>
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white"><i
@@ -79,7 +79,7 @@
                         </div>
 
                         <div
-                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 p-3.5">
+                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 p-3.5 bg-as">
                             <p class="text-xs uppercase text-sky-100">Ad spend</p>
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white"><i
@@ -90,7 +90,7 @@
                         </div>
 
                         <div
-                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 p-3.5">
+                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 p-3.5 bg-oh">
                             <p class="text-xs uppercase text-sky-100">Overheads</p>
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white"><i
@@ -101,7 +101,7 @@
                         </div>
 
                         <div
-                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-indigo-400 p-3.5">
+                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-indigo-400 p-3.5 bg-np">
                             <p class="text-xs uppercase text-sky-100">Net Profit</p>
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white"><i
@@ -112,7 +112,7 @@
                         </div>
 
                         <div
-                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 p-3.5">
+                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 p-3.5 bg-lg">
                             <p class="text-xs uppercase text-sky-100">Leads Generated</p>
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white"><i
@@ -123,7 +123,7 @@
                         </div>
 
                         <div
-                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 p-3.5">
+                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-amber-400 to-orange-600 p-3.5 bg-cpl">
                             <p class="text-xs uppercase text-sky-100">Cost per lead</p>
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white"><i
@@ -134,7 +134,7 @@
                         </div>
 
                         <div
-                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-info to-info-focus p-3.5">
+                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-info to-info-focus p-3.5 bg-ctc">
                             <p class="text-xs uppercase text-sky-100">Converted to Customers</p>
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white">{{ number_format($stat->paid_customer) }}
@@ -144,7 +144,7 @@
                         </div>
 
                         <div
-                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-3.5">
+                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-3.5 bg-tc">
                             <p class="text-xs uppercase text-sky-100">Total Customers</p>
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white">{{ number_format($stat->total_customer) }}
@@ -154,7 +154,7 @@
                         </div>
 
                         <div
-                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-3.5">
+                            class="relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-3.5 bg-pb">
                             <p class="text-xs uppercase text-sky-100">Profitability%</p>
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white">
@@ -176,6 +176,51 @@
     </div>
 @endsection
 
+@push('styles')
+    <style>
+        .bg-tr {
+            background: rgb(73, 90, 228);
+            background: linear-gradient(90deg, rgba(73, 90, 228, 1) 15%, rgba(7, 24, 157, 0.9654061453683036) 93%);
+        }
+
+        .bg-as {
+            background: rgb(187, 4, 4);
+            background: linear-gradient(90deg, rgba(187, 4, 4, 0.9542016635755864) 16%, rgba(247, 63, 63, 1) 86%);
+        }
+
+        .bg-oh {
+            background: rgb(240, 44, 44);
+            background: linear-gradient(90deg, rgba(240, 44, 44, 1) 22%, rgba(187, 4, 4, 0.9542016635755864) 93%);
+        }
+
+        .bg-np {
+            background: rgb(4, 135, 3);
+            background: linear-gradient(90deg, rgba(4, 135, 3, 1) 37%, rgba(49, 230, 44, 0.9766106271610207) 93%);
+        }
+
+        .bg-lg {
+            background: rgb(8, 26, 171);
+            background: linear-gradient(90deg, rgba(8, 26, 171, 1) 37%, rgba(34, 58, 241, 0.9514005431274072) 93%);
+        }
+
+        .bg-cpl {}
+
+        .bg-ctc {
+            background: rgb(104, 159, 56);
+            background: linear-gradient(90deg, rgba(104, 159, 56, 1) 15%, rgba(67, 143, 0, 0.9457983022310487) 93%);
+        }
+
+        .bg-tc {
+            background: rgb(240, 68, 124);
+            background: linear-gradient(90deg, rgba(240, 68, 124, 1) 15%, rgba(161, 5, 56, 1) 93%);
+        }
+
+        .bg-pb {
+            background: rgb(67, 212, 65);
+            background: linear-gradient(90deg, rgba(67, 212, 65, 1) 15%, rgba(7, 133, 12, 1) 93%);
+        }
+    </style>
+@endpush
 
 @push('scripts')
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
