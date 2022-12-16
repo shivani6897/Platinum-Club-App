@@ -139,7 +139,11 @@
                                                             method="POST">
                                                             @csrf
                                                             <input name="_method" type="hidden" value="DELETE">
-                                                            <button class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">Delete</button>
+                                                            <button
+                                                                type="button"
+                                                                onclick="clubDelete(this)"
+                                                                class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
+                                                            >Delete</button>
                                                         </form>
                                                     </li>
                                                 </ul>
@@ -165,6 +169,33 @@
 @endsection
 
 @push('scripts')
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function clubDelete(obj)
+        {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        'Warning!',
+                        'Deleting Club',
+                        'warning'
+                    );
+                    $(obj).closest('form').submit();
+                }
+            })
+        }
+    </script>
+
     <script>
         function tableSearch(obj)
         {

@@ -205,7 +205,7 @@
                               @csrf
                               <button
                                 type="button"
-                                onclick="taskDelete(this)"
+                                onclick="userDelete(this)"
                                 class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
                                 >Delete</button>
                               </form>
@@ -326,7 +326,7 @@
   {
     $('<form action=""></form>').append('<input type="hidden" name="search" value="'+$(obj).val()+'">').appendTo('body').submit().remove();
   }
-  function taskDelete(obj)
+  function userDelete(obj)
   {
     Swal.fire({
       title: 'Are you sure?',
