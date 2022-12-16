@@ -74,11 +74,11 @@
                                     type="text"
                                     name="customer_name"
                                     autocomplete="off"
-                                    value="<?php echo e(old('customer_name')); ?>"
+                                    value="<?php echo e(old('name')); ?>"
                                     required
                                 />
                             </span>
-                                <?php $__errorArgs = ['customer_name'];
+                                <?php $__errorArgs = ['name'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -119,9 +119,13 @@ unset($__errorArgs, $__bag); ?>
                                 <span>Phone Number</span> <span>*</span>
                                 <span class="relative mt-1.5 flex">
                                 <input
+                                    x-input-mask="{
+                                          numeric:true,
+                                          blocks: [3, 3, 4],
+                                      }"
                                     class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                     placeholder="Customer's Phone Number"
-                                    type="number"
+                                    type="text"
                                     name="phone_no"
                                     autocomplete="off"
                                     value="<?php echo e(old('phone_no')); ?>"
@@ -166,7 +170,7 @@ unset($__errorArgs, $__bag); ?>
                         </div>
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <label class="block">
-                                <span>Company name</span> <span>*</span>
+                                <span>Company name</span>
                                 <span class="relative mt-1.5 flex">
                                     <input
                                         class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
@@ -199,7 +203,7 @@ unset($__errorArgs, $__bag); ?>
                                             name="gst_no"
                                             autocomplete="off"
                                             value="<?php echo e(old('gst_no')); ?>"
-                                            required
+                                            
                                         />
                                     </span>
                                     <?php $__errorArgs = ['gst_no'];
@@ -216,7 +220,7 @@ unset($__errorArgs, $__bag); ?>
                         </div>
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
                             <label class="block">
-                                <span>Company's Address</span> <span>*</span>
+                                <span>Company's Address</span>
                                 <span class="relative mt-1.5 flex">
                                     <input
                                         class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
@@ -225,7 +229,7 @@ unset($__errorArgs, $__bag); ?>
                                         name="company_address"
                                         autocomplete="off"
                                         value="<?php echo e(old('company_address')); ?>"
-                                        required
+                                        
                                     />
                                 </span>
                                 <?php $__errorArgs = ['company_address'];

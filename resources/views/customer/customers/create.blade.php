@@ -74,11 +74,11 @@
                                     type="text"
                                     name="customer_name"
                                     autocomplete="off"
-                                    value="{{ old('customer_name') }}"
+                                    value="{{ old('name') }}"
                                     required
                                 />
                             </span>
-                                @error('customer_name')
+                                @error('name')
                                 <span class="text-tiny+ text-error">{{$message}}</span>
                                 @enderror
                             </label>
@@ -105,9 +105,13 @@
                                 <span>Phone Number</span> <span>*</span>
                                 <span class="relative mt-1.5 flex">
                                 <input
+                                    x-input-mask="{
+                                          numeric:true,
+                                          blocks: [3, 3, 4],
+                                      }"
                                     class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                     placeholder="Customer's Phone Number"
-                                    type="number"
+                                    type="text"
                                     name="phone_no"
                                     autocomplete="off"
                                     value="{{ old('phone_no') }}"
@@ -138,7 +142,7 @@
                         </div>
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <label class="block">
-                                <span>Company name</span> <span>*</span>
+                                <span>Company name</span>
                                 <span class="relative mt-1.5 flex">
                                     <input
                                         class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
@@ -164,7 +168,7 @@
                                             name="gst_no"
                                             autocomplete="off"
                                             value="{{ old('gst_no') }}"
-                                            required
+                                            
                                         />
                                     </span>
                                     @error('gst_no')
@@ -174,7 +178,7 @@
                         </div>
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-1">
                             <label class="block">
-                                <span>Company's Address</span> <span>*</span>
+                                <span>Company's Address</span>
                                 <span class="relative mt-1.5 flex">
                                     <input
                                         class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
@@ -183,7 +187,7 @@
                                         name="company_address"
                                         autocomplete="off"
                                         value="{{ old('company_address') }}"
-                                        required
+                                        
                                     />
                                 </span>
                                 @error('company_address')

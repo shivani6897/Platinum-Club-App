@@ -40,7 +40,7 @@
             </svg>
             <a
                 class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-                href="{{url('business')}}"
+                href="{{route('incomes.index')}}"
             >Business</a
             >
             <svg
