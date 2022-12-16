@@ -76,36 +76,6 @@ Route::group(['middleware' => ['auth','verified']], function () {
 
     Route::get('/invoices/create',[\App\Http\Controllers\Customer\InvoiceController::class,'create'])->name('invoices.create');
     Route::post('/invoices/store',[\App\Http\Controllers\Customer\InvoiceController::class,'store'])->name('invoices.store');
-    Route::match(['get', 'post'], '/customer/invoices/test', function () {
-            // This is your test secret API key.
-\Stripe\Stripe::setApiKey('sk_test_51MEoesSDgiDh1TyaqR6vKw3H0u5PcfZikyPWsDE2ifD7BFh1uUlbDJFAskn6PYyUYZYQzoHgCpb5RRHOr36Gn07B00pW8h2fvq');
-
-
-header('Content-Type: application/json');
-
-try {
-    // retrieve JSON from POST body
-    $jsonStr = file_get_contents('php://input');
-    $jsonObj = json_decode($jsonStr);
-
-    // Create a PaymentIntent with amount and currency
-    $paymentIntent = \Stripe\PaymentIntent::create([
-        'amount' => 250,
-        'currency' => 'inr',
-        'automatic_payment_methods' => [
-            'enabled' => true,
-        ],
-    ]);
-
-    $output = [
-        'clientSecret' => $paymentIntent->client_secret,
-    ];
-
-    echo json_encode($output);
-} catch (Error $e) {
-    http_response_code(500);
-    echo json_encode(['error' => $e->getMessage()]);
-}
-
-        });
+    Route::post('/customer/invoices/test/{amount}',[\App\Http\Controllers\Customer\InvoiceController::class,'paymentIntent'])->name('customer.invoices.paymentIntent');
+    Route::get('/customer/invoices/stripe/success',[\App\Http\Controllers\Customer\InvoiceController::class,'stripeSuccess'])->name('customer.invoices.stripe.success');
 });
