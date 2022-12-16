@@ -29,7 +29,8 @@ class UpdateRequest extends FormRequest
             'phone_no'=>'required',
             'last_name' => 'required', 'string', 'max:255',
             'city' => 'required', 'string', 'max:255',
-            'email' => 'required', 'email', 'max:255',
+            'email' => 'nullable',
+//            'email' => 'nullable|unique:users,email,'.$users->id.',id,deleted_at,NULL',
 //            'password' => 'required', 'string', 'min:8', 'confirmed',
         ];
     }
