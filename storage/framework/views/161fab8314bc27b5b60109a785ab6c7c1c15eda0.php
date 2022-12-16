@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('heading', 'Reminder Create')
 
-@section('breadcrums')
+<?php $__env->startSection('heading', 'Reminder Edit'); ?>
+
+<?php $__env->startSection('breadcrums'); ?>
 <div class="hidden h-full py-1 sm:flex">
   <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
 </div>
@@ -10,7 +10,7 @@
   <li class="flex items-center space-x-2">
     <a
       class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-      href="{{route('home')}}"
+      href="<?php echo e(route('home')); ?>"
       >Dashboard</a
     >
     <svg
@@ -30,7 +30,7 @@
     </svg>
     <a
       class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-      href="{{route('tasks.index')}}"
+      href="<?php echo e(route('tasks.index')); ?>"
       >Reminders</a
     >
     <svg
@@ -49,59 +49,88 @@
       />
     </svg>
   </li>
-  <li>Create</li>
+  <li>Edit</li>
 </ul>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="card grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
   <div class="col-span-12">
     <div class=" p-4 sm:p-5">
       <p
         class="text-base font-medium text-slate-700 dark:text-navy-100"
       >
-        Reminder Create
+        Reminder Edit
       </p>
-      <form method="post" action="{{route('tasks.store')}}">
-        @csrf
+      <form method="post" action="<?php echo e(route('tasks.update',$task->id)); ?>">
+        <?php echo csrf_field(); ?>
+        <?php echo method_field('put'); ?>
         <div class="mt-4 space-y-4">
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <label class="block">
-              <span>Reminder Cateogry</span>
+              <span>Reminder Category</span>
               <select
-                class="select2 form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
-                @error('task_category_id')
+                class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
+                <?php $__errorArgs = ['task_category_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                 border-error
-                @enderror"
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                 name="task_category_id"
                 required
               >
-              @foreach($categories as $category)
-                <option value="{{$category->id}}" @selected(old('task_category_id',0)==$category->id)>{{$category->name}}</option>
-              @endforeach
+              <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <option value="<?php echo e($category->id); ?>" <?php if($task->task_category_id==$category->id): echo 'selected'; endif; ?>><?php echo e($category->name); ?></option>
+              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
               </select>
-              @error('task_category_id')
-                <span class="text-tiny+ text-error">{{$message}}</span>
-              @enderror
+              <?php $__errorArgs = ['task_category_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+              <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
             </label>
             <label class="block">
               <span>Name</span>
               <span class="relative mt-1.5 flex">
                 <input
                   class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                  @error('name')
+                  <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                   border-error
-                  @enderror"
+                  <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                   placeholder="Task Name"
                   name="name"
                   type="text"
-                  value="{{old('name')}}"
+                  value="<?php echo e($task->name); ?>"
                   required
                 />
               </span>
-              @error('name')
-                <span class="text-tiny+ text-error">{{$message}}</span>
-              @enderror
+              <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+              <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
             </label>
           </div>
 
@@ -114,7 +143,7 @@
                   class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
                   name="type"
                   value="0"
-                  @checked(old('type',0)==0)
+                  <?php if($task->type==0): echo 'checked'; endif; ?>
                   type="radio"
                 />
                 <span>One-Time</span>
@@ -124,14 +153,21 @@
                   class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
                   name="type"
                   value="1"
-                  @checked(old('type',0)==1)
+                  <?php if($task->type==1): echo 'checked'; endif; ?>
                   type="radio"
                 />
                 <span>Recurring</span>
               </label>
-              @error('type')
-                <span class="text-tiny+ text-error">{{$message}}</span>
-              @enderror
+              <?php $__errorArgs = ['type'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+              <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
             </label>
             
           </div>
@@ -144,13 +180,20 @@
                   <input
                     x-init="$el._x_flatpickr = flatpickr($el,{enableTime: true,altInput: true,altFormat: 'd-m-Y H:i',dateFormat: 'Y-m-d H:i'})"
                     class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                    @error('task_date')
+                    <?php $__errorArgs = ['task_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                     border-error
-                    @enderror"
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                     placeholder="Choose datetime..."
                     type="text"
                     name="task_date"
-                    value="{{old('task_date')}}"
+                    value="<?php echo e($task->task_date?->format('Y-m-d H:i')); ?>"
                   />
                   <span
                     class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
@@ -171,28 +214,42 @@
                     </svg>
                   </span>
                 </label>
-                @error('task_date')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
+                <?php $__errorArgs = ['task_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                  <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
               </label>
             </div>
           </div>
 
           <div id="recurringDiv" class="space-y-4 block" style="display: none;">
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <label class="block">
                 <span>Start DateTime</span><br>
                 <label class="relative flex">
                   <input
                     x-init="$el._x_flatpickr = flatpickr($el,{enableTime: true,altInput: true,altFormat: 'd-m-Y H:i',dateFormat: 'Y-m-d H:i'})"
                     class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                    @error('start_date')
+                    <?php $__errorArgs = ['start_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                     border-error
-                    @enderror"
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                     placeholder="Choose start datetime..."
                     type="text"
                     name="start_date"
-                    value="{{old('start_date')}}"
+                    value="<?php echo e($task->start_date?->format('Y-m-d H:i')); ?>"
                   />
                   <span
                     class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
@@ -213,9 +270,16 @@
                     </svg>
                   </span>
                 </label>
-                @error('start_date')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
+                <?php $__errorArgs = ['start_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                  <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
               </label>
               <label class="block">
                 <span>End DateTime</span><br>
@@ -223,13 +287,20 @@
                   <input
                     x-init="$el._x_flatpickr = flatpickr($el,{enableTime: true,altInput: true,altFormat: 'd-m-Y H:i',dateFormat: 'Y-m-d H:i'})"
                     class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                    @error('end_date')
+                    <?php $__errorArgs = ['end_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                     border-error
-                    @enderror"
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                     placeholder="Choose end datetime..."
                     type="text"
                     name="end_date"
-                    value="{{old('end_date')}}"
+                    value="<?php echo e($task->end_date?->format('Y-m-d H:i')); ?>"
                   />
                   <span
                     class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
@@ -250,9 +321,16 @@
                     </svg>
                   </span>
                 </label>
-                @error('end_date')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
+                <?php $__errorArgs = ['end_date'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                  <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
               </label>
             </div>
 
@@ -265,7 +343,7 @@
                     class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
                     name="frequency"
                     value="0"
-                    @checked(old('frequency',1)==1)
+                    <?php if($task->frequency==1): echo 'checked'; endif; ?>
                     type="radio"
                   />
                   <span>Daily</span>
@@ -275,7 +353,7 @@
                     class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
                     name="frequency"
                     value="1"
-                    @checked(old('frequency',1)==2)
+                    <?php if($task->frequency==2): echo 'checked'; endif; ?>
                     type="radio"
                   />
                   <span>Bi-Weekly</span>
@@ -285,7 +363,7 @@
                     class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
                     name="frequency"
                     value="2"
-                    @checked(old('frequency',1)==3)
+                    <?php if($task->frequency==3): echo 'checked'; endif; ?>
                     type="radio"
                   />
                   <span>Weekly</span>
@@ -295,14 +373,21 @@
                     class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
                     name="frequency"
                     value="3"
-                    @checked(old('frequency',1)==4)
+                    <?php if($task->frequency==4): echo 'checked'; endif; ?>
                     type="radio"
                   />
                   <span>Monthly</span>
                 </label>
-                @error('frequency')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
+                <?php $__errorArgs = ['frequency'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                  <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
               </label>
             </div>
 
@@ -311,45 +396,73 @@
                 <span>First Day of the Week</span>
                 <select
                   class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
-                  @error('day_of_week_1')
+                  <?php $__errorArgs = ['day_of_week_1'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                   border-error
-                  @enderror"
+                  <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                   name="day_of_week_1"
                   required
                 >
-                  <option value="Monday" @selected(old('day_of_week_1','Monday')=='Monday')>Monday</option>
-                  <option value="Tuesday" @selected(old('day_of_week_1','Monday')=='Tuesday')>Tuesday</option>
-                  <option value="Wednesday" @selected(old('day_of_week_1','Monday')=='Wednesday')>Wednesday</option>
-                  <option value="Thursday" @selected(old('day_of_week_1','Monday')=='Thursday')>Thursday</option>
-                  <option value="Friday" @selected(old('day_of_week_1','Monday')=='Friday')>Friday</option>
-                  <option value="Saturday" @selected(old('day_of_week_1','Monday')=='Saturday')>Saturday</option>
-                  <option value="Sunday" @selected(old('day_of_week_1','Monday')=='Sunday')>Sunday</option>
+                  <option value="Monday" <?php if($task->day_of_week=='Monday'): echo 'selected'; endif; ?>>Monday</option>
+                  <option value="Tuesday" <?php if($task->day_of_week=='Tuesday'): echo 'selected'; endif; ?>>Tuesday</option>
+                  <option value="Wednesday" <?php if($task->day_of_week=='Wednesday'): echo 'selected'; endif; ?>>Wednesday</option>
+                  <option value="Thursday" <?php if($task->day_of_week=='Thursday'): echo 'selected'; endif; ?>>Thursday</option>
+                  <option value="Friday" <?php if($task->day_of_week=='Friday'): echo 'selected'; endif; ?>>Friday</option>
+                  <option value="Saturday" <?php if($task->day_of_week=='Saturday'): echo 'selected'; endif; ?>>Saturday</option>
+                  <option value="Sunday" <?php if($task->day_of_week=='Sunday'): echo 'selected'; endif; ?>>Sunday</option>
                 </select>
-                @error('day_of_week_1')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
+                <?php $__errorArgs = ['day_of_week_1'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                  <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
               </label>
               <label class="block">
                 <span>Second Day of the Week</span>
                 <select
                   class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
-                  @error('day_of_week_2')
+                  <?php $__errorArgs = ['day_of_week_2'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                   border-error
-                  @enderror"
+                  <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                   name="day_of_week_2"
                   required
                 >
-                  <option value="Monday" @selected(old('day_of_week_1','Monday')=='Monday')>Monday</option>
-                  <option value="Tuesday" @selected(old('day_of_week_1','Monday')=='Tuesday')>Tuesday</option>
-                  <option value="Wednesday" @selected(old('day_of_week_1','Monday')=='Wednesday')>Wednesday</option>
-                  <option value="Thursday" @selected(old('day_of_week_1','Monday')=='Thursday')>Thursday</option>
-                  <option value="Friday" @selected(old('day_of_week_1','Monday')=='Friday')>Friday</option>
-                  <option value="Saturday" @selected(old('day_of_week_1','Monday')=='Saturday')>Saturday</option>
-                  <option value="Sunday" @selected(old('day_of_week_1','Monday')=='Sunday')>Sunday</option>
+                  <option value="Monday" <?php if($task->day_of_week_2=='Monday'): echo 'selected'; endif; ?>>Monday</option>
+                  <option value="Tuesday" <?php if($task->day_of_week_2=='Tuesday'): echo 'selected'; endif; ?>>Tuesday</option>
+                  <option value="Wednesday" <?php if($task->day_of_week_2=='Wednesday'): echo 'selected'; endif; ?>>Wednesday</option>
+                  <option value="Thursday" <?php if($task->day_of_week_2=='Thursday'): echo 'selected'; endif; ?>>Thursday</option>
+                  <option value="Friday" <?php if($task->day_of_week_2=='Friday'): echo 'selected'; endif; ?>>Friday</option>
+                  <option value="Saturday" <?php if($task->day_of_week_2=='Saturday'): echo 'selected'; endif; ?>>Saturday</option>
+                  <option value="Sunday" <?php if($task->day_of_week_2=='Sunday'): echo 'selected'; endif; ?>>Sunday</option>
                 </select>
-                @error('day_of_week_2')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
+                <?php $__errorArgs = ['day_of_week_2'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                  <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
               </label>
             </div>
 
@@ -358,23 +471,37 @@
                 <span>Day of the Week</span>
                 <select
                   class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
-                  @error('day_of_week')
+                  <?php $__errorArgs = ['day_of_week'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                   border-error
-                  @enderror"
+                  <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                   name="day_of_week"
                   required
                 >
-                  <option value="Monday" @selected(old('day_of_week_2','Monday')=='Monday')>Monday</option>
-                  <option value="Tuesday" @selected(old('day_of_week_2','Monday')=='Tuesday')>Tuesday</option>
-                  <option value="Wednesday" @selected(old('day_of_week_2','Monday')=='Wednesday')>Wednesday</option>
-                  <option value="Thursday" @selected(old('day_of_week_2','Monday')=='Thursday')>Thursday</option>
-                  <option value="Friday" @selected(old('day_of_week_2','Monday')=='Friday')>Friday</option>
-                  <option value="Saturday" @selected(old('day_of_week_2','Monday')=='Saturday')>Saturday</option>
-                  <option value="Sunday" @selected(old('day_of_week_2','Monday')=='Sunday')>Sunday</option>
+                  <option value="Monday" <?php if($task->day_of_week=='Monday'): echo 'selected'; endif; ?>>Monday</option>
+                  <option value="Tuesday" <?php if($task->day_of_week=='Tuesday'): echo 'selected'; endif; ?>>Tuesday</option>
+                  <option value="Wednesday" <?php if($task->day_of_week=='Wednesday'): echo 'selected'; endif; ?>>Wednesday</option>
+                  <option value="Thursday" <?php if($task->day_of_week=='Thursday'): echo 'selected'; endif; ?>>Thursday</option>
+                  <option value="Friday" <?php if($task->day_of_week=='Friday'): echo 'selected'; endif; ?>>Friday</option>
+                  <option value="Saturday" <?php if($task->day_of_week=='Saturday'): echo 'selected'; endif; ?>>Saturday</option>
+                  <option value="Sunday" <?php if($task->day_of_week=='Sunday'): echo 'selected'; endif; ?>>Sunday</option>
                 </select>
-                @error('day_of_week')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
+                <?php $__errorArgs = ['day_of_week'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                  <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
               </label>
             </div>
 
@@ -383,19 +510,33 @@
                 <span>Day of the Month</span>
                 <select
                   class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
-                  @error('day_of_month')
+                  <?php $__errorArgs = ['day_of_month'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                   border-error
-                  @enderror"
+                  <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                   name="day_of_month"
                   required
                 >
-                @for($i=1;$i<32;$i++)
-                  <option value="{{$i}}" @selected(old('day_of_week',1)==$i)>{{$i}}</option>
-                @endfor
+                <?php for($i=1;$i<32;$i++): ?>
+                  <option value="<?php echo e($i); ?>" <?php if($task->month_day==$i): echo 'selected'; endif; ?>><?php echo e($i); ?></option>
+                <?php endfor; ?>
                 </select>
-                @error('day_of_month')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
+                <?php $__errorArgs = ['day_of_month'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                  <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
               </label>
             </div>
 
@@ -414,9 +555,9 @@
     </div>
   </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script>
   $(document).ready(function(){
     $('input[name="type"]').change(function(e){
@@ -461,8 +602,9 @@
       }
     });
 
-    $('input[name="type"][value="{{old('type',0)}}"]').prop('checked',true).trigger('change');
-    $('input[name="frequency"][value="{{old('frequency',0)}}"]').prop('checked',true).trigger('change');
+    $('input[name="type"][value="<?php echo e($task->type); ?>"]').prop('checked',true).trigger('change');
+    $('input[name="frequency"][value="<?php echo e($task->frequency); ?>"]').prop('checked',true).trigger('change');
   });
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/vagrant/web/platinum-club-app/Platinum-Club-App/resources/views/customer/tasks/edit.blade.php ENDPATH**/ ?>

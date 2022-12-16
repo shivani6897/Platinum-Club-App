@@ -1,8 +1,8 @@
-@extends('layouts.app')
 
-@section('heading', 'Reminder')
 
-@section('breadcrums')
+<?php $__env->startSection('heading', 'Reminder'); ?>
+
+<?php $__env->startSection('breadcrums'); ?>
 <div class="hidden h-full py-1 sm:flex">
   <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
 </div>
@@ -10,7 +10,7 @@
   <li class="flex items-center space-x-2">
     <a
       class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-      href="{{route('home')}}"
+      href="<?php echo e(route('home')); ?>"
       >Dashboard</a
     >
     <svg
@@ -32,11 +32,11 @@
   </li>
   <li>Reminders</li>
 </ul>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
-{{-- Calendar --}}
-{{-- <div class="grid grid-cols-2 gap-4 sm:gap-5 lg:gap-6"> --}}
+<?php $__env->startSection('content'); ?>
+
+
 <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
   <div class="col-span-12">
     <div class=" p-4 sm:p-5">
@@ -64,10 +64,10 @@
               type="button"
               class="leading-none rounded-lg transition ease-in-out duration-100 inline-flex cursor-pointer hover:bg-gray-200 p-1 items-center" 
               :class="{'cursor-not-allowed opacity-25': month == 0 }"
-              {{-- :disabled="month == 0 ? true : false" --}}
-              onclick="changeMonth({{request('month',date('n'))}},{{request('year',date('Y'))}},'sub')"
+              
+              onclick="changeMonth(<?php echo e(request('month',date('n'))); ?>,<?php echo e(request('year',date('Y'))); ?>,'sub')"
               >
-              {{-- @click="month--; getNoOfDays()"> --}}
+              
               <svg class="h-6 w-6 text-gray-500 inline-flex leading-none"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
               </svg>  
@@ -77,9 +77,9 @@
               type="button"
               class="leading-none rounded-lg transition ease-in-out duration-100 inline-flex items-center cursor-pointer hover:bg-gray-200 p-1" 
               :class="{'cursor-not-allowed opacity-25': month == 11 }"
-              {{-- :disabled="month == 11 ? true : false" --}}
-              onclick="changeMonth({{request('month',date('n'))}},{{request('year',date('Y'))}},'add')">
-              {{-- @click="month++; getNoOfDays()"> --}}
+              
+              onclick="changeMonth(<?php echo e(request('month',date('n'))); ?>,<?php echo e(request('year',date('Y'))); ?>,'add')">
+              
               <svg class="h-6 w-6 text-gray-500 inline-flex leading-none"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
               </svg>                    
@@ -110,7 +110,7 @@
                 <div
                   style="cursor: pointer;"
                   x-bind:onclick="`completeTask(this,${event.event_theme})`"
-                  {{-- @click="showEventModal(date)" --}}
+                  
                   x-text="date"
                   class="inline-flex w-6 h-6 items-center justify-center cursor-pointer text-center leading-none rounded-full transition ease-in-out duration-100"
                   :class="{'bg-blue-500 text-white': isToday(date) == true, 'text-gray-700 hover:bg-blue-200': isToday(date) == false }"  
@@ -122,7 +122,7 @@
                     x-text="events.filter(e => e.event_date === new Date(year, month, date).toDateString()).length"></div> -->
 
                   <template x-for="event in events.filter(e => new Date(e.event_date).toDateString() ===  new Date(year, month, date).toDateString() )">  
-                  <form method="get" x-bind:action="`{{url('/tasks/complete')}}/${event.event_id}`">
+                  <form method="get" x-bind:action="`<?php echo e(url('/tasks/complete')); ?>/${event.event_id}`">
                     <div
                       style="cursor: pointer;"
                        x-bind:onclick="`completeTask(this,'${event.event_theme}')`"
@@ -206,7 +206,7 @@
   </div>
 </div>
 
-{{-- Table --}}
+
 <div class="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6 mt-5">
   <!-- Users Table -->
   <div>
@@ -218,53 +218,13 @@
       </h2>
       <div class="flex">
         <div class="flex items-center" x-data="{isInputActive:false}">
-          {{-- <label class="block">
-            <span class="relative mr-1.5 flex">
-              <input
-                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                placeholder="Search here..."
-                onchange="tableSearch(this)"
-                name="search"
-                type="text"
-                value="{{request('search','')}}"
-              />
-            </span>
-          </label> --}}
-          {{-- <label class="block">
-            <input
-              x-effect="isInputActive === true && $nextTick(() => { $el.focus()});"
-              :class="isInputActive ? 'w-32 lg:w-48' : 'w-0'"
-              class="form-input bg-transparent px-1 text-right transition-all duration-100 placeholder:text-slate-500 dark:placeholder:text-navy-200"
-              placeholder="Search here..."
-              onchange="tableSearch(this)"
-              value="{{request('search','')}}"
-              type="text"
-            />
-          </label>
-          <button
-            @click="isInputActive = !isInputActive"
-            class="btn h-8 w-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4.5 w-4.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button> --}}
+          
+          
         </div>
         <div
           class="inline-flex"
         >
-        <a href="{{route('tasks.create')}}" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Reminder</a>
+        <a href="<?php echo e(route('tasks.create')); ?>" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Reminder</a>
         </div>
       </div>
     </div>
@@ -349,7 +309,7 @@
                         placeholder="Category"
                         name="category"
                         type="text"
-                        value="{{request('category','')}}"
+                        value="<?php echo e(request('category','')); ?>"
                       />
                     </span>
                   </label>
@@ -362,7 +322,7 @@
                         placeholder="Name"
                         name="name"
                         type="text"
-                        value="{{request('name','')}}"
+                        value="<?php echo e(request('name','')); ?>"
                       />
                     </span>
                   </label>
@@ -374,8 +334,8 @@
                       name="type"
                     >
                       <option value="">All</option>
-                      <option value="0" @selected(request('type','')==0)>One-Time</option>
-                      <option value="1" @selected(request('type','')==1)>Recurring</option>
+                      <option value="0" <?php if(request('type','')==0): echo 'selected'; endif; ?>>One-Time</option>
+                      <option value="1" <?php if(request('type','')==1): echo 'selected'; endif; ?>>Recurring</option>
                     </select>
                   </label>
                 </th>
@@ -386,11 +346,11 @@
                       name="frequency"
                     >
                       <option value="">All</option>
-                      <option value="0" @selected(request('frequency','')==0)>No Repeat</option>
-                      <option value="1" @selected(request('frequency','')==1)>Daily</option>
-                      <option value="2" @selected(request('frequency','')==2)>Bi-weekly</option>
-                      <option value="3" @selected(request('frequency','')==3)>Weekly</option>
-                      <option value="4" @selected(request('frequency','')==4)>Monthly</option>
+                      <option value="0" <?php if(request('frequency','')==0): echo 'selected'; endif; ?>>No Repeat</option>
+                      <option value="1" <?php if(request('frequency','')==1): echo 'selected'; endif; ?>>Daily</option>
+                      <option value="2" <?php if(request('frequency','')==2): echo 'selected'; endif; ?>>Bi-weekly</option>
+                      <option value="3" <?php if(request('frequency','')==3): echo 'selected'; endif; ?>>Weekly</option>
+                      <option value="4" <?php if(request('frequency','')==4): echo 'selected'; endif; ?>>Monthly</option>
                     </select>
                   </label>
                 </th>
@@ -402,7 +362,7 @@
                     placeholder="Start Date"
                     name="start_date"
                     type="text"
-                    value="{{request('start_date','')}}"
+                    value="<?php echo e(request('start_date','')); ?>"
                   />
                   <span
                     class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
@@ -432,7 +392,7 @@
                     placeholder="End Date"
                     name="end_date"
                     type="text"
-                    value="{{request('end_date','')}}"
+                    value="<?php echo e(request('end_date','')); ?>"
                   />
                   <span
                     class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
@@ -461,44 +421,48 @@
                       name="status"
                     >
                       <option value="">All</option>
-                      <option value="0" @selected(request('status','')==0)>Pending</option>
-                      <option value="1" @selected(request('status','')==1)>Completed</option>
+                      <option value="0" <?php if(request('status','')==0): echo 'selected'; endif; ?>>Pending</option>
+                      <option value="1" <?php if(request('status','')==1): echo 'selected'; endif; ?>>Completed</option>
                     </select>
                   </label>
                 </th>
                 <th style="min-width: 120px;">
-                  <button class="btn space-x-2 bg-primary mr-2 font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"><i class="fa-solid fa-filter"></i></button><a href="{{route('tasks.index')}}" class="btn space-x-2 ml-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"><i class="fa-solid fa-rotate-right"></i></a>
+                  <button class="btn space-x-2 bg-primary mr-2 font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"><i class="fa-solid fa-filter"></i></button><a href="<?php echo e(route('tasks.index')); ?>" class="btn space-x-2 ml-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"><i class="fa-solid fa-rotate-right"></i></a>
                 </th>
               </tr>
 
             </form>
           </thead>
-            @forelse($tasks as $task)
+            <?php $__empty_1 = true; $__currentLoopData = $tasks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $task): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
               <tr
                 class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500"
               >
                 <td
                   class="whitespace-nowrap px-4 py-3 sm:px-5"
-                >{{((request('page',1)-1)*10+$loop->iteration)}}</td>
-                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$task->task_category->name}}
+                ><?php echo e(((request('page',1)-1)*10+$loop->iteration)); ?></td>
+                <td class="whitespace-nowrap px-4 py-3 sm:px-5"><?php echo e($task->task_category->name); ?>
+
                 </td>
                 <td
                   class="whitespace-nowrap px-3 py-3 sm:px-5"
-                >{{$task->name}}</td>
+                ><?php echo e($task->name); ?></td>
                 <td
                   class="whitespace-nowrap px-4 py-3 sm:px-5"
-                >{!!($task->type==0?'<div class="badge rounded-full border border-warning text-warning">One-Time</div>':'<div class="badge rounded-full border border-info text-info">Recurring</div>')!!}</td>
+                ><?php echo ($task->type==0?'<div class="badge rounded-full border border-warning text-warning">One-Time</div>':'<div class="badge rounded-full border border-info text-info">Recurring</div>'); ?></td>
                 <td
                   class="whitespace-nowrap px-4 py-3 sm:px-5"
-                >{{$task->getFrequency()}}</td>
+                ><?php echo e($task->getFrequency()); ?></td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
-                  {{($task->type==1?$task->start_date->format('d-m-Y H:i'):$task->task_date->format('d-m-Y H:i'))}}
+                  <?php echo e(($task->type==1?$task->start_date->format('d-m-Y H:i'):$task->task_date->format('d-m-Y H:i'))); ?>
+
                 </td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
-                  {{($task->type==1?$task->end_date->format('d-m-Y H:i'):'')}}
+                  <?php echo e(($task->type==1?$task->end_date->format('d-m-Y H:i'):'')); ?>
+
                 </td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
-                  {!!($task->completed==1?'<div class="badge rounded-full border border-success text-success">Completed</div>':'<div class="badge rounded-full border border-info text-info">Pending</div>')!!}
+                  <?php echo ($task->completed==1?'<div class="badge rounded-full border border-success text-success">Completed</div>':'<div class="badge rounded-full border border-info text-info">Pending</div>'); ?>
+
                 </td>
                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                   <div
@@ -538,24 +502,24 @@
                         <ul>
                           <li>
                             <a
-                              href="{{route('tasks.edit',$task->id)}}"
+                              href="<?php echo e(route('tasks.edit',$task->id)); ?>"
                               class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
                               >Edit</a
                             >
                           </li>
-                          @if($task->completed==0)
+                          <?php if($task->completed==0): ?>
                           <li>
                             <a
-                              href="{{route('tasks.complete',$task->id)}}"
+                              href="<?php echo e(route('tasks.complete',$task->id)); ?>"
                               class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
                               >Complete</a
                             >
                           </li>
-                          @endif
+                          <?php endif; ?>
                           <li>
-                            <form method="post" action="{{route('tasks.destroy',$task->id)}}">
-                              @method('delete')
-                              @csrf
+                            <form method="post" action="<?php echo e(route('tasks.destroy',$task->id)); ?>">
+                              <?php echo method_field('delete'); ?>
+                              <?php echo csrf_field(); ?>
                               <button
                                 type="button"
                                 onclick="taskDelete(this)"
@@ -569,11 +533,11 @@
                   </div>
                 </td>
               </tr>
-              @empty
+              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
               <tr>
                 <td class="text-center p-5" colspan="10">No Data...</td>
               </tr>
-              @endforelse
+              <?php endif; ?>
           </tbody>
         </table>
       </div>
@@ -581,98 +545,21 @@
       <div
         class="paginate-div flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5"
       >
-        {{-- <div class="text-xs+">1 - 10 of 10 entries</div> --}}
+        
 
-        {{$tasks->links()}}
+        <?php echo e($tasks->links()); ?>
 
-        {{-- <ol class="pagination">
-          <li class="rounded-l-full bg-slate-150 dark:bg-navy-500">
-            <a
-              href="#"
-              class="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300/80 dark:text-navy-200 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </a>
-          </li>
-          <li class="bg-slate-150 dark:bg-navy-500">
-            <a
-              href="#"
-              class="flex h-8 min-w-[2rem] items-center justify-center rounded-full px-3 leading-tight transition-colors hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300/80 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
-              >1</a
-            >
-          </li>
-          <li class="bg-slate-150 dark:bg-navy-500">
-            <a
-              href="#"
-              class="flex h-8 min-w-[2rem] items-center justify-center rounded-full bg-primary px-3 leading-tight text-white transition-colors hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
-              >2</a
-            >
-          </li>
-          <li class="bg-slate-150 dark:bg-navy-500">
-            <a
-              href="#"
-              class="flex h-8 min-w-[2rem] items-center justify-center rounded-full px-3 leading-tight transition-colors hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300/80 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
-              >3</a
-            >
-          </li>
-          <li class="bg-slate-150 dark:bg-navy-500">
-            <a
-              href="#"
-              class="flex h-8 min-w-[2rem] items-center justify-center rounded-full px-3 leading-tight transition-colors hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300/80 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
-              >4</a
-            >
-          </li>
-          <li class="bg-slate-150 dark:bg-navy-500">
-            <a
-              href="#"
-              class="flex h-8 min-w-[2rem] items-center justify-center rounded-full px-3 leading-tight transition-colors hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300/80 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
-              >5</a
-            >
-          </li>
-          <li class="rounded-r-full bg-slate-150 dark:bg-navy-500">
-            <a
-              href="#"
-              class="flex h-8 w-8 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-300 focus:bg-slate-300 active:bg-slate-300/80 dark:text-navy-200 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </a>
-          </li>
-        </ol> --}}
+
+        
       </div>
     </div>
   </div>
 </div>
 
-{{-- </div> --}}
-@endsection
 
-@push('styles')
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startPush('styles'); ?>
 <style>
     [x-cloak] {
       display: none;
@@ -714,9 +601,9 @@
    right: 5px;
   }
 </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -775,15 +662,15 @@
         days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
 
         events: [
-          @foreach($data as $value)
+          <?php $__currentLoopData = $data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
           {
-            event_id: {{$value['event_id']}},
-            event_date: new Date({{explode('-',$value['event_date'])[0]}}, {{explode('-',$value['event_date'])[1]-1}}, {{explode('-',$value['event_date'])[2]}}),
-            event_title: "{{$value['event_title']}}",
-            event_theme: '{{$value['event_theme']}}',
-          }@if(!$loop->last),
-          @endif
-          @endforeach
+            event_id: <?php echo e($value['event_id']); ?>,
+            event_date: new Date(<?php echo e(explode('-',$value['event_date'])[0]); ?>, <?php echo e(explode('-',$value['event_date'])[1]-1); ?>, <?php echo e(explode('-',$value['event_date'])[2]); ?>),
+            event_title: "<?php echo e($value['event_title']); ?>",
+            event_theme: '<?php echo e($value['event_theme']); ?>',
+          }<?php if(!$loop->last): ?>,
+          <?php endif; ?>
+          <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
           // {
           //   event_date: new Date(2022, 3, 1),
           //   event_title: "April Fool's Day",
@@ -833,8 +720,8 @@
 
         initDate() {
           let today = new Date();
-          this.month = {{request('month',date('n'))-1}};//today.getMonth();
-          this.year = {{request('year',date('Y'))}};//today.getFullYear();
+          this.month = <?php echo e(request('month',date('n'))-1); ?>;//today.getMonth();
+          this.year = <?php echo e(request('year',date('Y'))); ?>;//today.getFullYear();
           this.datepickerValue = new Date(this.year, this.month, today.getDate()).toDateString();
         },
 
@@ -941,20 +828,22 @@
     });
 
     // Filter on load
-    var filter_span = $('th.sort-by[data-title="{{request('sort','id')}}"]');
-    @if(request('order','asc')=='asc')
+    var filter_span = $('th.sort-by[data-title="<?php echo e(request('sort','id')); ?>"]');
+    <?php if(request('order','asc')=='asc'): ?>
       $('#reminders-table th.sort-by').data('order','').removeClass('asc desc');
       filter_span.data('order','asc').removeClass('desc').addClass('asc');
       $('#reminders-table #table_sort').val(filter_span.data('title'));
       $('#reminders-table #table_order').val('asc');
 
-    @else
+    <?php else: ?>
       $('#reminders-table th.sort-by').data('order','').removeClass('asc desc');
       filter_span.data('order','desc').removeClass('asc').addClass('desc');
       $('#reminders-table #table_sort').val(filter_span.data('title'));
       $('#reminders-table #table_order').val('desc');
 
-    @endif
+    <?php endif; ?>
   })
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/vagrant/web/platinum-club-app/Platinum-Club-App/resources/views/customer/tasks/index.blade.php ENDPATH**/ ?>
