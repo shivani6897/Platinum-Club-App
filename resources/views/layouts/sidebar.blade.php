@@ -59,7 +59,7 @@
             class="flex h-11 w-11 items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
             x-tooltip.placement.right="'Habits'"
         >
-<i class="fa-solid fa-clock fa-2x"></i>
+            <i class="fa-solid fa-clock fa-2x"></i>
         </a>
 
       <!-- Events -->
@@ -73,7 +73,7 @@
 
         <!-- My Business -->
         <a
-          href="{{url('business')}}"
+          href="{{url('incomes')}}"
           class="flex h-11 w-11 items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
           x-tooltip.placement.right="'My Business'"
         >
