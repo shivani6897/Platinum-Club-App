@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Customer\CustomerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,4 +68,5 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::get('/customer/setpassword/{userToken}', [\App\Http\Controllers\Admin\UserController::class, 'userPassword'])->name('setuserpassword');
     Route::post('/customer/setpassword/{userToken}', [\App\Http\Controllers\Admin\UserController::class, 'userPasswordUpdate'])->name('userpassword.update');
 
+    Route::resource('/customers',CustomerController::class);
 });
