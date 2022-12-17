@@ -66,31 +66,34 @@ class TaskController extends Controller
             }
 
             // Recurring task for days
-            $recurring = Task::where('user_id',auth()->id())->where(function($q) use ($date){
-                    $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
-                        ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
-                        ->where('frequency',1);
-                })
-                ->orWhere(function($q) use ($date){
-                    $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
-                        ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
-                        ->where(function($q2) use ($date){
-                            $q2->where('day_of_week',date("l", strtotime($date)))
-                                ->orWhere('day_of_week_2',date("l", strtotime($date)));
-                        })
-                        ->where('frequency',2);
-                })
-                ->orWhere(function($q) use ($date){
-                    $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
-                        ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
-                        ->where('day_of_week',date("l", strtotime($date)))
-                        ->where('frequency',3);
-                })
-                ->orWhere(function($q) use ($date){
-                    $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
-                        ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
-                        ->where('day_of_week',date("l", strtotime($date)))
-                        ->where('frequency',4);
+            $recurring = Task::where('user_id',auth()->id())
+                ->where(function($query) {
+                    $query->where(function($q) use ($date){
+                        $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
+                            ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
+                            ->where('frequency',1);
+                    })
+                    ->orWhere(function($q) use ($date){
+                        $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
+                            ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
+                            ->where(function($q2) use ($date){
+                                $q2->where('day_of_week',date("l", strtotime($date)))
+                                    ->orWhere('day_of_week_2',date("l", strtotime($date)));
+                            })
+                            ->where('frequency',2);
+                    })
+                    ->orWhere(function($q) use ($date){
+                        $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
+                            ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
+                            ->where('day_of_week',date("l", strtotime($date)))
+                            ->where('frequency',3);
+                    })
+                    ->orWhere(function($q) use ($date){
+                        $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
+                            ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
+                            ->where('day_of_week',date("l", strtotime($date)))
+                            ->where('frequency',4);
+                    })
                 })->get();
             foreach($recurring as $re)
             {
