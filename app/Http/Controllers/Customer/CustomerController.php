@@ -43,7 +43,9 @@ class CustomerController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $customer = Customer::create($request->validated());
+        $array = $request->validated();
+        $array['user_id'] = auth()->id();
+        $customer = Customer::create($array);
         return redirect()->route('customers.index')->with('success', 'Customer Created successfully');
     }
 

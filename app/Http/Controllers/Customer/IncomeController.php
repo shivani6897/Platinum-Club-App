@@ -44,7 +44,9 @@ class IncomeController extends Controller{
 
     public function store(StoreRequest $request)
     {
-        $income = Income::create($request->validated());
+        $array = $request->validated();
+        $array['user_id'] = auth()->id();
+        $income = Income::create($array);
 
         return redirect()->route('incomes.index')->with('success','Income Created successfully');
     }

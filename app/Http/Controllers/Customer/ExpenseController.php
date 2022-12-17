@@ -32,7 +32,9 @@ class ExpenseController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $expense = Expense::create($request->validated());
+        $array = $request->validated();
+        $array['user_id'] = auth()->id();
+        $expense = Expense::create($array);
 
         return redirect()->route('incomes.index')->with('success','Expense Created successfully');
     }

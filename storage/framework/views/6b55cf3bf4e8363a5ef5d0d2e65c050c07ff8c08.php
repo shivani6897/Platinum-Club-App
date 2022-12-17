@@ -30,7 +30,7 @@
     </svg>
     <a
       class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-      href="<?php echo e(route('tasks.index')); ?>"
+      href="<?php echo e(route('invoices.index')); ?>"
       >Invoice</a
     >
     <svg

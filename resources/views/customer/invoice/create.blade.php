@@ -30,7 +30,7 @@
     </svg>
     <a
       class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-      href="{{route('tasks.index')}}"
+      href="{{route('invoices.index')}}"
       >Invoice</a
     >
     <svg

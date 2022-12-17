@@ -37,10 +37,6 @@
                         <i class="fa fa-calendar"></i>&nbsp;
                         <span id="date-duration"></span>
                     </div>
-                    <form>
-                        <input type="hidden" name="filter_from">
-                        <input type="hidden" name="filter_to">
-                    </form>
                 </div>
 
                 {{-- end  --}}
@@ -54,7 +50,7 @@
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white"><i
                                         class="fa-sharp fa-solid fa-indian-rupee-sign"></i>
-                                    {{ number_format($revenue, 2) }}</p>
+                                    {{ number_format($stat->revenue_earned, 2) }}</p>
                             </div>
                             <div class="mask is-diamond absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"></div>
                         </div>
@@ -65,7 +61,7 @@
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white"><i
                                         class="fa-sharp fa-solid fa-indian-rupee-sign"></i>
-                                    {{ number_format($ad_spends, 2) }}</p>
+                                    {{ number_format($stat->ad_spends, 2) }}</p>
                             </div>
                             <div class="mask is-reuleaux-triangle absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"></div>
                         </div>
@@ -76,7 +72,7 @@
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white"><i
                                         class="fa-sharp fa-solid fa-indian-rupee-sign"></i>
-                                    {{ number_format($overheads, 2) }}</p>
+                                    {{ number_format($stat->overheads, 2) }}</p>
                             </div>
                             <div class="mask is-hexagon-2 absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"></div>
                         </div>
@@ -87,7 +83,7 @@
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white"><i
                                         class="fa-sharp fa-solid fa-indian-rupee-sign"></i>
-                                    {{ number_format($net_profit, 2) }}</p>
+                                    {{ number_format($stat->net_profit, 2) }}</p>
                             </div>
                             <div class="mask is-diamond absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"></div>
                         </div>
@@ -96,8 +92,9 @@
                             class="bg-lg relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 p-3.5">
                             <p class="text-xs uppercase text-sky-100">Leads Generated</p>
                             <div class="flex items-end justify-between space-x-2">
-                                <p class="mt-4 text-2xl font-medium text-white">
-                                    {{ number_format($leads) }}</p>
+                                <p class="mt-4 text-2xl font-medium text-white"><i
+                                        class="fa-sharp fa-solid fa-indian-rupee-sign"></i>
+                                    {{ number_format($stat->leads_generated) }}</p>
                             </div>
                             <div class="mask is-diamond absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"></div>
                         </div>
@@ -108,7 +105,7 @@
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white"><i
                                         class="fa-sharp fa-solid fa-indian-rupee-sign"></i>
-                                    {{ number_format($cost_per_lead, 2) }}</p>
+                                    {{ number_format($stat->cost_per_lead, 2) }}</p>
                             </div>
                             <div class="mask is-hexagon-2 absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"></div>
                         </div>
@@ -117,7 +114,7 @@
                             class="bg-ctc relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-info to-info-focus p-3.5">
                             <p class="text-xs uppercase text-sky-100">Converted to Customers</p>
                             <div class="flex items-end justify-between space-x-2">
-                                <p class="mt-4 text-2xl font-medium text-white">{{ number_format($converted_customers) }}
+                                <p class="mt-4 text-2xl font-medium text-white">{{ number_format($stat->paid_customer) }}
                                 </p>
                             </div>
                             <div class="mask is-reuleaux-triangle absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"></div>
@@ -125,9 +122,9 @@
 
                         <div
                             class="bg-tc relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 p-3.5">
-                            <p class="text-xs uppercase text-sky-100">Customers</p>
+                            <p class="text-xs uppercase text-sky-100">Total Customers</p>
                             <div class="flex items-end justify-between space-x-2">
-                                <p class="mt-4 text-2xl font-medium text-white">{{ number_format($customers) }}
+                                <p class="mt-4 text-2xl font-medium text-white">{{ number_format($stat->total_customer) }}
                                 </p>
                             </div>
                             <div class="mask is-hexagon-2 absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"></div>
@@ -138,7 +135,7 @@
                             <p class="text-xs uppercase text-sky-100">Profitability%</p>
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white">
-                                    {{ number_format($profitability, 2) }}
+                                    {{ number_format($stat->profitability, 2) }}
                                     %</p>
                             </div>
                             <div class="mask is-reuleaux-triangle absolute top-0 right-0 -m-3 h-16 w-16 bg-white/20"></div>
@@ -211,7 +208,7 @@
         var options = {
             series: [{
                 name: 'Profit',
-                data: {!!json_encode($profitArray)!!},
+                data: {!! json_encode($profitability['y']) !!},
                 // [1.45, 5.42, 5.9, -0.42, -12.6, -18.1, -18.2, -14.16, -11.1, -6.09, 0.34, 3.88, 13.07,
                 //   5.8, 2, 7.37, 8.1, 13.57, 15.75, 17.1, 19.8, -27.03, -54.4, -47.2, -43.3, -18.6, -
                 //   48.6, -41.1, -39.6, -37.6, -29.4, -21.4, -2.4
@@ -252,7 +249,7 @@
             },
             xaxis: {
                 type: 'datetime',
-                categories: {!!json_encode($dateArray)!!},
+                categories: {!! json_encode($profitability['x']) !!},
                 // [
                 //   '2011-01-01', '2011-02-01', '2011-03-01', '2011-04-01', '2011-05-01', '2011-06-01',
                 //   '2011-07-01', '2011-08-01', '2011-09-01', '2011-10-01', '2011-11-01', '2011-12-01',
@@ -271,29 +268,15 @@
         chart.render();
 
         $(document).ready(function() {
-            @if(request('filter_from'))
-            var start = moment('{{request('filter_from')}}','YYYY-MM-DD');
-            @else
             var start = moment().subtract(29, 'days');
-            @endif
-            @if(request('filter_to'))
-            var end = moment('{{request('filter_to')}}','YYYY-MM-DD');
-            @else
             var end = moment();
-            @endif
 
-            var flg = 0;
             function cb(start, end) {
                 $('#reportrange #date-duration').html(start.format('MMMM D, YYYY') + ' - ' + end.format(
                     'MMMM D, YYYY'));
 
-                if(flg==1)
-                {
-                    $('input[name="filter_from"]').val(start.format("YYYY-MM-DD"));
-                    $('input[name="filter_to"]').val(end.format("YYYY-MM-DD")).closest('form').submit();
-                }
-                else
-                    flg=1;
+                console.log('start', start.format("YYYY-MM-DD"))
+                console.log('end', end.format("YYYY-MM-DD"))
             }
 
             $('#reportrange').daterangepicker({

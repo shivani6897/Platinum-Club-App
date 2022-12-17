@@ -32,7 +32,9 @@ class LeadController extends Controller
             'converted_customer' => 'required',
             'date'=> 'required',
         ]);
-        $lead = Lead::create($request->all());
+        $array = $request->all();
+        $array['user_id'] = auth()->id();
+        $lead = Lead::create($array);
         return redirect()->route('incomes.index')->with('success', 'Lead Created successfully');
     }
 
