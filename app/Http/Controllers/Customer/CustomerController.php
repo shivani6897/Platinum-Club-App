@@ -17,7 +17,8 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $customer = Customer::when(request('search'),function($q){
+        $customer = Customer::where('user_id',auth()->id())
+        ->when(request('search'),function($q){
             $q->where('name','LIKE', '%'.request('search').'%')
                 ->orWhere('company_name','LIKE','%'.request('search').'%');
         })
