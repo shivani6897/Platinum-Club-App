@@ -110,7 +110,7 @@
                         @forelse($customer as $key=>$single_customer)
                              <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_customer->customer_name }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_customer->name }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_customer->company_name }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $single_customer->state}} </td>
 
