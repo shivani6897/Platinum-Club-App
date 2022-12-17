@@ -98,7 +98,7 @@
           <i class="fa-solid fa-building fa-2x"></i>
         </a>
 
-        <!-- Business Stats -->
+        {{-- <!-- Business Stats -->
         <a
           href="{{url('business-stats')}}"
           class="flex h-11 w-11 items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
@@ -120,7 +120,7 @@
               class="fill-slate-500 dark:fill-navy-200"
             />
           </svg>
-        </a>
+        </a> --}}
     </div>
 
     <!-- Bottom Links -->

@@ -151,6 +151,92 @@
           x-init="$nextTick(() => { $el._x_chart = new ApexCharts($el, analyticsPagesViews); $el._x_chart.render() });"
         ></div> --}}
                 </div>
+
+                <div
+                  class="col-span-12 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-5 lg:gap-6"
+                >
+                  <div class="card col-span-2">
+                    <div
+                      class="mt-3 flex items-center justify-between px-4 sm:px-5"
+                    >
+                      <h2
+                        class="font-medium tracking-wide text-slate-700 dark:text-navy-100"
+                      >
+                        Revenue Earned
+                      </h2>
+                      <div
+                        x-data="usePopper({placement:'bottom-end',offset:4})"
+                        @click.outside="if(isShowPopper) isShowPopper = false"
+                        class="inline-flex"
+                      >
+                      </div>
+                    </div>
+                    <div class="pr-3 sm:pl-2">
+                      <div id="revenueChart"></div>
+                    </div>
+                  </div>
+                  <div class="card col-span-2">
+                    <div
+                      class="mt-3 flex items-center justify-between px-4 sm:px-5"
+                    >
+                      <h2
+                        class="font-medium tracking-wide text-slate-700 dark:text-navy-100"
+                      >
+                        Ad Spends
+                      </h2>
+                      <div
+                        x-data="usePopper({placement:'bottom-end',offset:4})"
+                        @click.outside="if(isShowPopper) isShowPopper = false"
+                        class="inline-flex"
+                      >
+                      </div>
+                    </div>
+                    <div class="pr-3 sm:pl-2">
+                      <div id="adSpendChart"></div>
+                    </div>
+                  </div>
+                  <div class="card col-span-2">
+                    <div
+                      class="mt-3 flex items-center justify-between px-4 sm:px-5"
+                    >
+                      <h2
+                        class="font-medium tracking-wide text-slate-700 dark:text-navy-100"
+                      >
+                        Overheads
+                      </h2>
+                      <div
+                        x-data="usePopper({placement:'bottom-end',offset:4})"
+                        @click.outside="if(isShowPopper) isShowPopper = false"
+                        class="inline-flex"
+                      >
+                      </div>
+                    </div>
+                    <div class="pr-3 sm:pl-2">
+                      <div id="overheadsChart"></div>
+                    </div>
+                  </div>
+                  <div class="card col-span-2">
+                    <div
+                      class="mt-3 flex items-center justify-between px-4 sm:px-5"
+                    >
+                      <h2
+                        class="font-medium tracking-wide text-slate-700 dark:text-navy-100"
+                      >
+                        Net Profit
+                      </h2>
+                      <div
+                        x-data="usePopper({placement:'bottom-end',offset:4})"
+                        @click.outside="if(isShowPopper) isShowPopper = false"
+                        class="inline-flex"
+                      >
+                      </div>
+                    </div>
+                    <div class="pr-3 sm:pl-2">
+                      <div id="netProfitChart"></div>
+                    </div>
+                  </div>
+                </div>
+
             </div>
         </div>
     </div>
@@ -318,4 +404,96 @@
             cb(start, end);
         });
     </script>
+    <script type="text/javascript">
+  var revenueX =  [
+    @foreach($revenueArray['x'] as $data)
+      '{{$data->format('Y-m-d')}}',
+    @endforeach
+    ];
+  var revenueY =  {!! json_encode($revenueArray['y']) !!};
+
+  var options = {
+    chart: {
+      type: 'bar'
+    },
+    series: [{
+      name: 'Revenue',
+      data: revenueY
+    }],
+    xaxis: {
+        // type: 'datetime',
+        categories: revenueX
+    }
+  }
+
+  var chart = new ApexCharts(document.querySelector("#revenueChart"), options);
+  chart.render();
+
+  var ad_spendsX =  [
+    @foreach($ad_spendsArray['x'] as $data)
+      '{{$data->format('Y-m-d')}}',
+    @endforeach
+    ];
+  var ad_spendsY =  {!! json_encode($ad_spendsArray['y']) !!};
+
+  var options = {
+    chart: {
+      type: 'bar'
+    },
+    series: [{
+      name: 'Ad Spends',
+      data: ad_spendsY
+    }],
+    xaxis: {
+        // type: 'datetime',
+        categories: ad_spendsX
+    }
+  }
+
+  var chart = new ApexCharts(document.querySelector("#adSpendChart"), options);
+  chart.render();
+
+  var overheadsX =  [
+    @foreach($overheadsArray['x'] as $data)
+      '{{$data->format('Y-m-d')}}',
+    @endforeach
+    ];
+  var overheadsY =  {!! json_encode($overheadsArray['y']) !!};
+
+  var options = {
+    chart: {
+      type: 'bar'
+    },
+    series: [{
+      name: 'Overhead',
+      data: overheadsY
+    }],
+    xaxis: {
+        // type: 'datetime',
+        categories: overheadsX
+    }
+  }
+
+  var chart = new ApexCharts(document.querySelector("#overheadsChart"), options);
+  chart.render();
+
+  var net_profitX =  {!! json_encode($dateArray) !!};
+  var net_profitY =  {!! json_encode($netProfitArray) !!};
+
+  var options = {
+    chart: {
+      type: 'bar'
+    },
+    series: [{
+      name: 'Profit',
+      data: net_profitY
+    }],
+    xaxis: {
+      categories: net_profitX
+    }
+  }
+
+  var chart = new ApexCharts(document.querySelector("#netProfitChart"), options);
+  chart.render();
+</script>
 @endpush

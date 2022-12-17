@@ -17,7 +17,7 @@ use App\Http\Controllers\Customer\CustomerController;
 
 Route::redirect('/', 'login');
 
-Auth::routes(['verify' => true,'register' => false]);
+Auth::routes(['verify' => true]);
 
 // Admin Route
 Route::group([

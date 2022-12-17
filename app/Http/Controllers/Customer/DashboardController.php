@@ -17,6 +17,8 @@ class DashboardController extends Controller
 {
     public function index()
     {
+
+        // Numbers In Boxes
         $revenue = Income::where('user_id',auth()->id())
             ->when(request('filter_from'),function($q) {
                 $q->whereDate('date','>=',request('filter_from'));
@@ -57,64 +59,79 @@ class DashboardController extends Controller
         $customers = Customer::count();
         $profitability = $net_profit*100/($revenue>0?$revenue:1);
 
-            $stat = DB::select("SELECT `date`,
-                            `eid`,
-                            `expense`,
-                            `iid`,
-                            `income`
-                    FROM (  (
-                          SELECT
-                            IFNULL(incomes.date, expenses.date) AS date,
-                            expenses.id AS eid,
-                            `expenses`.`expense`,
-                            incomes.id AS iid,
-                            `incomes`.`income`
-                          FROM
-                            `incomes`
-                            LEFT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date`
-                            WHERE `incomes`.`deleted_at` IS NULL
-                            AND `expenses`.`deleted_at` IS NULL
-                            ".(request('filter_from')?
-                                "AND DATE(`incomes`.`date`)>='".request('filter_from')."'
-                                AND DATE(`expenses`.`date`)>='".request('filter_from')."'":'').
-                                (request('filter_to')?
-                                "AND DATE(`incomes`.`date`)<='".request('filter_to')."'
-                                AND DATE(`expenses`.`date`)<='".request('filter_to')."'":'')."
-                        )
-                        UNION ALL
-                        (
-                          SELECT
-                            IFNULL(incomes.date, expenses.date) AS date,
-                            expenses.id AS eid,
-                            `expenses`.`expense`,
-                            incomes.id AS iid,
-                            `incomes`.`income`
-                          FROM
-                            `incomes`
-                            RIGHT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date`
-                            WHERE `incomes`.`deleted_at` IS NULL
-                            AND `expenses`.`deleted_at` IS NULL
-                            ".(request('filter_from')?
-                                "AND DATE(`incomes`.`date`)>='".request('filter_from')."'
-                                AND DATE(`expenses`.`date`)>='".request('filter_from')."'":'').
-                                (request('filter_to')?
-                                "AND DATE(`incomes`.`date`)<='".request('filter_to')."'
-                                AND DATE(`expenses`.`date`)<='".request('filter_to')."'":'')."
-                        )
-                    ) AS dt
-                    GROUP BY `date`,`eid`,`expense`,`iid`,`income`
-                    ORDER BY `date`");
+        // Profit% and Net Profit Graph
+        $stat = DB::select("SELECT `date`,
+                    `eid`,
+                    `expense`,
+                    `iid`,
+                    `income`
+            FROM (  (
+                  SELECT
+                    IFNULL(incomes.date, expenses.date) AS date,
+                    expenses.id AS eid,
+                    `expenses`.`expense`,
+                    incomes.id AS iid,
+                    `incomes`.`income`
+                  FROM
+                    `incomes`
+                    LEFT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date`
+                    WHERE `incomes`.`deleted_at` IS NULL
+                    AND `expenses`.`deleted_at` IS NULL
+                    ".(request('filter_from')?
+                        "AND DATE(`incomes`.`date`)>='".request('filter_from')."'
+                        AND DATE(`expenses`.`date`)>='".request('filter_from')."'":'').
+                        (request('filter_to')?
+                        "AND DATE(`incomes`.`date`)<='".request('filter_to')."'
+                        AND DATE(`expenses`.`date`)<='".request('filter_to')."'":'')."
+                )
+                UNION ALL
+                (
+                  SELECT
+                    IFNULL(incomes.date, expenses.date) AS date,
+                    expenses.id AS eid,
+                    `expenses`.`expense`,
+                    incomes.id AS iid,
+                    `incomes`.`income`
+                  FROM
+                    `incomes`
+                    RIGHT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date`
+                    WHERE `incomes`.`deleted_at` IS NULL
+                    AND `expenses`.`deleted_at` IS NULL
+                    ".(request('filter_from')?
+                        "AND DATE(`incomes`.`date`)>='".request('filter_from')."'
+                        AND DATE(`expenses`.`date`)>='".request('filter_from')."'":'').
+                        (request('filter_to')?
+                        "AND DATE(`incomes`.`date`)<='".request('filter_to')."'
+                        AND DATE(`expenses`.`date`)<='".request('filter_to')."'":'')."
+                )
+            ) AS dt
+            GROUP BY `date`,`eid`,`expense`,`iid`,`income`
+            ORDER BY `date`");
 
         $dateArray = [];
         $profitArray = [];
-
+        $netProfitArray = [];
         foreach($stat as $st)
         {
             $dateArray[] = $st->date;
             $profitArray[] = ($st->income-$st->expense)*100/($st->income>0?$st->income:1);
+            $netProfitArray[] = $st->income-$st->expense;
         }
 
-        return view('customer.dashboard',compact('revenue','ad_spends','overheads','net_profit','leads','cost_per_lead','converted_customers','customers','profitability','dateArray','profitArray'));
+
+        // Revenue
+        $revenueArray['x'] = Income::where('user_id',auth()->id())->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as date"))->groupBy('date')->pluck('date')->all();
+        $revenueArray['y'] = Income::where('user_id',auth()->id())->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as date"))->groupBy('date')->pluck('revenue')->all();
+
+        // Ad Spends
+        $ad_spendsArray['x'] = Expense::where('user_id',auth()->id())->where('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as date"))->groupBy('date')->pluck('date')->all();
+        $ad_spendsArray['y'] = Expense::where('user_id',auth()->id())->where('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as date"))->groupBy('date')->pluck('expense')->all();
+
+        // Ad Spends
+        $overheadsArray['x'] = Expense::where('user_id',auth()->id())->whereNot('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as date"))->groupBy('date')->pluck('date')->all();
+        $overheadsArray['y'] = Expense::where('user_id',auth()->id())->whereNot('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as date"))->groupBy('date')->pluck('expense')->all();
+
+        return view('customer.dashboard',compact('revenue','ad_spends','overheads','net_profit','leads','cost_per_lead','converted_customers','customers','profitability','dateArray','profitArray','netProfitArray','revenueArray','ad_spendsArray','overheadsArray'));
         // $stat = BusinessStat::where('user_id',auth()->id());
         // if(request('duration',0)==1)
         //     $stat = $stat->whereYear('month',date('Y', strtotime('-1 year')));
