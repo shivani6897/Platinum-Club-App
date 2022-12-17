@@ -67,7 +67,7 @@ class TaskController extends Controller
 
             // Recurring task for days
             $recurring = Task::where('user_id',auth()->id())
-                ->where(function($query) {
+                ->where(function($query) use ($date) {
                     $query->where(function($q) use ($date){
                         $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
                             ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
@@ -93,7 +93,7 @@ class TaskController extends Controller
                             ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
                             ->where('day_of_week',date("l", strtotime($date)))
                             ->where('frequency',4);
-                    })
+                    });
                 })->get();
             foreach($recurring as $re)
             {
