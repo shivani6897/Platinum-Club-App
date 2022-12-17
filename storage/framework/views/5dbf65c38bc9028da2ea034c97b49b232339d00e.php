@@ -39,7 +39,7 @@
     <!-- Users Table -->
     <div x-data="{activeTab:'tabHome'}" class="tabs flex flex-col">
         <div
-            class="is-scrollbar-hidden overflow-x-auto rounded-lg bg-slate-200 text-slate-600 dark:bg-navy-800 dark:text-navy-200"
+            class="is-scrollbar-hidden overflow-x-auto rounded-lg bg-slate-200 text-slate-600 dark:bg-navy-800 dark:text-navy-200 mb-4"
         >
             <div class="tabs-list flex px-1.5 py-1">
                 <button
@@ -217,7 +217,7 @@
             </div>
         </div>
 
-        <div class="tab-content pt-4">
+        <div class="tab-content">
             <div
             x-show="activeTab === 'tabProfile'"
             x-transition:enter="transition-all duration-500 easy-in-out"
@@ -234,45 +234,13 @@
                             >
                                 Expense Table
                             </h2>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                            <div class="flex">
+                                <div
+                                    class="inline-flex"
+                                >
+                                    <a href="<?php echo e(route('incomes.create')); ?>" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Income/Expense</a>
+                                </div>
+                            </div>
 
                         </div>
                         <div class="card mt-3">
@@ -385,7 +353,7 @@
         </div>
         </div>
 
-        <div class="tab-content pt-4">
+        <div class="tab-content">
             <div
                 x-show="activeTab === 'tabMessages'"
                 x-transition:enter="transition-all duration-500 easy-in-out"
@@ -402,6 +370,13 @@
                                 >
                                     Lead Table
                                 </h2>
+                                <div class="flex">
+                                    <div
+                                        class="inline-flex"
+                                    >
+                                        <a href="<?php echo e(route('incomes.create')); ?>" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Income/Expense</a>
+                                    </div>
+                                </div>
                             </div>
                             <div class="card mt-3">
                                 <div
