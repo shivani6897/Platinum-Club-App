@@ -110,7 +110,7 @@
                         <?php $__empty_1 = true; $__currentLoopData = $customer; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key=>$single_customer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                              <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"><?php echo e(((request('page',1)-1)*10+$loop->iteration)); ?></td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> <?php echo e($single_customer->customer_name); ?> </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> <?php echo e($single_customer->name); ?> </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> <?php echo e($single_customer->company_name); ?> </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > <?php echo e($single_customer->state); ?> </td>
 
@@ -189,6 +189,7 @@
     <?php $__env->stopSection(); ?>
 
     <?php $__env->startPush('scripts'); ?>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             function tableSearch(obj)
             {
@@ -210,7 +211,7 @@
                     if (result.isConfirmed) {
                         Swal.fire(
                             'Warning!',
-                            'Deleting Club',
+                            'Deleting Customer',
                             'warning'
                         );
                         $(obj).closest('form').submit();

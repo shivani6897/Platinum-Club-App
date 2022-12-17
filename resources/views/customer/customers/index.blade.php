@@ -188,6 +188,7 @@
     @endsection
 
     @push('scripts')
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
             function tableSearch(obj)
             {
@@ -209,7 +210,7 @@
                     if (result.isConfirmed) {
                         Swal.fire(
                             'Warning!',
-                            'Deleting Club',
+                            'Deleting Customer',
                             'warning'
                         );
                         $(obj).closest('form').submit();

@@ -18,7 +18,9 @@ class InvoiceController extends Controller
 {
     public function index()
     {
+        $customers = Customer::where('user_id',auth()->id())->get(['id'])->pluck('id')->toArray();
         $invoices = Invoice::with('customer')
+            ->whereIn('customer_id',$customers)
             ->when(request('search'),function($q){
                 $q->where('invoice_number','LIKE','%'.request('search').'%')
                     ->orWhereHas('customer',function($q2){
@@ -31,7 +33,7 @@ class InvoiceController extends Controller
 
     public function create()
     {
-        $customers = Customer::all(['id','name']);
+        $customers = Customer::where('user_id',auth()->id())->get(['id','name']);
         return view('customer.invoice.create',compact('customers'));
     }
 

@@ -7,6 +7,7 @@ use App\Http\Requests\Customer\Customer\StoreRequest;
 use App\Http\Requests\Customer\Customer\UpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use App\Models\Invoice;
 
 class CustomerController extends Controller
 {
@@ -93,6 +94,9 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
+        $invoices = Invoice::where('customer_id',$customer->id)->get();
+        if(count($invoices)>0)
+            return redirect()->route('customers.index')->with('error', 'Deletion suspended, Customer is associate with invoice.');
         $customer->delete();
         return redirect()->route('customers.index')->with('success', 'Customer Deleted Successfully');
     }
