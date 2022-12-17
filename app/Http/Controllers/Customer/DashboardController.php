@@ -56,7 +56,7 @@ class DashboardController extends Controller
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
             })->sum('converted_customer');
-        $customers = Customer::count();
+        $customers = Customer::where('user_id',auth()->id())->count();
         $profitability = $net_profit*100/($revenue>0?$revenue:1);
 
         // Profit% and Net Profit Graph
