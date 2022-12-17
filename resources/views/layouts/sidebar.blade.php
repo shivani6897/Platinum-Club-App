@@ -139,7 +139,7 @@
         >
           <img
             class="rounded-full"
-            src="{{asset('images/200x200.png')}}"
+            src="{{asset($user->profile?'/images/users/'.$user->profile:'images/200x200.png')}}"
             alt="avatar"
           />
           <span
