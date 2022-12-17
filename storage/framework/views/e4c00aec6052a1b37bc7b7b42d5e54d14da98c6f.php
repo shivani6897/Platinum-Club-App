@@ -10,7 +10,7 @@
     />
 
     <title><?php echo e(config('app.name')); ?> - Sign In</title>
-    <link rel="icon" type="image/png" href="images/favicon.png" />
+    <link rel="icon" type="image/png" href="/images/favicon.png" />
 
     <!-- CSS Assets -->
     <link rel="stylesheet" href="css/app.css" />
@@ -45,7 +45,7 @@
           <div class="text-center">
             <img
               class="mx-auto h-16 w-16"
-              src="images/app-logo.svg"
+              src="/images/app-logo.png"
               alt="logo"
             />
             <div class="mt-4">
