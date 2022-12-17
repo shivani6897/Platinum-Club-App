@@ -54,7 +54,7 @@ class TaskController extends Controller
         while (strtotime($date) <= strtotime(date($array['year'].'-'.$array['month']) . '-' . date('t', strtotime($date)))) {
 
             // One time tasks for day 
-            $oneTimeTask = Task::whereDate('task_date',date("Y-m-d", strtotime($date)))->where('frequency',0)->get();
+            $oneTimeTask = Task::where('user_id',auth()->id())->whereDate('task_date',date("Y-m-d", strtotime($date)))->where('frequency',0)->get();
             foreach($oneTimeTask as $once)
             {
                 $data[] = [
@@ -66,7 +66,7 @@ class TaskController extends Controller
             }
 
             // Recurring task for days
-            $recurring = Task::where(function($q) use ($date){
+            $recurring = Task::where('user_id',auth()->id())->where(function($q) use ($date){
                     $q->whereDate('start_date','<=',date("Y-m-d", strtotime($date)))
                         ->whereDate('end_date','>=',date("Y-m-d", strtotime($date)))
                         ->where('frequency',1);
@@ -110,6 +110,7 @@ class TaskController extends Controller
 
 
         $tasks = Task::with('task_category')
+            ->where('user_id',auth()->id())
             ->when(request('search'),function($q){
                 $q->whereHas('task_category',function($q2){
                     $q2->where('name','LIKE', '%'.request('search').'%');
