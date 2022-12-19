@@ -10,7 +10,8 @@ use Illuminate\Http\Request;
 class LeadController extends Controller
 {
     public function index(){
-        $lead = Lead::when(request('search'),function($q){
+        $lead = Lead::where('user_id',auth()->id())
+        ->when(request('search'),function($q){
             $q->where('lead_generated','LIKE', '%'.request('search').'%')
                 ->orWhere('converted_customer','LIKE','%'.request('search').'%')
                 ->orWhere('date','LIKE','%'.request('search').'%');

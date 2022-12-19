@@ -15,7 +15,8 @@ class ExpenseController extends Controller
 {
     public function index(Request $request)
     {
-        $expense = Expense::with('incomeCategory')->when(request('search'),function($q){
+        $expense = Expense::with('incomeCategory')->where('user_id',auth()->id())
+        ->when(request('search'),function($q){
             $q->where('income','LIKE', '%'.request('search').'%');
         })
             ->paginate(10);
