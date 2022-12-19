@@ -14,7 +14,8 @@
         "laravel/ui": "^4.1",
         "laravelcollective/html": "^6.3",
         "laraveldaily/laravel-invoices": "3.0",
-        "stripe/stripe-php": "^10.2"
+        "stripe/stripe-php": "^10.2",
+        "spatie/laravel-ignition": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",
@@ -23,8 +24,7 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
-        "phpunit/phpunit": "^9.5.10",
-        "spatie/laravel-ignition": "^1.0"
+        "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
         "psr-4": {
