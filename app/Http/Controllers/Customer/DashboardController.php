@@ -60,11 +60,9 @@ class DashboardController extends Controller
         $profitability = $net_profit*100/($revenue>0?$revenue:1);
 
         // Profit% and Net Profit Graph
-        $stat = DB::select("SELECT `date`,
-                    `eid`,
-                    `expense`,
-                    `iid`,
-                    `income`
+        $stat = DB::select("SELECT DATE_FORMAT(`date`, '%b-%Y') as month,
+                    sum(`expense`) as expense,
+                    sum(`income`) as income
             FROM (  (
                   SELECT
                     IFNULL(incomes.date, expenses.date) AS date,
@@ -105,31 +103,70 @@ class DashboardController extends Controller
                         AND DATE(`expenses`.`date`)<='".request('filter_to')."'":'')."
                 )
             ) AS dt
-            GROUP BY `date`,`eid`,`expense`,`iid`,`income`
-            ORDER BY `date`");
+            GROUP BY `month`
+            ORDER BY `month`");
 
         $dateArray = [];
         $profitArray = [];
         $netProfitArray = [];
         foreach($stat as $st)
         {
-            $dateArray[] = $st->date;
+            $dateArray[] = $st->month;
             $profitArray[] = ($st->income-$st->expense)*100/($st->income>0?$st->income:1);
             $netProfitArray[] = $st->income-$st->expense;
         }
+        // dd($dateArray,$profitArray,$netProfitArray,$stat);
 
 
         // Revenue
-        $revenueArray['x'] = Income::where('user_id',auth()->id())->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as date"))->groupBy('date')->pluck('date')->all();
-        $revenueArray['y'] = Income::where('user_id',auth()->id())->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as date"))->groupBy('date')->pluck('revenue')->all();
+        $revenueArray['x'] = Income::where('user_id',auth()->id())
+            ->when(request('filter_from'),function($q) {
+                $q->whereDate('date','>=',request('filter_from'));
+            })
+            ->when(request('filter_to'),function($q) {
+                $q->whereDate('date','<=',request('filter_to'));
+            })->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"))->groupBy('month')->pluck('month')->all();
+        $revenueArray['y'] = Income::where('user_id',auth()->id())
+            ->when(request('filter_from'),function($q) {
+                $q->whereDate('date','>=',request('filter_from'));
+            })
+            ->when(request('filter_to'),function($q) {
+                $q->whereDate('date','<=',request('filter_to'));
+            })->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"))->groupBy('month')->pluck('revenue')->all();
+
+        // dd($revenueArray);
 
         // Ad Spends
-        $ad_spendsArray['x'] = Expense::where('user_id',auth()->id())->where('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as date"))->groupBy('date')->pluck('date')->all();
-        $ad_spendsArray['y'] = Expense::where('user_id',auth()->id())->where('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as date"))->groupBy('date')->pluck('expense')->all();
+        $ad_spendsArray['x'] = Expense::where('user_id',auth()->id())
+            ->when(request('filter_from'),function($q) {
+                $q->whereDate('date','>=',request('filter_from'));
+            })
+            ->when(request('filter_to'),function($q) {
+                $q->whereDate('date','<=',request('filter_to'));
+            })->where('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"))->groupBy('month')->pluck('month')->all();
+        $ad_spendsArray['y'] = Expense::where('user_id',auth()->id())
+            ->when(request('filter_from'),function($q) {
+                $q->whereDate('date','>=',request('filter_from'));
+            })
+            ->when(request('filter_to'),function($q) {
+                $q->whereDate('date','<=',request('filter_to'));
+            })->where('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"))->groupBy('month')->pluck('expense')->all();
 
         // Ad Spends
-        $overheadsArray['x'] = Expense::where('user_id',auth()->id())->whereNot('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as date"))->groupBy('date')->pluck('date')->all();
-        $overheadsArray['y'] = Expense::where('user_id',auth()->id())->whereNot('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as date"))->groupBy('date')->pluck('expense')->all();
+        $overheadsArray['x'] = Expense::where('user_id',auth()->id())
+            ->when(request('filter_from'),function($q) {
+                $q->whereDate('date','>=',request('filter_from'));
+            })
+            ->when(request('filter_to'),function($q) {
+                $q->whereDate('date','<=',request('filter_to'));
+            })->whereNot('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"))->groupBy('month')->pluck('month')->all();
+        $overheadsArray['y'] = Expense::where('user_id',auth()->id())
+            ->when(request('filter_from'),function($q) {
+                $q->whereDate('date','>=',request('filter_from'));
+            })
+            ->when(request('filter_to'),function($q) {
+                $q->whereDate('date','<=',request('filter_to'));
+            })->whereNot('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"))->groupBy('month')->pluck('expense')->all();
 
         return view('customer.dashboard',compact('revenue','ad_spends','overheads','net_profit','leads','cost_per_lead','converted_customers','customers','profitability','dateArray','profitArray','netProfitArray','revenueArray','ad_spendsArray','overheadsArray'));
         // $stat = BusinessStat::where('user_id',auth()->id());

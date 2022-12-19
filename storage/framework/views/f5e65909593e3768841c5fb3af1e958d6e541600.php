@@ -105,7 +105,7 @@
         >
           <img
             class="rounded-full"
-            src="<?php echo e(asset($user->profile?'/images/users/'.$user->profile:'images/200x200.png')); ?>"
+            src="/images/200x200.png"
             alt="avatar"
           />
           <span

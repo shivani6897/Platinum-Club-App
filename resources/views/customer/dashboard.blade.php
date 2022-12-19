@@ -337,7 +337,7 @@
                 }
             },
             xaxis: {
-                type: 'datetime',
+                // type: 'datetime',
                 categories: {!!json_encode($dateArray)!!},
                 // [
                 //   '2011-01-01', '2011-02-01', '2011-03-01', '2011-04-01', '2011-05-01', '2011-06-01',
@@ -407,7 +407,7 @@
     <script type="text/javascript">
   var revenueX =  [
     @foreach($revenueArray['x'] as $data)
-      '{{$data->format('Y-m-d')}}',
+      '{{$data}}',
     @endforeach
     ];
   var revenueY =  {!! json_encode($revenueArray['y']) !!};
@@ -431,7 +431,7 @@
 
   var ad_spendsX =  [
     @foreach($ad_spendsArray['x'] as $data)
-      '{{$data->format('Y-m-d')}}',
+      '{{$data}}',
     @endforeach
     ];
   var ad_spendsY =  {!! json_encode($ad_spendsArray['y']) !!};
@@ -455,7 +455,7 @@
 
   var overheadsX =  [
     @foreach($overheadsArray['x'] as $data)
-      '{{$data->format('Y-m-d')}}',
+      '{{$data}}',
     @endforeach
     ];
   var overheadsY =  {!! json_encode($overheadsArray['y']) !!};

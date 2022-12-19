@@ -327,7 +327,7 @@
                 }
             },
             xaxis: {
-                type: 'datetime',
+                // type: 'datetime',
                 categories: <?php echo json_encode($dateArray); ?>,
                 // [
                 //   '2011-01-01', '2011-02-01', '2011-03-01', '2011-04-01', '2011-05-01', '2011-06-01',
@@ -397,7 +397,7 @@
     <script type="text/javascript">
   var revenueX =  [
     <?php $__currentLoopData = $revenueArray['x']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-      '<?php echo e($data->format('Y-m-d')); ?>',
+      '<?php echo e($data); ?>',
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     ];
   var revenueY =  <?php echo json_encode($revenueArray['y']); ?>;
@@ -421,7 +421,7 @@
 
   var ad_spendsX =  [
     <?php $__currentLoopData = $ad_spendsArray['x']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-      '<?php echo e($data->format('Y-m-d')); ?>',
+      '<?php echo e($data); ?>',
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     ];
   var ad_spendsY =  <?php echo json_encode($ad_spendsArray['y']); ?>;
@@ -445,7 +445,7 @@
 
   var overheadsX =  [
     <?php $__currentLoopData = $overheadsArray['x']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-      '<?php echo e($data->format('Y-m-d')); ?>',
+      '<?php echo e($data); ?>',
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     ];
   var overheadsY =  <?php echo json_encode($overheadsArray['y']); ?>;
