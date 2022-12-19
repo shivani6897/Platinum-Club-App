@@ -25,8 +25,13 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
       rel="stylesheet"
     />
+    <style>
+      .showAlertButton {
+        display: none;
+      }
+    </style>
   </head>
-  <body x-data class="is-header-blur" x-bind="$store.global.documentBody">
+  <body x-data class="is-header-blur" x-bind="$store.global.documentBody" onload="showAlerts()">
     <!-- App preloader-->
     <div
       class="app-preloader fixed z-50 grid h-full w-full place-content-center bg-slate-50 dark:bg-navy-900"
@@ -203,14 +208,62 @@ unset($__errorArgs, $__bag); ?>
         </div>
       </main>
     </div>
+    
 
     <!--
         This is a place for Alpine.js Teleport feature
         @see https://alpinejs.dev/directives/teleport
       -->
     <div id="x-teleport-target"></div>
+
+    <?php if($errors->any()): ?>
+    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    <button
+      class="showAlertButton btn bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+      @click="$notification({text:'<?php echo e($error); ?>',variant:'error',position:'right-top'})"
+    >
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+  <?php endif; ?>
+  <?php if(session()->has('success')): ?>
+    <button
+      class="showAlertButton btn bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+      @click="$notification({text:'<?php echo e(session()->get('success')); ?>',variant:'success',position:'right-top'})"
+    >
+  <?php endif; ?>
+
+
+  <?php if(session()->has('info')): ?>
+    <button
+      class="showAlertButton btn bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+      @click="$notification({text:'<?php echo e(session()->get('info')); ?>',variant:'info',position:'right-top'})"
+    >
+  <?php endif; ?>
+
+
+  <?php if(session()->has('warning')): ?>
+    <button
+      class="showAlertButton btn bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+      @click="$notification({text:'<?php echo e(session()->get('warning')); ?>',variant:'warning',position:'right-top'})"
+    >
+      toastr.warning("<?php echo e(session()->get('warning')); ?>");
+  <?php endif; ?>
+
+
+  <?php if(session()->has('error')): ?>
+    <button
+      class="showAlertButton btn bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+      @click="$notification({text:'<?php echo e(session()->get('error')); ?>',variant:'error',position:'right-top'})"
+    > 
+  <?php endif; ?>
+    <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
     <script>
       window.addEventListener("DOMContentLoaded", () => Alpine.start());
+      function showAlerts() {
+        var btns = document.getElementsByClassName('showAlertButton');
+        console.log(btns);
+        for(i=0;i<btns.length;i++)
+          btns[i].click();
+      }
     </script>
   </body>
 </html>

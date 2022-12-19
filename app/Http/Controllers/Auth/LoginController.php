@@ -68,10 +68,10 @@ class LoginController extends Controller
         }
         else {
             return redirect()->route('adminLogin.index')
-                ->withErrors("Combination Of Email And Password Do Not Match");
+                ->withErrors("Credentials did not matched");
         }
         return redirect()->route('adminLogin.index')
-            ->withErrors("Combination Of Email And Password Do Not Match");
+            ->withErrors("Credentials did not matched");
     }
 
     public function customer()
@@ -99,10 +99,10 @@ class LoginController extends Controller
         }
         else {
             return redirect()->route('customerLogin.index')
-                ->withErrors("Combination Of Email And Password Do Not Match");
+                ->with('error',"Credentials did not matched");
         }
         return redirect()->route('customerLogin.index')
-            ->withErrors("Combination Of Email And Password Do Not Match");
+            ->with('error',"Credentials did not matched");
     }
 
     public function passwordSet($token)

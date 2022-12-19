@@ -25,8 +25,13 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
         rel="stylesheet"
     />
+    <style>
+      .showAlertButton {
+        display: none;
+      }
+    </style>
 </head>
-<body x-data class="is-header-blur" x-bind="$store.global.documentBody">
+<body x-data class="is-header-blur" x-bind="$store.global.documentBody" onload="showAlerts()">
 <!-- App preloader-->
 <div
     class="app-preloader fixed z-50 grid h-full w-full place-content-center bg-slate-50 dark:bg-navy-900"
@@ -189,8 +194,53 @@
     @see https://alpinejs.dev/directives/teleport
   -->
 <div id="x-teleport-target"></div>
+  @if($errors->any())
+    @foreach($errors->all() as $error)
+    <button
+      class="showAlertButton btn bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+      @click="$notification({text:'{{ $error }}',variant:'error',position:'right-top'})"
+    >
+    @endforeach
+  @endif
+  @if(session()->has('success'))
+    <button
+      class="showAlertButton btn bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+      @click="$notification({text:'{{ session()->get('success') }}',variant:'success',position:'right-top'})"
+    >
+  @endif
+
+
+  @if(session()->has('info'))
+    <button
+      class="showAlertButton btn bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+      @click="$notification({text:'{{ session()->get('info') }}',variant:'info',position:'right-top'})"
+    >
+  @endif
+
+
+  @if(session()->has('warning'))
+    <button
+      class="showAlertButton btn bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+      @click="$notification({text:'{{ session()->get('warning') }}',variant:'warning',position:'right-top'})"
+    >
+      toastr.warning("{{ session()->get('warning') }}");
+  @endif
+
+
+  @if(session()->has('error'))
+    <button
+      class="showAlertButton btn bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+      @click="$notification({text:'{{ session()->get('error') }}',variant:'error',position:'right-top'})"
+    > 
+  @endif
 <script>
     window.addEventListener("DOMContentLoaded", () => Alpine.start());
+    function showAlerts() {
+      var btns = document.getElementsByClassName('showAlertButton');
+      console.log(btns);
+      for(i=0;i<btns.length;i++)
+        btns[i].click();
+    }
 </script>
 </body>
 </html>
