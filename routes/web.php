@@ -82,7 +82,8 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::get('/customer/invoices/stripe/success', [\App\Http\Controllers\Customer\InvoiceController::class, 'stripeSuccess'])->name('customer.invoices.stripe.success');
 
     //    TODO Products Page Route
-    Route::get('/products', function () {return view('products.index');})->name('products.index');
+    // Route::get('/products', function () {return view('products.index');})->name('products.index');
+    Route::resource('/products',\App\Http\Controllers\Customer\ProductController::class);
 
     //    TODO Subscription Page Route
     Route::get('/subscription', function () {return view('subscription.index');})->name('subscription.index');
