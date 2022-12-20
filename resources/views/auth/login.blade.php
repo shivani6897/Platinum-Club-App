@@ -186,7 +186,6 @@
         </div>
       </main>
     </div>
-    
 
     <!--
         This is a place for Alpine.js Teleport feature

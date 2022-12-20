@@ -72,6 +72,7 @@ class LoginController extends Controller
         }
         return redirect()->route('adminLogin.index')
             ->withErrors("Credentials did not matched");
+      
     }
 
     public function customer()

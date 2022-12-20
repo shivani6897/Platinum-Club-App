@@ -238,8 +238,11 @@
             <div class="tabs-list flex px-1.5 py-1">
                 <button
                     @click="activeTab = 'tabHome'"
+<<<<<<< HEAD
                     onclick="saveSelectedTab('income')"
                     id="incomeTab"
+=======
+>>>>>>> 46ddff9d5f7dfdebae979a701f36be052e286720
                     :class="activeTab === 'tabHome' ? 'bg-white shadow dark:bg-navy-500 dark:text-navy-100' : 'hover:text-slate-800 focus:text-slate-800 dark:hover:text-navy-100 dark:focus:text-navy-100'"
                     class="btn shrink-0 px-3 py-1.5 font-medium"
                 >
@@ -247,8 +250,11 @@
                 </button>
                 <button
                     @click="activeTab = 'tabProfile'"
+<<<<<<< HEAD
                     onclick="saveSelectedTab('expense')"
                     id="expenseTab"
+=======
+>>>>>>> 46ddff9d5f7dfdebae979a701f36be052e286720
                     :class="activeTab === 'tabProfile' ? 'bg-white shadow dark:bg-navy-500 dark:text-navy-100' : 'hover:text-slate-800 focus:text-slate-800 dark:hover:text-navy-100 dark:focus:text-navy-100'"
                     class="btn shrink-0 px-3 py-1.5 font-medium"
                 >
@@ -256,8 +262,11 @@
                 </button>
                 <button
                     @click="activeTab = 'tabMessages'"
+<<<<<<< HEAD
                     onclick="saveSelectedTab('lead')"
                     id="leadTab"
+=======
+>>>>>>> 46ddff9d5f7dfdebae979a701f36be052e286720
                     :class="activeTab === 'tabMessages' ? 'bg-white shadow dark:bg-navy-500 dark:text-navy-100' : 'hover:text-slate-800 focus:text-slate-800 dark:hover:text-navy-100 dark:focus:text-navy-100'"
                     class="btn shrink-0 px-3 py-1.5 font-medium"
                 >
@@ -646,6 +655,7 @@
             }
             $(this).val(val);
         });
+<<<<<<< HEAD
         function saveSelectedTab(name)
         {
             setCookie('business_stat',name,7);
@@ -655,5 +665,7 @@
             if(name!='')
                 $('#'+name+'Tab').click();
         })
+=======
+>>>>>>> 46ddff9d5f7dfdebae979a701f36be052e286720
     </script>
 @endpush

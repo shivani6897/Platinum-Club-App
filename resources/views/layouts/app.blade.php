@@ -16,6 +16,7 @@
 
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}" />
 
+    <script src="https://cdn.tailwindcss.com/"></script>
     <!-- CSS Assets -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
 

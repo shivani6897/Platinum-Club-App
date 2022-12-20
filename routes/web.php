@@ -68,16 +68,23 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::get('/customer/setpassword/{userToken}', [\App\Http\Controllers\Admin\UserController::class, 'userPassword'])->name('setuserpassword');
     Route::post('/customer/setpassword/{userToken}', [\App\Http\Controllers\Admin\UserController::class, 'userPasswordUpdate'])->name('userpassword.update');
 
-    Route::resource('/customers',CustomerController::class);
-    Route::resource('/incomes',\App\Http\Controllers\Customer\IncomeController::class);
-    Route::resource('/expenses',\App\Http\Controllers\Customer\ExpenseController::class);
+    Route::resource('/customers', CustomerController::class);
+    Route::resource('/incomes', \App\Http\Controllers\Customer\IncomeController::class);
+    Route::resource('/expenses', \App\Http\Controllers\Customer\ExpenseController::class);
 
-    Route::resource('/leads',\App\Http\Controllers\Customer\LeadController::class);
+    Route::resource('/leads', \App\Http\Controllers\Customer\LeadController::class);
 
-    Route::get('/invoices',[\App\Http\Controllers\Customer\InvoiceController::class,'index'])->name('invoices.index');
-    Route::get('/invoices/{invoice}/pdf',[\App\Http\Controllers\Customer\InvoiceController::class,'getPdf'])->name('invoices.pdf');
-    Route::get('/invoices/create',[\App\Http\Controllers\Customer\InvoiceController::class,'create'])->name('invoices.create');
-    Route::post('/invoices/store',[\App\Http\Controllers\Customer\InvoiceController::class,'store'])->name('invoices.store');
-    Route::post('/customer/invoices/test/{amount}',[\App\Http\Controllers\Customer\InvoiceController::class,'paymentIntent'])->name('customer.invoices.paymentIntent');
-    Route::get('/customer/invoices/stripe/success',[\App\Http\Controllers\Customer\InvoiceController::class,'stripeSuccess'])->name('customer.invoices.stripe.success');
+    Route::get('/invoices', [\App\Http\Controllers\Customer\InvoiceController::class, 'index'])->name('invoices.index');
+    Route::get('/invoices/{invoice}/pdf', [\App\Http\Controllers\Customer\InvoiceController::class, 'getPdf'])->name('invoices.pdf');
+    Route::get('/invoices/create', [\App\Http\Controllers\Customer\InvoiceController::class, 'create'])->name('invoices.create');
+    Route::post('/invoices/store', [\App\Http\Controllers\Customer\InvoiceController::class, 'store'])->name('invoices.store');
+    Route::post('/customer/invoices/test/{amount}', [\App\Http\Controllers\Customer\InvoiceController::class, 'paymentIntent'])->name('customer.invoices.paymentIntent');
+    Route::get('/customer/invoices/stripe/success', [\App\Http\Controllers\Customer\InvoiceController::class, 'stripeSuccess'])->name('customer.invoices.stripe.success');
+
+    //    TODO Products Page Route
+    Route::get('/products', function () {return view('products.index');})->name('products.index');
+
+    //    TODO Subscription Page Route
+    Route::get('/subscription', function () {return view('subscription.index');})->name('subscription.index');
+    Route::get('/add-subscription', function () {return view('subscription.add-subscription');})->name('add-subscription.index');
 });
