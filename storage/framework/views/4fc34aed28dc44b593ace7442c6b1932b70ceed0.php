@@ -1,7 +1,6 @@
-@extends('layouts.app')
-@section('heading', 'Products')
+<?php $__env->startSection('heading', 'Products'); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="products-container">
         <div class="mt-4 grid grid-cols-12 gap-4  transition-all duration-[.25s] sm:mt-5 sm:gap-5 lg:mt-6 lg:gap-6">
             <div class="col-span-12 lg:col-span-4 ">
@@ -9,7 +8,7 @@
                     <div class="px-4 pb-4 flex-row items-center justify-between flex  border-b border-sky-200">
                         <h3 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
                             Products</h3>
-                        {{--  TODO Add Product Model   --}}
+                        
                         <div x-data="{showModal:false}">
                             <button
                                 @click="showModal = true"
@@ -153,7 +152,7 @@
             </div>
             <div class="col-span-12 lg:col-span-8 ">
                 <div class="bg-white rounded-md p-4 shadow-md">
-                    {{--        TODO  Add PLam          --}}
+                    
                     <div class="border-b border-sky-200 pb-3">
                         <h3 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
                             Add Plan
@@ -227,7 +226,7 @@
                                 checkout page.</small>
                         </label>
                     </div>
-                    {{--  TODO Trial  --}}
+                    
                     <h4 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100 py-4">
                         Trial <sup class="text-rose-500">*</sup>
                     </h4>
@@ -294,7 +293,7 @@
                             </div>
                         </div>
                     </div>
-                    {{--  TODO Billing Cycle  --}}
+                    
                     <h4 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100 py-4">
                         Billing Cycle <sup class="text-rose-500">*</sup>
                     </h4>
@@ -355,7 +354,7 @@
                             </div>
                         </div>
                     </div>
-                    {{--  TODO Pricing  --}}
+                    
                     <h4 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100 py-4">
                         Pricing <sup class="text-rose-500">*</sup>
                     </h4>
@@ -452,7 +451,7 @@
                             </label>
                         </div>
                     </div>
-                    {{--  TODO Plan Description  --}}
+                    
                     <h4 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100 py-4">
                         Plan Description <sup class="text-rose-500">*</sup>
                     </h4>
@@ -489,7 +488,7 @@
                             </small>
                         </div>
                     </div>
-                    {{--  TODO Payment Gateway   --}}
+                    
                     <div>
                         <label class="block mt-4">
                             <span>Payment Gateway </span>
@@ -515,9 +514,9 @@
             </div>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
     <style>
         .products-container {
             max-width: 1280px;
@@ -549,4 +548,6 @@
 
 
     </style>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\platinum\resources\views/products/index.blade.php ENDPATH**/ ?>
