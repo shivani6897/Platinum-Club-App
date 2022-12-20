@@ -45,7 +45,7 @@
         <!-- TODO Subscription -->
         <a href="<?php echo e(route('subscription.index')); ?>"
         class="flex h-11 w-11 items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:bg-navy-600 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
-        x-tooltip.placement.right="'Products'">
+        x-tooltip.placement.right="'Subscription'">
             <i class="fa-sharp fa-solid fa-s fa-2x"></i>
       </a>
 

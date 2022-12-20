@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('heading', 'Products'); ?>
 
 <?php $__env->startSection('content'); ?>
