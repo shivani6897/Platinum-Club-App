@@ -295,94 +295,10 @@
                     </div>
                     
                     <h4 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100 py-4">
-                        Billing Cycle <sup class="text-rose-500">*</sup>
-                    </h4>
-                    <div class="border-t border-sky-200 py-3">
-                        <div>
-                            <div>
-                                <input
-                                    class="form-radio is-outline h-5 w-5 rounded-full border-slate-400/70 bg-slate-100 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-500 dark:bg-navy-900 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
-                                    name="contact-preference" id="rb-email" type="radio" checked="checked"/>
-                                <label class="label" for="rb-email">One-Time</label>
-                            </div>
-                            <input
-                                class="rb-billing-cycle form-radio is-outline h-5 w-5 rounded-full border-slate-400/70 bg-slate-100 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-500 dark:bg-navy-900 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
-                                name="contact-preference" id="rb-phone" type="radio"/>
-                            <label class="label" for="rb-phone">EMI</label>
-                            <div class="billing-cycle mt-4">
-                                <div class="grid grid-cols-3 gap-4">
-                                    <div>
-                                        <label class="block">
-                                            <span>Bill Every<sup class="text-rose-500">*</sup></span>
-                                            <input
-                                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                type="number"
-                                            />
-                                        </label>
-                                        <small>
-                                            Choose the billing frequency type. Example: To bill every 2 weeks up to 3
-                                            billing cycles, add 2 in the bill every option, choose weeks from the
-                                            dropdown and add 3 in the no. of billing cycles.
-                                        </small>
-                                    </div>
-                                    <div>
-                                        <label class="block">
-                                            <span></span>
-                                            <select
-                                                class="form-select mt-7 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
-                                            >
-                                                <option>3 Month</option>
-                                                <option>6 Month</option>
-                                                <option>9 Month</option>
-                                            </select>
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label class="block">
-                                            <span>No. of Billing Cycles</span>
-                                            <input
-                                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                type="number"
-                                            />
-                                        </label>
-                                        <div class="col-span-2">
-                                            <small>
-                                                Leave it blank to use the forever billing cycle type. </small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <h4 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100 py-4">
                         Pricing <sup class="text-rose-500">*</sup>
                     </h4>
                     <div class="border-t border-sky-200 py-3">
-                        <label class="block">
-                            <select
-                                class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
-                            >
-                                <option>Select Plan Type</option>
-                                <option>Flat Fee</option>
-                                <option>Per Unit</option>
-                                <option>Volume</option>
-                                <option>Tiered</option>
-                                <option>Stairstep</option>
-                                <option>Donation / Pay Your Own Price</option>
-                                <option>Variable Pricing (Dimesale/Timesale)</option>
-                            </select>
-                        </label>
-                        <small>Note: To create a free plan, keep the price amount as zero.</small>
                         <div class="my-4">
-                            <label class="block">
-                                <span>What Currency Do You Want to Sell In? <sup class="text-rose-500">*</sup></span>
-                                <select
-                                    class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
-                                >
-                                    <option>What Currency Do You Want to Sell In?</option>
-                                </select>
-                            </label>
                             <label class="block mt-4">
                                 <span>Price <sup class="text-rose-500">*</sup></span>
                                 <label class="mt-1 flex -space-x-px">
@@ -449,6 +365,67 @@
                                     You can mention the minimum amount to be paid by the customer.
                                 </small>
                             </label>
+                        </div>
+                    </div>
+                    
+                    <h4 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100 py-4">
+                        Billing Cycle <sup class="text-rose-500">*</sup>
+                    </h4>
+                    <div class="border-t border-sky-200 py-3">
+                        <div>
+                            <div>
+                                <input
+                                    class="form-radio is-outline h-5 w-5 rounded-full border-slate-400/70 bg-slate-100 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-500 dark:bg-navy-900 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
+                                    name="contact-preference" id="rb-email" type="radio" checked="checked"/>
+                                <label class="label" for="rb-email">One-Time</label>
+                            </div>
+                            <input
+                                class="rb-billing-cycle form-radio is-outline h-5 w-5 rounded-full border-slate-400/70 bg-slate-100 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-500 dark:bg-navy-900 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
+                                name="contact-preference" id="rb-phone" type="radio"/>
+                            <label class="label" for="rb-phone">EMI</label>
+                            <div class="billing-cycle mt-4">
+                                <div class="grid grid-cols-3 gap-4">
+                                    <div>
+                                        <label class="block">
+                                            <span>Down Payment<sup class="text-rose-500">*</sup></span>
+                                            <input
+                                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                type="number"
+                                            />
+                                        </label>
+                                        <small>
+                                            Choose the billing frequency type. Example: To bill every 2 weeks up to 3
+                                            billing cycles, add 2 in the bill every option, choose weeks from the
+                                            dropdown and add 3 in the no. of billing cycles.
+                                        </small>
+                                    </div>
+                                    <div>
+                                        <label class="block">
+                                            <span></span>
+                                            <select
+                                                class="form-select mt-7 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+                                            >
+                                                <option>3 Month</option>
+                                                <option>6 Month</option>
+                                                <option>9 Month</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <label class="block">
+                                            <span>No. of Billing Cycles</span>
+                                            <input
+                                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                type="number"
+                                            />
+                                        </label>
+                                        <div class="col-span-2">
+                                            <small>
+                                                Leave it blank to use the forever billing cycle type. </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
