@@ -117,8 +117,7 @@
 
                                 <div x-ref="popperRoot" class="popper-root" :class="isShowPopper && 'show'">
                                     <div
-                                        class="popper-box rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700"
-                                    >
+                                        class="popper-box rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
                                         <ul>
                                             <li>
                                                 <a href="#"
@@ -130,6 +129,7 @@
                                                    class="flex  items-center px-3 h-8 pr-12 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
                                                 >Delete</a>
                                             </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -231,10 +231,12 @@
                         Trial <sup class="text-rose-500">*</sup>
                     </h4>
                     <div class="border-t border-sky-200 py-3">
-                        <input
-                            class=" rb-trial form-checkbox is-basic h-5 w-5 rounded border-slate-400/70 checked:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
-                            name="contact-preference" id="rb-phone" type="checkbox"/>
-                        <label class="label" for="rb-phone">Trial</label>
+                        <label class="inline-flex items-center space-x-2">
+                            <input
+                                class=" rb-trial form-checkbox is-basic h-5 w-5 rounded border-slate-400/70 checked:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
+                                name="contact-preference" id="rb-phone" type="checkbox" onclick="trialChanged()"/>
+                            <span class="label">Trial</span>
+                        </label>
                         <div class="trial mt-4">
                             <div>
                                 <label class="block mt-4">
@@ -335,7 +337,7 @@
                                         </label>
                                     </label>
                                 </div>
-                                <label class="mt-1 flex -space-x-px">
+                                <label class="mt-1 flex -space-x-px" style="height: 40px;margin-top: 10px">
                                     <input
                                         class="form-input w-full rounded-l-lg border border-slate-300 bg-transparent px-3  placeholder:text-slate-400/70 hover:z-10 hover:border-slate-400 focus:z-10 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                         type="number"
@@ -373,17 +375,20 @@
                     </h4>
                     <div class="border-t border-sky-200 py-3">
                         <div>
-                            <div>
+                            <label class="inline-flex items-center space-x-2">
                                 <input
                                     class="form-radio is-outline h-5 w-5 rounded-full border-slate-400/70 bg-slate-100 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-500 dark:bg-navy-900 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
-                                    name="contact-preference" id="rb-email" type="radio" checked="checked"/>
-                                <label class="label" for="rb-email">One-Time</label>
-                            </div>
-                            <input
-                                class="rb-billing-cycle form-radio is-outline h-5 w-5 rounded-full border-slate-400/70 bg-slate-100 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-500 dark:bg-navy-900 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
-                                name="contact-preference" id="rb-phone" type="radio"/>
-                            <label class="label" for="rb-phone">EMI</label>
-                            <div class="billing-cycle mt-4">
+                                    name="contact-preference" id="rb-email" type="radio" checked="checked"
+                                    onclick="hideBilling()"/>
+                                <span class="label">One-Time</span>
+                            </label> <br>
+                            <label class="inline-flex items-center space-x-2">
+                                <input
+                                    class="rb-billing-cycle form-radio is-outline h-5 w-5 rounded-full border-slate-400/70 bg-slate-100 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-500 dark:bg-navy-900 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
+                                    name="contact-preference" id="rb-phone" type="radio" onclick="showBilling()"/>
+                                <span class="label">EMI</span>
+                            </label>
+                            <div class="billing-cycle mt-4" id="billingcycle" style="clear: both">
                                 <div class="grid grid-cols-3 gap-4">
                                     <div>
                                         <label class="block">
@@ -394,7 +399,8 @@
                                             />
                                         </label>
                                         <small>
-                                            Choose the billing frequency type. Example: To bill every 2 weeks up to 3
+                                            Choose the billing frequency type. Example: To bill every 2 weeks up to
+                                            3
                                             billing cycles, add 2 in the bill every option, choose weeks from the
                                             dropdown and add 3 in the no. of billing cycles.
                                         </small>
@@ -525,6 +531,25 @@
 
 
     </style>
+<?php $__env->stopPush(); ?>
+
+<?php $__env->startPush('scripts'); ?>
+    <script>
+        function hideBilling() {
+            document.getElementById('billingcycle').style.display = 'none';
+        }
+
+        function showBilling() {
+            document.getElementById('billingcycle').style.display = 'block';
+        }
+
+        function trialChanged() {
+            if($('.rb-trial').is(":checked"))
+                $(".trial").show();
+            else
+                $(".trial").hide();
+        };
+    </script>
 <?php $__env->stopPush(); ?>
 
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\platinum\resources\views/products/index.blade.php ENDPATH**/ ?>
