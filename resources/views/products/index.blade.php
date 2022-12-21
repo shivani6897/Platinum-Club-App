@@ -549,6 +549,6 @@
                 $(".trial").show();
             else
                 $(".trial").hide();
-        };
+        }
     </script>
 @endpush

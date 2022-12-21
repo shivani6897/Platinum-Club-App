@@ -88,4 +88,8 @@ Route::group(['middleware' => ['auth','verified']], function () {
     //    TODO Subscription Page Route
     Route::get('/subscription', function () {return view('subscription.index');})->name('subscription.index');
     Route::get('/add-subscription', function () {return view('subscription.add-subscription');})->name('add-subscription.index');
+
+    //    TODO Paymentz Page
+    Route::get('/paymentz', function () {return view('paymentz.index');})->name('paymentz.index');
+
 });
