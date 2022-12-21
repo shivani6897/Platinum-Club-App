@@ -60,9 +60,14 @@ class DashboardController extends Controller
         $profitability = $net_profit*100/($revenue>0?$revenue:1);
 
         // Profit% and Net Profit Graph
-        $stat = DB::select("SELECT DATE_FORMAT(`date`, '%b-%Y') as month,
-                    sum(`expense`) as expense,
-                    sum(`income`) as income
+        // $stat = DB::select("SELECT DATE_FORMAT(`date`, '%b-%Y') as month,
+        //             sum(`expense`) as expense,
+        //             sum(`income`) as income
+        $stat = DB::select("SELECT `date`,
+                    `eid`,
+                    `expense`,
+                    `iid`,
+                    `income`
             FROM (  (
                   SELECT
                     IFNULL(incomes.date, expenses.date) AS date,
@@ -102,17 +107,21 @@ class DashboardController extends Controller
                         "AND DATE(`incomes`.`date`)<='".request('filter_to')."'
                         AND DATE(`expenses`.`date`)<='".request('filter_to')."'":'')."
                 )
-            ) AS dt
-            GROUP BY `month`
-            ORDER BY `month`");
+            ) AS dt 
+            GROUP BY `date`,`eid`,`expense`,`iid`,`income`
+            ORDER BY `date`");
+
+            //GROUP BY `month`
+            //ORDER BY `month`");
 
         $dateArray = [];
         $profitArray = [];
         $netProfitArray = [];
         foreach($stat as $st)
         {
-            $dateArray[] = $st->month;
-            $profitArray[] = ($st->income-$st->expense)*100/($st->income>0?$st->income:1);
+            // $dateArray[] = $st->month;
+            $dateArray[] = $st->date;
+            $profitArray[] = ($st->income>0?($st->income-$st->expense)*100/$st->income:100);
             $netProfitArray[] = $st->income-$st->expense;
         }
         // dd($dateArray,$profitArray,$netProfitArray,$stat);
@@ -125,14 +134,14 @@ class DashboardController extends Controller
             })
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
-            })->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"))->groupBy('month')->pluck('month')->all();
+            })->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->orderBy('date')->pluck('date')->all();
         $revenueArray['y'] = Income::where('user_id',auth()->id())
             ->when(request('filter_from'),function($q) {
                 $q->whereDate('date','>=',request('filter_from'));
             })
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
-            })->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"))->groupBy('month')->pluck('revenue')->all();
+            })->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->orderBy('date')->pluck('revenue')->all();
 
         // dd($revenueArray);
 
