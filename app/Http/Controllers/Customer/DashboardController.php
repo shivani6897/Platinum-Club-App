@@ -85,20 +85,17 @@ class DashboardController extends Controller
         //             sum(`expense`) as expense,
         //             sum(`income`) as income
         $stat = DB::select("SELECT `date`,
-                    `eid`,
-                    `expense`,
-                    `iid`,
-                    `income`
+                    MAX(`expense`) AS 'expense',
+                    SUM(`income`) AS 'income'
             FROM (  (
                   SELECT
                     IFNULL(incomes.date, expenses.date) AS date,
-                    expenses.id AS eid,
-                    `expenses`.`expense`,
+                    SUM(`expenses`.`expense`) as 'expense',
                     incomes.id AS iid,
                     `incomes`.`income`
                   FROM
                     `incomes`
-                    LEFT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date`
+                    LEFT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date` AND `incomes`.`user_id`=".auth()->id()." AND `expenses`.`user_id`=".auth()->id()."
                     WHERE `incomes`.`deleted_at` IS NULL
                     AND `expenses`.`deleted_at` IS NULL
                     ".(request('filter_from')?
@@ -107,18 +104,18 @@ class DashboardController extends Controller
                         (request('filter_to')?
                         "AND DATE(`incomes`.`date`)<='".request('filter_to')."'":
                         "AND DATE(`incomes`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
+                    GROUP BY `date`,`iid`
                 )
                 UNION ALL
                 (
                   SELECT
                     IFNULL(incomes.date, expenses.date) AS date,
-                    expenses.id AS eid,
-                    `expenses`.`expense`,
+                    SUM(`expenses`.`expense`) as 'expense',
                     incomes.id AS iid,
                     `incomes`.`income`
                   FROM
                     `incomes`
-                    RIGHT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date`
+                    RIGHT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date` AND `incomes`.`user_id`=".auth()->id()." AND `expenses`.`user_id`=".auth()->id()."
                     WHERE `incomes`.`deleted_at` IS NULL
                     AND `expenses`.`deleted_at` IS NULL
                     ".(request('filter_from')?
@@ -127,11 +124,11 @@ class DashboardController extends Controller
                         (request('filter_to')?
                         "AND DATE(`expenses`.`date`)<='".request('filter_to')."'":
                         "AND DATE(`expenses`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
+                    GROUP BY `date`,`iid`
                 )
             ) AS dt 
-            GROUP BY `date`,`eid`,`expense`,`iid`,`income`
+            GROUP BY `date`
             ORDER BY `date`");
-
             //GROUP BY `month`
             //ORDER BY `month`");
 
@@ -145,7 +142,6 @@ class DashboardController extends Controller
             $profitArray[] = ($st->income>0?($st->income-$st->expense)*100/$st->income:-100);
             $netProfitArray[] = $st->income-$st->expense;
         }
-        // dd($dateArray,$profitArray,$netProfitArray,$stat);
 
 
         // Revenue
