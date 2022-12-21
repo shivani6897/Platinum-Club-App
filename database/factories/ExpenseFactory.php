@@ -19,7 +19,7 @@ class ExpenseFactory extends Factory
     {
         return [
             'user_id'=>2,
-            'expense_category_id'=>1,
+            'expense_category_id'=>rand(1,2),
             'expense'=>rand(1,100)*1000,
             'date'=>Carbon::today()->subDays(rand(0, 365))->format('Y-m-d'),
         ];
