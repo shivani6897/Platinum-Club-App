@@ -17,6 +17,6 @@ class IncomeExpenseSeeder extends Seeder
     public function run()
     {
         Income::factory()->count(100)->create();
-        Expense::factory()->count(100)->create();
+        Expense::factory()->count(200)->create();
     }
 }

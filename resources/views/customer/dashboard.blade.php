@@ -298,6 +298,7 @@
 
     <script type="text/javascript">
         var options = {
+            colors:['#3c763d'],
             series: [{
                 name: 'Profit',
                 data: {!!json_encode($profitArray)!!},
@@ -307,20 +308,16 @@
                 // ]
             }],
             chart: {
-                type: 'area',
+                type: 'bar',
                 height: 350
             },
             plotOptions: {
                 bar: {
                     colors: {
                         ranges: [{
-                            from: -100,
-                            to: -46,
-                            color: '#F15B46'
-                        }, {
-                            from: -45,
+                            from: -10000,
                             to: 0,
-                            color: '#FEB019'
+                            color: '#a94442'
                         }]
                     },
                     columnWidth: '80%',
@@ -417,15 +414,28 @@
 
   var options = {
     chart: {
-      type: 'area'
+      type: 'bar'
     },
     series: [{
       name: 'Revenue',
       data: revenueY
     }],
-    dataLabels: {
-                enabled: false,
+    colors:['#3c763d'],
+    plotOptions: {
+        bar: {
+            colors: {
+                ranges: [{
+                    from: -10000,
+                    to: 0,
+                    color: '#a94442'
+                }]
             },
+            columnWidth: '80%',
+        }
+    },
+    dataLabels: {
+        enabled: false,
+    },
     xaxis: {
         type: 'datetime',
         categories: revenueX
@@ -437,7 +447,7 @@
 
   var ad_spendsX =  [
     @foreach($ad_spendsArray['x'] as $data)
-      '{{$data}}',
+      '{{$data->format('Y-m-d')}}',
     @endforeach
     ];
   var ad_spendsY =  {!! json_encode($ad_spendsArray['y']) !!};
@@ -450,8 +460,24 @@
       name: 'Ad Spends',
       data: ad_spendsY
     }],
+    colors:['#3c763d'],
+    plotOptions: {
+        bar: {
+            colors: {
+                ranges: [{
+                    from: -10000,
+                    to: 0,
+                    color: '#a94442'
+                }]
+            },
+            columnWidth: '80%',
+        }
+    },
+    dataLabels: {
+        enabled: false,
+    },
     xaxis: {
-        // type: 'datetime',
+        type: 'datetime',
         categories: ad_spendsX
     }
   }
@@ -461,7 +487,7 @@
 
   var overheadsX =  [
     @foreach($overheadsArray['x'] as $data)
-      '{{$data}}',
+      '{{$data->format('Y-m-d')}}',
     @endforeach
     ];
   var overheadsY =  {!! json_encode($overheadsArray['y']) !!};
@@ -474,8 +500,24 @@
       name: 'Overhead',
       data: overheadsY
     }],
+    colors:['#3c763d'],
+    plotOptions: {
+        bar: {
+            colors: {
+                ranges: [{
+                    from: -10000000,
+                    to: 0,
+                    color: '#a94442'
+                }]
+            },
+            columnWidth: '80%',
+        }
+    },
+    dataLabels: {
+        enabled: false,
+    },
     xaxis: {
-        // type: 'datetime',
+        type: 'datetime',
         categories: overheadsX
     }
   }
@@ -494,7 +536,24 @@
       name: 'Profit',
       data: net_profitY
     }],
+    colors:['#3c763d'],
+    plotOptions: {
+        bar: {
+            colors: {
+                ranges: [{
+                    from: -100000000,
+                    to: 0,
+                    color: '#a94442'
+                }]
+            },
+            columnWidth: '80%',
+        }
+    },
+    dataLabels: {
+        enabled: false,
+    },
     xaxis: {
+      type: 'datetime',
       categories: net_profitX
     }
   }
