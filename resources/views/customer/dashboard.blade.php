@@ -244,6 +244,9 @@
 
 @push('styles')
     <style>
+        /*.apexcharts-datalabel {
+    fill: #fff!important;
+}*/
         /*.bg-tr {
             background: rgb(73, 90, 228);
             background: linear-gradient(90deg, rgba(73, 90, 228, 1) 15%, rgba(7, 24, 157, 0.9654061453683036) 93%);
@@ -304,7 +307,7 @@
                 // ]
             }],
             chart: {
-                type: 'bar',
+                type: 'area',
                 height: 350
             },
             plotOptions: {
@@ -337,7 +340,7 @@
                 }
             },
             xaxis: {
-                // type: 'datetime',
+                type: 'datetime',
                 categories: {!!json_encode($dateArray)!!},
                 // [
                 //   '2011-01-01', '2011-02-01', '2011-03-01', '2011-04-01', '2011-05-01', '2011-06-01',
@@ -407,21 +410,24 @@
     <script type="text/javascript">
   var revenueX =  [
     @foreach($revenueArray['x'] as $data)
-      '{{$data}}',
+      '{{$data->format('Y-m-d')}}',
     @endforeach
     ];
   var revenueY =  {!! json_encode($revenueArray['y']) !!};
 
   var options = {
     chart: {
-      type: 'bar'
+      type: 'area'
     },
     series: [{
       name: 'Revenue',
       data: revenueY
     }],
+    dataLabels: {
+                enabled: false,
+            },
     xaxis: {
-        // type: 'datetime',
+        type: 'datetime',
         categories: revenueX
     }
   }
