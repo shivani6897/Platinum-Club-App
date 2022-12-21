@@ -18,7 +18,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::when(request('search'),function($q) {
+        $products = Product::where('user_id',auth()->id())
+        ->when(request('search'),function($q) {
             $q->where('name','LIKE','%'.request('search').'%')
                 ->orWhere('price','LIKE','%'.request('search').'%')
                 ->orWhere('downpayment','LIKE','%'.request('search').'%');
@@ -50,6 +51,7 @@ class ProductController extends Controller
             'downpayment',
             'description'
         ]);
+        $array['user_id'] = auth()->id();
         $array['image'] = $imageService->store($request->image, '/images/products', $request->name);
         $product = Product::create($array);
         return redirect()->route('products.index')->with('success','Product Created');
@@ -81,6 +83,7 @@ class ProductController extends Controller
             'downpayment',
             'description'
         ]);
+        $array['user_id'] = auth()->id();
         $array['image'] = $product->image;
         if(!empty($request->image))
         {
