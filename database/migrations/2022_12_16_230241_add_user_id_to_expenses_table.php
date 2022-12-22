@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('expenses', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->index(0)->after('id');
+            $table->unsignedBigInteger('user_id')->nullable()->index(0)->after('id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
