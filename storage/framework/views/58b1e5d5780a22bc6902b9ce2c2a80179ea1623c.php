@@ -1,7 +1,6 @@
-@extends('layouts.app')
-@section('heading', 'Add Subscription')
+<?php $__env->startSection('heading', 'Add Subscription'); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="bg-white rounded-md p-4 shadow-md container mx-auto">
         <div class="border-b border-sky-200 pb-3">
             <h3 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
@@ -90,7 +89,7 @@
                 </small>
             </div>
         </div>
-        {{--   TODO Assign Product and Plan     --}}
+        
         <div class="card m-4 p-4">
             <h3 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
                 Assign Product and Plan
@@ -201,7 +200,7 @@
                 </div>
             </div>
         </div>
-        {{--   TODO Subscription Term Start on    --}}
+        
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block mt-4">
@@ -225,7 +224,7 @@
                 </label>
             </div>
         </div>
-        {{--   TODO Add Subscription Reason  --}}
+        
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block mt-4">
@@ -243,7 +242,7 @@
                 </label>
             </div>
         </div>
-        {{--   TODO Payment Method    --}}
+        
         <div class="card m-4 p-4">
             <h3 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
                 Payment Method
@@ -287,7 +286,7 @@
                 </div>
             </div>
         </div>
-        {{--  TODO Payment Term  --}}
+        
         <h4 class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100 py-4">
             Payment Term
         </h4>
@@ -333,9 +332,9 @@
             </button>
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script>
         function paymentTerm() {
             if ($('.rb-payment-term').is(":checked"))
@@ -350,10 +349,10 @@
                 $(".payment-method").hide();
         }
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
 
 
-@push('styles')
+<?php $__env->startPush('styles'); ?>
     <style>
         .payment-method {
             display: none;
@@ -372,4 +371,6 @@
         }
 
     </style>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\platinum\resources\views/subscription/add-subscription.blade.php ENDPATH**/ ?>

@@ -50,7 +50,7 @@
 
 <!-- Main Content Wrapper -->
 <div style="padding-bottom: 50px">
-    <main class="w-8/12 mx-auto">
+    <main class="sm:w-8/12 sm:mx-auto">
         <div>
             <div class="mt-7 pt-5">
                 <div class="rounded-lg p-5 bg-white">
@@ -178,7 +178,7 @@
                 <div class="mt-4 rounded-lg p-4 bg-white">
                     <div>
                         <center><p class="text-2xl  text-black font-bold pt-5">Product Description</p></center>
-                        <div class="grid grid-cols-2 gap-4 mt-4 p-4">
+                        <div class="grid md:grid-cols-2 gap-4 mt-4 p-4">
                             <div class=" flex justify-center">
                                 <img src="{{asset('images/payment/marketing-online.png')}}" alt="">
                             </div>
