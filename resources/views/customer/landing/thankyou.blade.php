@@ -53,11 +53,11 @@
           <p class="pt-4 text-7xl font-bold text-primary dark:text-accent">
             Thank You for your purchase
           </p>
-          <p
+          {{-- <p
             class="pt-4 text-xl font-semibold text-slate-800 dark:text-navy-50"
           >
             We have sent you confirmation Mail
-          </p>
+          </p> --}}
           <p class="pt-2 text-slate-500 dark:text-navy-200">
             Now you can go back by clicking home button below.
           </p>

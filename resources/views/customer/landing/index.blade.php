@@ -217,15 +217,19 @@
                         </div>
                     </div>
                     <div class="mt-7">
-                        <input type="hidden" name="gateway" id="payment-gateway" value="stripe">
+                        <input type="hidden" name="gateway" id="payment-gateway" value="{{($gateway->stripe_active==1?'stripe':'razorpay')}}">
                         <div class="grid grid-cols-3 gap-4 mt-4">
+                            @if($gateway->stripe_active==1)
                             <div onclick="selectGateway(this,'stripe')" class="gateway-button selected border border-b-slate-200 rounded-md  flex justify-center">
                                 <img src="{{asset('images/payment/stripe_logo.png')}}" alt="">
                             </div>
-                            <div onclick="selectGateway(this,'razorpay')" class="gateway-button border border-b-slate-200 rounded-md  flex justify-center items-center">
+                            @endif
+                            @if($gateway->razorpay_active==1)
+                            <div onclick="selectGateway(this,'razorpay')" class="gateway-button {{ ($gateway->stripe_active==0?'selected':'') }} border border-b-slate-200 rounded-md  flex justify-center items-center">
                                 <img src="{{asset('images/payment/razorpay_logo.png')}}" alt=""
                                      style="width: 70%;height: 40px"/>
                             </div>
+                            @endif
                             {{-- <div onclick="selectGateway(this,'instamojo')" class="gateway-button border border-b-slate-200 rounded-md  flex justify-center items-center">
                                 <img src="{{asset('images/payment/instamojo.png')}}" alt=""
                                      style="width: 70%;height: 40px"/>

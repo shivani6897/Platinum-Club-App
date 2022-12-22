@@ -99,6 +99,12 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::resource('/products',\App\Http\Controllers\Customer\ProductController::class);
     Route::get('getProductById', [\App\Http\Controllers\Customer\ProductController::class, 'getProductById'])->name('products.getProductById');
 
+    Route::get('/customer/payment-gateways', [\App\Http\Controllers\Customer\PaymentGatewayController::class, 'index'])->name('paymentgateways');
+    Route::get('/customer/payment-gateways/changeVisibility/{id}/{visibility}/{type}', [\App\Http\Controllers\Customer\PaymentGatewayController::class, 'changeVisibility'])->name('changeVisibility');
+    Route::get('/customer/payment-gateways/show/{id}/{type}', [\App\Http\Controllers\Customer\PaymentGatewayController::class, 'show'])->name('customer.create');
+    Route::post('/customer/payment-gateways/store', [\App\Http\Controllers\Customer\PaymentGatewayController::class, 'store'])->name('customer.store');
+
+
     //    TODO Subscription Page Route
     Route::get('/subscription', function () {return view('subscription.index');})->name('subscription.index');
     Route::get('/add-subscription', function () {return view('subscription.add-subscription');})->name('add-subscription.index');

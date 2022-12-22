@@ -15,6 +15,7 @@ use App\Models\Payment;
 use App\Models\Customer;
 use Carbon\Carbon;
 use Razorpay\Api\Api;
+use App\Models\PaymentGateway;
 
 
 class LandingPageController extends Controller
@@ -25,8 +26,11 @@ class LandingPageController extends Controller
         $selectedProduct = Product::where('user_id',$id)->first();
         if(count($products)==0)
             return redirect()->back()->with('error','Please add products to generate sharable link');
+        $gateway = PaymentGateway::where('user_id',auth()->id())->first();
+        if($gateway->stripe_active!=1 && $gateway->razorpay_active!=1)
+            return redirect()->back()->with('error','At least one payment gateway should active to access sharable link.');
 
-        return view('customer.landing.index',compact('products','id','selectedProduct'));
+        return view('customer.landing.index',compact('products','id','selectedProduct','gateway'));
     }
 
     public function getProduct($id,Product $product)
@@ -45,14 +49,16 @@ class LandingPageController extends Controller
 
     public function stripePaymentIntent($id,$amount)
     {
-        $stripe = new StripeService(config('payment.STRIPE_SECRET'),config('payment.STRIPE_PUBLIC'));
+        $gateway = PaymentGateway::where('user_id',$id)->first();
+        $stripe = new StripeService($gateway->stripe_secret,$gateway->stripe_public);
         return $stripe->paymentIntent($amount,explode('_secret_',request('paymentIntent',''))[0]);
     }
 
     public function stripeSuccess($id, Request $request)
     {
-        \Stripe\Stripe::setApiKey(config('payment.STRIPE_SECRET'));
-        $stripe = new \Stripe\StripeClient(config('payment.STRIPE_SECRET'));
+        $gateway = PaymentGateway::where('user_id',$id)->first();
+        \Stripe\Stripe::setApiKey($gateway->stripe_secret);
+        $stripe = new \Stripe\StripeClient($gateway->stripe_secret);
         
         try
         {
@@ -60,6 +66,10 @@ class LandingPageController extends Controller
               $request->payment_intent,
               []
             );
+
+            $alreadyPaid = Payment::where('transaction_id',$paymentIntent->id)->first();
+            if(!empty($alreadyPaid))
+                return redirect()->route('landing.index',compact('id'))->withInput($request->all())->with('error','Cannot reload, please try again');
 
             $customer = Customer::updateOrCreate([
                 'user_id'=>$id,
@@ -145,18 +155,24 @@ class LandingPageController extends Controller
 
     public function razorpayCreateOrder($id,$amount)
     {
-        $razorpay = new RazorpayService('rzp_test_uCGRsa9V8YfVBU','QF5DLoQQszNGJnjIAfzmAVA8');
+        $gateway = PaymentGateway::where('user_id',$id)->first();
+        $razorpay = new RazorpayService($gateway->razorpay_key,$gateway->razorpay_secret);
         $order = $razorpay->createOrder($amount,request('email',''),request('payment_type',0));
         return response()->json(['status'=>1,'message'=>'success','order_id'=>$order->id]);
     }
 
     public function razorpaySuccess($id, Request $request)
     {
-        $generated_signature = hash_hmac('sha256',$request->razorpay_order_id . "|" . $request->razorpay_payment_id, 'QF5DLoQQszNGJnjIAfzmAVA8');
+        $gateway = PaymentGateway::where('user_id',$id)->first();
+        $generated_signature = hash_hmac('sha256',$request->razorpay_order_id . "|" . $request->razorpay_payment_id, $gateway->razorpay_secret);
 
-        $api = new Api('rzp_test_uCGRsa9V8YfVBU', 'QF5DLoQQszNGJnjIAfzmAVA8');
+        $api = new Api($gateway->razorpay_key, $gateway->razorpay_secret);
 
         $razorpayment = $api->payment->fetch($request->razorpay_payment_id);
+
+        $alreadyPaid = Payment::where('transaction_id',$razorpayment->id)->first();
+        if(!empty($alreadyPaid))
+            return redirect()->route('landing.index',compact('id'))->withInput($request->all())->with('error','Cannot reload, please try again');
 
         if ($generated_signature == $request->razorpay_signature) {
 
@@ -209,7 +225,11 @@ class LandingPageController extends Controller
                 'amount'=>$razorpayment->amount/100,
                 'type'=>3,
                 'transaction_id'=>$razorpayment->id,
-                'payment_response'=>json_encode($razorpayment),
+                'payment_response'=>json_encode($request->only([
+                    'razorpay_payment_id',
+                    'razorpay_order_id',
+                    'razorpay_signature'
+                ])),
                 'gateway'=>'razorpay'
             ]);
 
