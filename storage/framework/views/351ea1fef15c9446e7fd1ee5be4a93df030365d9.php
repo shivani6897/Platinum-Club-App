@@ -80,14 +80,14 @@
                                     Invoice No: PAY-1001
                                 </p>
                             </div>
-                            <div class="justify-between flex">
+                            <div class="sm:justify-between sm:flex">
                                 <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">Phone :</p>+1234567890
                                 </span>
                                 <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">Due Date :</p>20-2-2022</span>
                             </div>
-                            <div class="justify-between flex">
+                            <div class="sm:justify-between sm:flex">
                                 <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">Email :</p>hello@owlsy.dev
                                 </span>
@@ -104,7 +104,7 @@
                                     Bill To
                                 </p>
                             </div>
-                            <div class="justify-between flex">
+                            <div class="sm:justify-between sm:flex">
                                  <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">Name :</p>
                                     Sandy Kumar
@@ -125,7 +125,7 @@
                                     <p class="text-md font-bold text-black mr-2">Phone :</p>+1234567890
                                 </span>
                                 <span class="flex items-center text-md">
-                                    <p class="text-xl font-bold text-black mr-2">₹ 14,750.00</p>
+                                    <p class="text-xl font-bold text-black ">₹ 14,750.00</p>
                                 </span>
                             </div>
                         </div>
