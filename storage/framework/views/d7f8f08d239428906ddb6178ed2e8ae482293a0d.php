@@ -50,7 +50,7 @@
 
 <!-- Main Content Wrapper -->
 <div style="padding-bottom: 50px">
-    <main class="w-8/12 mx-auto">
+    <main class="sm:w-8/12 sm:mx-auto">
         <div>
             <div class="mt-7 pt-5">
                 <div class="rounded-lg p-5 bg-white">
@@ -80,14 +80,14 @@
                                     Invoice No: PAY-1001
                                 </p>
                             </div>
-                            <div class="justify-between flex">
+                            <div class="sm:justify-between sm:flex">
                                 <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">Phone :</p>+1234567890
                                 </span>
                                 <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">Due Date :</p>20-2-2022</span>
                             </div>
-                            <div class="justify-between flex">
+                            <div class="sm:justify-between sm:flex">
                                 <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">Email :</p>hello@owlsy.dev
                                 </span>
@@ -104,7 +104,7 @@
                                     Bill To
                                 </p>
                             </div>
-                            <div class="justify-between flex">
+                            <div class="sm:justify-between sm:flex">
                                  <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">Name :</p>
                                     Sandy Kumar
@@ -125,7 +125,7 @@
                                     <p class="text-md font-bold text-black mr-2">Phone :</p>+1234567890
                                 </span>
                                 <span class="flex items-center text-md">
-                                    <p class="text-xl font-bold text-black mr-2">₹ 14,750.00</p>
+                                    <p class="text-xl font-bold text-black ">₹ 14,750.00</p>
                                 </span>
                             </div>
                         </div>
@@ -178,7 +178,7 @@
                 <div class="mt-4 rounded-lg p-4 bg-white">
                     <div>
                         <center><p class="text-2xl  text-black font-bold pt-5">Product Description</p></center>
-                        <div class="grid grid-cols-2 gap-4 mt-4 p-4">
+                        <div class="grid md:grid-cols-2 gap-4 mt-4 p-4">
                             <div class=" flex justify-center">
                                 <img src="<?php echo e(asset('images/payment/marketing-online.png')); ?>" alt="">
                             </div>
