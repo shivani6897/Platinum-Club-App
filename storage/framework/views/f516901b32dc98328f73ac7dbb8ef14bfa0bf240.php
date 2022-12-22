@@ -18,19 +18,41 @@
                 <h2 class="text-sm+ font-medium tracking-wide text-slate-700 dark:text-navy-100">
                     Statistics
                 </h2>
-
+                <form>
                 <div class="flex items-center space-x-4">
                     
-                    <div id="reportrange" name="duration"
-                        class="form-select p-2 rounded-full border border-slate-300 bg-white px-2.5 pr-9 text-xs+ hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent">
-                        <i class="fa fa-calendar"></i>&nbsp;
-                        <span id="date-duration"></span>
-                    </div>
-                    <form>
+                        <label class="block">
+                            <select
+                              class="form-input-submit form-select w-full rounded-full border border-slate-300 bg-white px-4 py-2 pr-8 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+                              name="club"
+                            >
+                              <option value="">All Clubs</option>
+                              <?php $__currentLoopData = $clubs; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $club): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                              <option value="<?php echo e($club->id); ?>" <?php if(request('club',0)==$club->id): echo 'selected'; endif; ?>><?php echo e($club->name); ?></option>
+                              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </select>
+                          </label>
+                        <label class="block">
+                            <select
+                              class="form-input-submit form-select w-full rounded-full border border-slate-300 bg-white px-4 py-2 pr-8 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+                              name="user"
+                            >
+                              <option value="">All Users</option>
+                              <?php $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                              <option value="<?php echo e($user->id); ?>" <?php if(request('user',0)==$user->id): echo 'selected'; endif; ?>><?php echo e($user->first_name); ?> <?php echo e($user->last_name); ?></option>
+                              <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </select>
+                          </label>
+                        <div id="reportrange" name="duration"
+                            class="form-select p-2 rounded-full border border-slate-300 bg-white px-2.5 pr-9 text-xs+ hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent">
+                            <i class="fa fa-calendar"></i>&nbsp;
+                            <span id="date-duration"></span>
+                        </div>
+                    
                         <input type="hidden" name="filter_from">
                         <input type="hidden" name="filter_to">
-                    </form>
                 </div>
+                </form>
 
                 
             </div>
@@ -305,7 +327,7 @@
                 bar: {
                     colors: {
                         ranges: [{
-                            from: -100000000000,
+                            from: -1000000000,
                             to: 0,
                             color: '#ec4899'
                         }]
@@ -347,6 +369,9 @@
         chart.render();
 
         $(document).ready(function() {
+            $('.form-input-submit').change(function(e){
+                $(this).closest('form').submit();
+            });
             <?php if(request('filter_from')): ?>
             var start = moment('<?php echo e(request('filter_from')); ?>','YYYY-MM-DD');
             <?php else: ?>
@@ -369,7 +394,11 @@
                     $('input[name="filter_to"]').val(end.format("YYYY-MM-DD")).closest('form').submit();
                 }
                 else
+                {
+                    $('input[name="filter_from"]').val(start.format("YYYY-MM-DD"));
+                    $('input[name="filter_to"]').val(end.format("YYYY-MM-DD"));
                     flg=1;
+                }
             }
 
             $('#reportrange').daterangepicker({
@@ -553,4 +582,7 @@
 </script>
 <?php $__env->stopPush(); ?>
 
-<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/vagrant/web/platinum-club-app/Platinum-Club-App/resources/views/customer/dashboard.blade.php ENDPATH**/ ?>
+
+
+
+<?php echo $__env->make('admin.layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/vagrant/web/platinum-club-app/Platinum-Club-App/resources/views/admin/dashboard.blade.php ENDPATH**/ ?>

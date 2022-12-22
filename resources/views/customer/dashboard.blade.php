@@ -298,7 +298,7 @@
 
     <script type="text/javascript">
         var options = {
-            colors:['#3c763d'],
+            colors:['#0284c7'],
             series: [{
                 name: 'Profit',
                 data: {!!json_encode($profitArray)!!},
@@ -315,9 +315,9 @@
                 bar: {
                     colors: {
                         ranges: [{
-                            from: -10000,
+                            from: -100000000000,
                             to: 0,
-                            color: '#a94442'
+                            color: '#ec4899'
                         }]
                     },
                     columnWidth: '80%',
@@ -420,14 +420,14 @@
       name: 'Revenue',
       data: revenueY
     }],
-    colors:['#3c763d'],
+    colors:['#0284c7'],
     plotOptions: {
         bar: {
             colors: {
                 ranges: [{
                     from: -10000,
                     to: 0,
-                    color: '#a94442'
+                    color: '#ec4899'
                 }]
             },
             columnWidth: '80%',
@@ -460,14 +460,14 @@
       name: 'Ad Spends',
       data: ad_spendsY
     }],
-    colors:['#3c763d'],
+    colors:['#0284c7'],
     plotOptions: {
         bar: {
             colors: {
                 ranges: [{
                     from: -10000,
                     to: 0,
-                    color: '#a94442'
+                    color: '#ec4899'
                 }]
             },
             columnWidth: '80%',
@@ -500,14 +500,14 @@
       name: 'Overhead',
       data: overheadsY
     }],
-    colors:['#3c763d'],
+    colors:['#0284c7'],
     plotOptions: {
         bar: {
             colors: {
                 ranges: [{
                     from: -10000000,
                     to: 0,
-                    color: '#a94442'
+                    color: '#ec4899'
                 }]
             },
             columnWidth: '80%',
@@ -536,14 +536,14 @@
       name: 'Profit',
       data: net_profitY
     }],
-    colors:['#3c763d'],
+    colors:['#0284c7'],
     plotOptions: {
         bar: {
             colors: {
                 ranges: [{
                     from: -100000000,
                     to: 0,
-                    color: '#a94442'
+                    color: '#ec4899'
                 }]
             },
             columnWidth: '80%',

@@ -208,6 +208,7 @@ unset($__errorArgs, $__bag); ?>
         </div>
       </main>
     </div>
+    
 
     <!--
         This is a place for Alpine.js Teleport feature
@@ -266,4 +267,4 @@ unset($__errorArgs, $__bag); ?>
     </script>
   </body>
 </html>
-<?php /**PATH C:\laragon\www\platinum\resources\views/auth/login.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\Platinum-Club-App\resources\views/auth/login.blade.php ENDPATH**/ ?>

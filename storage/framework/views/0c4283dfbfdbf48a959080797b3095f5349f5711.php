@@ -1,6 +1,6 @@
-@extends('layouts.app')
 
-@push('styles')
+
+<?php $__env->startPush('styles'); ?>
     <style type="text/css">
         .required:after{
             content:'*';
@@ -8,11 +8,11 @@
             padding-left:5px;
         }
     </style>
-@endpush
+<?php $__env->stopPush(); ?>
 
-@section('heading', 'My Business')
+<?php $__env->startSection('heading', 'My Business'); ?>
 
-@section('breadcrums')
+<?php $__env->startSection('breadcrums'); ?>
     <div class="hidden h-full py-1 sm:flex">
         <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
     </div>
@@ -20,7 +20,7 @@
         <li class="flex items-center space-x-2">
             <a
                 class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-                href="{{route('home')}}"
+                href="<?php echo e(route('home')); ?>"
             >Dashboard</a
             >
             <svg
@@ -40,7 +40,7 @@
             </svg>
             <a
                 class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-                href="{{route('incomes.index')}}"
+                href="<?php echo e(route('incomes.index')); ?>"
             >Business</a
             >
             <svg
@@ -61,174 +61,174 @@
         </li>
         <li>Add Business</li>
     </ul>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
-    {{--<div class="card grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">--}}
-    {{--  <div class="col-span-12">--}}
-    {{--    <div class=" p-4 sm:p-5">--}}
-    {{--      <p--}}
-    {{--        class="text-base font-medium text-slate-700 dark:text-navy-100"--}}
-    {{--      >--}}
-    {{--        @isset($businessStat) Edit @else Add @endisset Stats--}}
-    {{--      </p>--}}
+<?php $__env->startSection('content'); ?>
+    
+    
+    
+    
+    
+    
+    
+    
 
-    {{--      @isset($businessStat)--}}
-    {{--        {!! Form::model($businessStat, ['route' => ['business.update', $businessStat->id], 'method' => 'patch', 'autocomplete' => 'off']) !!}--}}
-    {{--      @else--}}
-    {{--        {!! Form::open(['route' => ['business.store'], 'method' => 'POST', 'autocomplete' => 'off']) !!}--}}
-    {{--      @endisset--}}
-    {{--        @csrf--}}
-    {{--        <div class="mt-4 space-y-4">--}}
-    {{--          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">--}}
-    {{--            <label class="block">--}}
-    {{--              <span class="required">Month</span>--}}
-    {{--              <span class="relative mt-1.5 flex">--}}
-    {{--                <input--}}
-    {{--                    x-init="$el._x_flatpickr = flatpickr($el,{altInput: true,altFormat: 'F Y',dateFormat: 'F Y',viewMode: 'years'})"--}}
-    {{--                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 mt-1.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent--}}
-    {{--                    float_value"--}}
-    {{--                    placeholder="Month"--}}
-    {{--                    name="month"--}}
-    {{--                    type="text"--}}
-    {{--                    value="{{(isset($businessStat) ? $businessStat->month : '')}}"--}}
-    {{--                    required--}}
-    {{--                  />--}}
-    {{--              </span>--}}
-    {{--            </label>--}}
-    {{--          </div>--}}
-    {{--          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">--}}
-    {{--            <label class="block">--}}
-    {{--              <span class="required">Total Revenue Earned (<i class="fa-sharp fa-solid fa-indian-rupee-sign"></i>)</span>--}}
-    {{--              <span class="relative mt-1.5 flex">--}}
-    {{--                <input--}}
-    {{--                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent --}}
-    {{--                  float_value"--}}
-    {{--                  placeholder="Total Revenue Earned"--}}
-    {{--                  name="revenue_earned"--}}
-    {{--                  type="text"--}}
-    {{--                  value="{{(isset($businessStat) ? $businessStat->revenue_earned : '')}}"--}}
-    {{--                  required--}}
-    {{--                />--}}
-    {{--              </span>--}}
-    {{--            </label>--}}
-    {{--          </div>--}}
-    {{--          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">--}}
-    {{--            <label class="block">--}}
-    {{--              <span class="required">Total Ad Spends (<i class="fa-sharp fa-solid fa-indian-rupee-sign"></i>)</span>--}}
-    {{--              <span class="relative mt-1.5 flex">--}}
-    {{--                <input--}}
-    {{--                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent --}}
-    {{--                  float_value"--}}
-    {{--                  placeholder="Total Ad Spends"--}}
-    {{--                  name="ad_spends"--}}
-    {{--                  type="text"--}}
-    {{--                  value="{{(isset($businessStat) ? $businessStat->ad_spends : '')}}"--}}
-    {{--                  required--}}
-    {{--                />--}}
-    {{--              </span>--}}
-    {{--            </label>--}}
-    {{--          </div>--}}
-    {{--          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">--}}
-    {{--            <label class="block">--}}
-    {{--              <span class="required">Average Cost Per Lead (<i class="fa-sharp fa-solid fa-indian-rupee-sign"></i>)</span>--}}
-    {{--              <span class="relative mt-1.5 flex">--}}
-    {{--                <input--}}
-    {{--                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent --}}
-    {{--                  float_value"--}}
-    {{--                  placeholder="Average Cost Per Lead"--}}
-    {{--                  name="avg_cost_per_lead"--}}
-    {{--                  type="text"--}}
-    {{--                  value="{{(isset($businessStat) ? $businessStat->avg_cost_per_lead : '')}}"--}}
-    {{--                  required--}}
-    {{--                />--}}
-    {{--              </span>--}}
-    {{--            </label>--}}
-    {{--          </div>--}}
-    {{--          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">--}}
-    {{--            <label class="block">--}}
-    {{--              <span class="required">Total Leads Generated</span>--}}
-    {{--              <span class="relative mt-1.5 flex">--}}
-    {{--                <input--}}
-    {{--                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent --}}
-    {{--                  float_value"--}}
-    {{--                  placeholder="Total Leads Generated"--}}
-    {{--                  name="leads_generated"--}}
-    {{--                  value="{{(isset($businessStat) ? $businessStat->leads_generated : '')}}"--}}
-    {{--                  type="text"--}}
-    {{--                  required--}}
-    {{--                />--}}
-    {{--              </span>--}}
-    {{--            </label>--}}
-    {{--          </div>--}}
-    {{--          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">--}}
-    {{--            <label class="block">--}}
-    {{--              <span class="required">Total Paid Customers (L1)</span>--}}
-    {{--              <span class="relative mt-1.5 flex">--}}
-    {{--                <input--}}
-    {{--                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent --}}
-    {{--                  float_value"--}}
-    {{--                  placeholder="Total Paid Customers (L1)"--}}
-    {{--                  name="paid_customer"--}}
-    {{--                  value="{{(isset($businessStat) ? $businessStat->paid_customer : '')}}"--}}
-    {{--                  type="text"--}}
-    {{--                  required--}}
-    {{--                />--}}
-    {{--              </span>--}}
-    {{--            </label>--}}
-    {{--          </div>--}}
-    {{--          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">--}}
-    {{--            <label class="block">--}}
-    {{--              <span class="required">Total Group Size</span>--}}
-    {{--              <span class="relative mt-1.5 flex">--}}
-    {{--                <input--}}
-    {{--                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent --}}
-    {{--                  float_value"--}}
-    {{--                  placeholder="Total Group Size"--}}
-    {{--                  name="group_size"--}}
-    {{--                  value="{{(isset($businessStat) ? $businessStat->group_size : '')}}"--}}
-    {{--                  type="text"--}}
-    {{--                  required--}}
-    {{--                />--}}
-    {{--              </span>--}}
-    {{--            </label>--}}
-    {{--          </div>--}}
-    {{--          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">--}}
-    {{--            <label class="block">--}}
-    {{--              <span class="required">Ovderhead</span>--}}
-    {{--              <span class="relative mt-1.5 flex">--}}
-    {{--                <input--}}
-    {{--                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent --}}
-    {{--                  float_value"--}}
-    {{--                  placeholder="Return On Ad Spends"--}}
-    {{--                  name="overheads"--}}
-    {{--                  type="text"--}}
-    {{--                  value="{{(isset($businessStat) ? $businessStat->overheads : '')}}"--}}
-    {{--                  required--}}
-    {{--                />--}}
-    {{--              </span>--}}
-    {{--            </label>--}}
-    {{--          </div>--}}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
-    {{--          <div class="flex justify-end space-x-2">--}}
-    {{--            <a--}}
-    {{--              class="btn min-w-[7rem] rounded-full border border-slate-300 font-medium text-slate-700 hover:bg-slate-150 focus:bg-slate-150 active:bg-slate-150/80 dark:border-navy-450 dark:text-navy-100 dark:hover:bg-navy-500 dark:focus:bg-navy-500 dark:active:bg-navy-500/90"--}}
-    {{--              href="{{url('business')}}"--}}
-    {{--            >--}}
-    {{--              Cancel--}}
-    {{--            </a>--}}
-    {{--            <button--}}
-    {{--              class="btn min-w-[7rem] rounded-full bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"--}}
-    {{--              type="submit"--}}
-    {{--            >--}}
-    {{--              <span>Submit</span>--}}
-    {{--            </button>--}}
-    {{--          </div>--}}
-    {{--        </div>--}}
-    {{--      {{Form::close()}}--}}
-    {{--    </div>--}}
-    {{--  </div>--}}
-    {{--</div>--}}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 
     <div x-data="{activeTab:'tabHome'}" class="tabs flex flex-col">
@@ -263,13 +263,13 @@
                 >
                     Lead
                 </button>
-{{--                <button--}}
-{{--                    @click="activeTab = 'tabSettings'"--}}
-{{--                    :class="activeTab === 'tabSettings' ? 'bg-white shadow dark:bg-navy-500 dark:text-navy-100' : 'hover:text-slate-800 focus:text-slate-800 dark:hover:text-navy-100 dark:focus:text-navy-100'"--}}
-{{--                    class="btn shrink-0 px-3 py-1.5 font-medium"--}}
-{{--                >--}}
-{{--                    Converted Customers--}}
-{{--                </button>--}}
+
+
+
+
+
+
+
             </div>
         </div>
         <div class="tab-content pt-4">
@@ -281,12 +281,12 @@
             >
                 <div>
                     <form method="POST"
-                          action="{{ route('incomes.store') }}"
+                          action="<?php echo e(route('incomes.store')); ?>"
                           accept-charset="UTF-8"
                           class="p-lg-5 p-3"
                           enctype="multipart/form-data"
                     >
-                        @csrf
+                        <?php echo csrf_field(); ?>
 
                         <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6 ">
                             <div class="col-span-12">
@@ -297,42 +297,70 @@
                                                 <span>Income Category</span>
                                                 <select
                                                     class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
-                                                    @error('income_category_id')
+                                                    <?php $__errorArgs = ['income_category_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                                         border-error
-                                                    @enderror"
+                                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                     name="income_category_id"
                                                     required
                                                 >
-                                                    @foreach($incomeCateogries as $incomeCateogry)
-                                                        <option value="{{$incomeCateogry->id}}" @selected(old('income_cateogry_id',0)==$incomeCateogry->id)>{{$incomeCateogry->name}}</option>
-                                                    @endforeach
+                                                    <?php $__currentLoopData = $incomeCateogries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $incomeCateogry): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($incomeCateogry->id); ?>" <?php if(old('income_cateogry_id',0)==$incomeCateogry->id): echo 'selected'; endif; ?>><?php echo e($incomeCateogry->name); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </select>
-                                                @error('club_id')
-                                                <span class="text-tiny+ text-error">{{$message}}</span>
-                                                @enderror
+                                                <?php $__errorArgs = ['club_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </label>
-{{--                                        </div>--}}
 
-{{--                                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">--}}
+
+
                                             <label class="block">
                                                 <span>Income</span>
                                                 <span class="relative mt-1.5 flex">
                                                     <input
                                                         class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                                                             @error('income')
+                                                             <?php $__errorArgs = ['income'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                                                   border-error
-                                                             @enderror"
+                                                             <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                         placeholder="income"
                                                         name="income"
                                                         type="number"
-                                                        value="{{old('income')}}"
+                                                        value="<?php echo e(old('income')); ?>"
                                                         required
                                                         autocomplete="off"
                                                       />
                                                 </span>
-                                                @error('income')
-                                                <span class="text-tiny+ text-error">{{$message}}</span>
-                                                @enderror
+                                                <?php $__errorArgs = ['income'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </label>
                                             <label class="block">
                                                   <span class="required">Date</span>
@@ -344,7 +372,7 @@
                                                         placeholder="Choose Date.."
                                                         name="date"
                                                         type="text"
-                                                        value="{{ old('date') }}"
+                                                        value="<?php echo e(old('date')); ?>"
                                                         required
                                                         autocomplete="off"
                                                       />
@@ -361,11 +389,19 @@
                                                 autocomplete="off"
                                                 class="form-textarea mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent p-2.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                             >
-                                                {{ old('description') }}
+                                                <?php echo e(old('description')); ?>
+
                                             </textarea>
-                                            @error('description')
-                                                <span class="text-tiny+ text-error">{{$message}}</span>
-                                            @enderror
+                                            <?php $__errorArgs = ['description'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                         </label>
 
                                     <div class="flex justify-end space-x-2">
@@ -393,12 +429,12 @@
             >
                 <div>
                     <form method="POST"
-                          action="{{ route('expenses.store') }}"
+                          action="<?php echo e(route('expenses.store')); ?>"
                           accept-charset="UTF-8"
                           class="p-lg-5 p-3"
                           enctype="multipart/form-data"
                     >
-                        @csrf
+                        <?php echo csrf_field(); ?>
 
                         <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6 ">
                             <div class="col-span-12">
@@ -409,42 +445,70 @@
                                                 <span>Expense Category</span>
                                                 <select
                                                     class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
-                                                    @error('expense_category_id')
+                                                    <?php $__errorArgs = ['expense_category_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                                         border-error
-                                                    @enderror"
+                                                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                     name="expense_category_id"
                                                     required
                                                 >
-                                                    @foreach($expenseCateogries as $expenseCateogry)
-                                                        <option value="{{$expenseCateogry->id}}" @selected(old('expense_category_id',0)==$expenseCateogry->id)>{{$expenseCateogry->name}}</option>
-                                                    @endforeach
+                                                    <?php $__currentLoopData = $expenseCateogries; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $expenseCateogry): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                        <option value="<?php echo e($expenseCateogry->id); ?>" <?php if(old('expense_category_id',0)==$expenseCateogry->id): echo 'selected'; endif; ?>><?php echo e($expenseCateogry->name); ?></option>
+                                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                                 </select>
-                                                @error('club_id')
-                                                <span class="text-tiny+ text-error">{{$message}}</span>
-                                                @enderror
+                                                <?php $__errorArgs = ['club_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </label>
-{{--                                        </div>--}}
 
-{{--                                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">--}}
+
+
                                             <label class="block">
                                                 <span>Expense</span>
                                                 <span class="relative mt-1.5 flex">
                                                     <input
                                                         class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                                                         @error('expense')
+                                                         <?php $__errorArgs = ['expense'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
                                                             border-error
-                                                         @enderror"
+                                                         <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>"
                                                          placeholder="expense"
                                                          name="expense"
                                                          type="number"
-                                                         value="{{old('expense')}}"
+                                                         value="<?php echo e(old('expense')); ?>"
                                                          required
                                                          autocomplete="off"
                                                     />
                                                 </span>
-                                                @error('expense')
-                                                    <span class="text-tiny+ text-error">{{$message}}</span>
-                                                @enderror
+                                                <?php $__errorArgs = ['expense'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                    <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </label>
                                             <label class="block">
                                                 <span class="required">Date</span>
@@ -456,7 +520,7 @@
                                                         placeholder="Choose Date.."
                                                         name="date"
                                                         type="text"
-                                                        value="{{ old('date') }}"
+                                                        value="<?php echo e(old('date')); ?>"
                                                         required
                                                         autocomplete="off"
                                                     />
@@ -473,11 +537,19 @@
                                                 autocomplete="off"
                                                 class="form-textarea mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent p-2.5 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                             >
-                                                {{ old('description') }}
+                                                <?php echo e(old('description')); ?>
+
                                             </textarea>
-                                            @error('description')
-                                            <span class="text-tiny+ text-error">{{$message}}</span>
-                                            @enderror
+                                            <?php $__errorArgs = ['description'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                            <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                                            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                         </label>
 
                                         <div class="flex justify-end space-x-2">
@@ -504,12 +576,12 @@
             >
                 <div>
                     <form method="POST"
-                          action="{{ route('leads.store') }}"
+                          action="<?php echo e(route('leads.store')); ?>"
                           accept-charset="UTF-8"
                           class="p-lg-5 p-3"
                           enctype="multipart/form-data"
                     >
-                        @csrf
+                        <?php echo csrf_field(); ?>
 
                         <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6 ">
                             <div class="col-span-12">
@@ -525,13 +597,20 @@
                                                         type="number"
                                                         name="lead_generated"
                                                         autocomplete="off"
-                                                        value="{{ old('lead_generated') }}"
+                                                        value="<?php echo e(old('lead_generated')); ?>"
                                                         required
                                                     />
                                                 </span>
-                                                @error('lead_generated')
-                                                <span class="text-tiny+ text-error">{{$message}}</span>
-                                                @enderror
+                                                <?php $__errorArgs = ['lead_generated'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </label>
                                             <label class="block">
                                                 <span>Converted Customer</span> <span>*</span>
@@ -542,13 +621,20 @@
                                                         type="number"
                                                         name="converted_customer"
                                                         autocomplete="off"
-                                                        value="{{ old('converted_customer') }}"
+                                                        value="<?php echo e(old('converted_customer')); ?>"
                                                         required
                                                     />
                                                 </span>
-                                                @error('converted_customer')
-                                                <span class="text-tiny+ text-error">{{$message}}</span>
-                                                @enderror
+                                                <?php $__errorArgs = ['converted_customer'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                                                <span class="text-tiny+ text-error"><?php echo e($message); ?></span>
+                                                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                                             </label>
                                             <label class="block">
                                                 <span class="required">Date</span>
@@ -560,7 +646,7 @@
                                                         placeholder="Choose Date.."
                                                         name="date"
                                                         type="text"
-                                                        value="{{ old('date') }}"
+                                                        value="<?php echo e(old('date')); ?>"
                                                         required
                                                         autocomplete="off"
                                                     />
@@ -581,61 +667,61 @@
                     </form>
                 </div>
             </div>
-{{--            <div--}}
-{{--                x-show="activeTab === 'tabSettings'"--}}
-{{--                x-transition:enter="transition-all duration-500 easy-in-out"--}}
-{{--                x-transition:enter-start="opacity-0 [transform:translate3d(1rem,0,0)]"--}}
-{{--                x-transition:enter-end="opacity-100 [transform:translate3d(0,0,0)]"--}}
-{{--            >--}}
-{{--                <div>--}}
-{{--                    <form method="POST"--}}
-{{--                          action="{{ route('admin.habits.store') }}"--}}
-{{--                          accept-charset="UTF-8"--}}
-{{--                          class="p-lg-5 p-3"--}}
-{{--                          enctype="multipart/form-data"--}}
-{{--                    >--}}
-{{--                        @csrf--}}
 
-{{--                        <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">--}}
-{{--                            <div class="col-span-12">--}}
-{{--                                <div class="card p-4 sm:p-5">--}}
-{{--                                    <div class="mt-4 space-y-4">--}}
-{{--                                        <label class="block">--}}
-{{--                                            <span>Name</span> <span>*</span>--}}
-{{--                                            <span class="relative mt-1.5 flex">--}}
-{{--                                                <input--}}
-{{--                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"--}}
-{{--                                                    placeholder="Habit"--}}
-{{--                                                    type="text"--}}
-{{--                                                    name="name"--}}
-{{--                                                    autocomplete="off"--}}
-{{--                                                    value="{{ old('name') }}"--}}
-{{--                                                    required--}}
-{{--                                                />--}}
-{{--                                            </span>--}}
-{{--                                            @error('name')--}}
-{{--                                            <span class="text-tiny+ text-error">{{$message}}</span>--}}
-{{--                                            @enderror--}}
-{{--                                        </label>--}}
-{{--                                        <div class="flex justify-end space-x-2">--}}
-{{--                                            <button--}}
-{{--                                                class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"--}}
-{{--                                            >--}}
-{{--                                                <span>Submit</span>--}}
-{{--                                            </button>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                    </form>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
     <script type="text/javascript">
         $('.float_value').keyup(function () {
             var val = $(this).val();
@@ -656,4 +742,6 @@
                 $('#'+name+'Tab').click();
         })
     </script>
-@endpush
+<?php $__env->stopPush(); ?>
+
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /home/vagrant/web/platinum-club-app/Platinum-Club-App/resources/views/customer/incomes/create.blade.php ENDPATH**/ ?>

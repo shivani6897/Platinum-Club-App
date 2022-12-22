@@ -250,20 +250,25 @@
             <div class="mt-4">
                 <div>
                     <div>
-                        <input
-                            class="form-radio is-outline h-5 w-5 rounded-full border-slate-400/70 bg-slate-100 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-500 dark:bg-navy-900 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
-                            name="contact-preference" id="rb-email" type="radio" checked="checked"/>
-                        <label class="label" for="rb-email">Offline Payment / Create Invoice</label> <br>
+                        <label class="inline-flex items-center space-x-2">
+                            <input onclick="paymentMethod()"
+                                class="form-radio is-outline h-5 w-5 rounded-full border-slate-400/70 bg-slate-100 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-500 dark:bg-navy-900 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
+                                name="contact-preference" id="rb-email" type="radio" checked="checked"/>
+                            <label class="label" for="rb-email">Offline Payment / Create Invoice</label>
+                        </label>
+                        <br>
                         <small>
                             Choose this offline payment method to create the offline/manual subscription for any
                             customer. The invoice status would be sent. You can record the invoice from the invoice
                             section. Or you can create an invoice and send this to your customer to collect the payment.
                         </small>
                     </div>
-                    <input
-                        class="rb-payment-method form-radio is-outline h-5 w-5 rounded-full border-slate-400/70 bg-slate-100 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-500 dark:bg-navy-900 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
-                        name="contact-preference" id="rb-phone" type="radio"/>
-                    <label class="label" for="rb-phone">Credit Card</label> <br>
+                    <label class="inline-flex items-center space-x-2">
+                        <input class="rb-payment-method form-radio is-outline h-5 w-5 rounded-full border-slate-400/70 bg-slate-100 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-500 dark:bg-navy-900 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
+                            name="contact-preference" id="rb-phone" type="radio" onclick="paymentMethod()"/>
+                        <label class="label" for="rb-phone">Credit Card</label>
+                    </label>
+                    <br>
                     <small>
                         Card list that is associated with this customer will be shown here. You can select the card to
                         collect the payment for this subscription.
@@ -286,10 +291,12 @@
             Payment Term
         </h4>
         <div class="border-t border-sky-200 py-3">
-            <input
-                class=" rb-payment-term form-checkbox is-basic h-5 w-5 rounded border-slate-400/70 checked:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
-                name="contact-preference" id="rb-phone" type="checkbox"/>
-            <label class="label" for="rb-phone">Payment Term</label>
+            <label class="inline-flex items-center space-x-2">
+                <input
+                    class=" rb-payment-term form-checkbox is-basic h-5 w-5 rounded border-slate-400/70 checked:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
+                    name="contact-preference" id="rb-phone" type="checkbox" onclick="paymentTerm()"/>
+                <span class="label">Payment Term</span>
+            </label>
             <div class="payment-term">
                 <div class="grid grid-cols-2 gap-4">
                     <div class=" mt-4">
@@ -304,8 +311,10 @@
                             </select>
                         </label>
                         <small>
-                            The payment term period defines the time period within which the customer has to make payment for
-                            the subscription . For example, if you select net 15 that means your customer has 15 more days to
+                            The payment term period defines the time period within which the customer has to make
+                            payment for
+                            the subscription . For example, if you select net 15 that means your customer has 15 more
+                            days to
                             make the payment from the subscription billing date. Similarly for Net 30, Net 45, Net 60.
                         </small>
                     </div>
@@ -324,6 +333,24 @@
         </div>
     </div>
 <?php $__env->stopSection(); ?>
+
+<?php $__env->startPush('scripts'); ?>
+    <script>
+        function paymentTerm() {
+            if ($('.rb-payment-term').is(":checked"))
+                $(".payment-term").show();
+            else
+                $(".payment-term").hide();
+        }
+        function paymentMethod() {
+            if ($('.rb-payment-method').is(":checked"))
+                $(".payment-method").show();
+            else
+                $(".payment-method").hide();
+        }
+    </script>
+<?php $__env->stopPush(); ?>
+
 
 <?php $__env->startPush('styles'); ?>
     <style>

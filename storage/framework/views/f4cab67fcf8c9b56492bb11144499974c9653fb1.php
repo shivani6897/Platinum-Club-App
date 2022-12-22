@@ -234,6 +234,9 @@
 
 <?php $__env->startPush('styles'); ?>
     <style>
+        /*.apexcharts-datalabel {
+    fill: #fff!important;
+}*/
         /*.bg-tr {
             background: rgb(73, 90, 228);
             background: linear-gradient(90deg, rgba(73, 90, 228, 1) 15%, rgba(7, 24, 157, 0.9654061453683036) 93%);
@@ -285,6 +288,7 @@
 
     <script type="text/javascript">
         var options = {
+            colors:['#3c763d'],
             series: [{
                 name: 'Profit',
                 data: <?php echo json_encode($profitArray); ?>,
@@ -301,13 +305,9 @@
                 bar: {
                     colors: {
                         ranges: [{
-                            from: -100,
-                            to: -46,
-                            color: '#F15B46'
-                        }, {
-                            from: -45,
+                            from: -10000,
                             to: 0,
-                            color: '#FEB019'
+                            color: '#a94442'
                         }]
                     },
                     columnWidth: '80%',
@@ -327,7 +327,7 @@
                 }
             },
             xaxis: {
-                // type: 'datetime',
+                type: 'datetime',
                 categories: <?php echo json_encode($dateArray); ?>,
                 // [
                 //   '2011-01-01', '2011-02-01', '2011-03-01', '2011-04-01', '2011-05-01', '2011-06-01',
@@ -397,7 +397,7 @@
     <script type="text/javascript">
   var revenueX =  [
     <?php $__currentLoopData = $revenueArray['x']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-      '<?php echo e($data); ?>',
+      '<?php echo e($data->format('Y-m-d')); ?>',
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     ];
   var revenueY =  <?php echo json_encode($revenueArray['y']); ?>;
@@ -410,8 +410,24 @@
       name: 'Revenue',
       data: revenueY
     }],
+    colors:['#3c763d'],
+    plotOptions: {
+        bar: {
+            colors: {
+                ranges: [{
+                    from: -10000,
+                    to: 0,
+                    color: '#a94442'
+                }]
+            },
+            columnWidth: '80%',
+        }
+    },
+    dataLabels: {
+        enabled: false,
+    },
     xaxis: {
-        // type: 'datetime',
+        type: 'datetime',
         categories: revenueX
     }
   }
@@ -421,7 +437,7 @@
 
   var ad_spendsX =  [
     <?php $__currentLoopData = $ad_spendsArray['x']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-      '<?php echo e($data); ?>',
+      '<?php echo e($data->format('Y-m-d')); ?>',
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     ];
   var ad_spendsY =  <?php echo json_encode($ad_spendsArray['y']); ?>;
@@ -434,8 +450,24 @@
       name: 'Ad Spends',
       data: ad_spendsY
     }],
+    colors:['#3c763d'],
+    plotOptions: {
+        bar: {
+            colors: {
+                ranges: [{
+                    from: -10000,
+                    to: 0,
+                    color: '#a94442'
+                }]
+            },
+            columnWidth: '80%',
+        }
+    },
+    dataLabels: {
+        enabled: false,
+    },
     xaxis: {
-        // type: 'datetime',
+        type: 'datetime',
         categories: ad_spendsX
     }
   }
@@ -445,7 +477,7 @@
 
   var overheadsX =  [
     <?php $__currentLoopData = $overheadsArray['x']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $data): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-      '<?php echo e($data); ?>',
+      '<?php echo e($data->format('Y-m-d')); ?>',
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
     ];
   var overheadsY =  <?php echo json_encode($overheadsArray['y']); ?>;
@@ -458,8 +490,24 @@
       name: 'Overhead',
       data: overheadsY
     }],
+    colors:['#3c763d'],
+    plotOptions: {
+        bar: {
+            colors: {
+                ranges: [{
+                    from: -10000000,
+                    to: 0,
+                    color: '#a94442'
+                }]
+            },
+            columnWidth: '80%',
+        }
+    },
+    dataLabels: {
+        enabled: false,
+    },
     xaxis: {
-        // type: 'datetime',
+        type: 'datetime',
         categories: overheadsX
     }
   }
@@ -478,7 +526,24 @@
       name: 'Profit',
       data: net_profitY
     }],
+    colors:['#3c763d'],
+    plotOptions: {
+        bar: {
+            colors: {
+                ranges: [{
+                    from: -100000000,
+                    to: 0,
+                    color: '#a94442'
+                }]
+            },
+            columnWidth: '80%',
+        }
+    },
+    dataLabels: {
+        enabled: false,
+    },
     xaxis: {
+      type: 'datetime',
       categories: net_profitX
     }
   }

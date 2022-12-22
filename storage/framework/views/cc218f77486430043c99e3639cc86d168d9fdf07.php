@@ -222,4 +222,4 @@
 </body>
 
 </html>
-<?php /**PATH C:\laragon\www\platinum\resources\views/paymentz/index.blade.php ENDPATH**/ ?>
+<?php /**PATH /home/vagrant/web/platinum-club-app/Platinum-Club-App/resources/views/paymentz/index.blade.php ENDPATH**/ ?>

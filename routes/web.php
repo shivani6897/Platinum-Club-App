@@ -92,4 +92,7 @@ Route::group(['middleware' => ['auth','verified']], function () {
     //    TODO Paymentz Page
     Route::get('/paymentz', function () {return view('paymentz.index');})->name('paymentz.index');
 
+    //    TODO Invoice page
+    Route::get('/invoice', function () {return view('invoice.invoice');})->name('invoice');
+
 });

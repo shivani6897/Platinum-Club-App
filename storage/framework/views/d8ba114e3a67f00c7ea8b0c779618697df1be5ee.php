@@ -221,4 +221,4 @@
     </div>
   </div>
 </div>
-<?php /**PATH C:\laragon\www\platinum\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\laragon\www\Platinum-Club-App\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>
