@@ -541,7 +541,7 @@
       $('input[name="product_price[]"]').each(function(i,v){
         total += (parseInt($('input[name="product_price[]"]').get(i).value)*parseInt($('input[name="product_qty[]"]').get(i).value));
       });
-      console.log(paymentIntent);
+      
       backURL = backURL + "?" + $(this).serialize();
       $.ajax({
         url: "{{url('/customer/invoices/test')}}/"+total,

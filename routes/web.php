@@ -35,8 +35,18 @@ Route::post('/customer/password/set/{token}',[LoginController::class,'passwordSe
 Route::get('/admin',[LoginController::class,'admin'])->name('adminLogin.index');
 Route::post('/admin', [LoginController::class,'adminLogin'])->name('admin-login');
 
+
+// Landing page routes
 Route::get('/landing/{id}',[\App\Http\Controllers\Customer\LandingPageController::class,'index'])->name('landing.index');
 Route::get('/landing/{id}/product/{product}',[\App\Http\Controllers\Customer\LandingPageController::class,'getProduct'])->name('landing.product');
+// landing pay with stripe
+Route::post('/landing/{id}/stripe/payment-intent/{amount}',[\App\Http\Controllers\Customer\LandingPageController::class,'stripePaymentIntent']);
+Route::get('/landing/{id}/stripe/success',[\App\Http\Controllers\Customer\LandingPageController::class,'stripeSuccess']);
+// landing pay with razorpay
+Route::post('/landing/{id}/razorpay/create-order/{amount}',[\App\Http\Controllers\Customer\LandingPageController::class,'razorpayCreateOrder']);
+Route::post('/landing/{id}/razorpay/success',[\App\Http\Controllers\Customer\LandingPageController::class,'razorpaySuccess']);
+
+
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 

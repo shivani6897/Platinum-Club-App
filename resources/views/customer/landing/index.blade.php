@@ -16,6 +16,8 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}"/>
+    {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script> --}}
 
     <script src="https://cdn.tailwindcss.com/"></script>
     <!-- CSS Assets -->
@@ -33,6 +35,8 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
         rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
+    {{-- <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.5/dist/flowbite.min.css" /> --}}
+    {{-- <script src="https://unpkg.com/flowbite@1.5.5/dist/flowbite.js" defer></script> --}}
 
     @stack('styles')
     @include('layouts.alertMsg')
@@ -54,6 +58,24 @@
         .select2-container--default .select2-selection--single .select2-selection__arrow {
             top: 15px;
         }
+    
+    .gateway-button {
+        cursor: pointer;
+        transition: all .2s;
+    }    
+    .gateway-button.selected {
+        border: 3px solid #0a86df;
+    }
+    #stripeModal {
+    background: rgba(0,0,0,0.7);
+    }
+    #stripeModal>div {
+      margin: auto;
+    }
+    #stripeModal>div>div {
+      /*margin-top: 50%;
+    transform: translateY(-50%);*/
+    }
 
     </style>
 </head>
@@ -62,7 +84,7 @@
 
 <!-- Main Content Wrapper -->
 <div>
-    <form>
+    <form id="paymentForm">
     <main class="container mx-auto p-10">
         <div>
             <center>
@@ -133,7 +155,8 @@
                         <label class="inline-flex items-center space-x-2">
                             <input
                                 class="rb-one-time form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
-                                name="basic" checked
+                                name="payment_type" checked
+                                value="0"
                                 onclick="showEmi(0)"
                                 type="radio"/>
                             <p>One-time</p>
@@ -141,7 +164,8 @@
                         <label class="inline-flex items-center space-x-2 ml-4">
                             <input
                                 class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
-                                name="basic"
+                                name="payment_type"
+                                value="1"
                                 onclick="showEmi(1)"
                                 type="radio"/>
                             <p>EMI</p>
@@ -183,9 +207,9 @@
                                         class="form-select mt-1.5 w-full rounded-lg border border-slate-300  px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 bg-transparent dark:hover:border-navy-400 dark:focus:border-accent">
                                         @php
                                             $pending = $selectedProduct->price-$selectedProduct->downpayment;
-                                            echo "<option value='3' data-emi='".number_format($pending/3,2)."'>₹".number_format($pending/3,2)." * 3 Months</option>";
+                                            echo "<option value='3' data-emi='".number_format($pending/3,2)."' selected>₹".number_format($pending/3,2)." * 3 Months</option>";
                                             echo "<option value='6' data-emi='".number_format($pending/6,2)."'>₹".number_format($pending/6,2)." * 6 Months</option>";
-                                            echo "<option value='12' data-emi='".number_format($pending/12,2)."'>₹".number_format($pending/12,2)." * 12 Months</option>";
+                                            echo "<option value='12' data-emi='".number_format($pending/9,2)."'>₹".number_format($pending/9,2)." * 9 Months</option>";
                                         @endphp
                                     </select>
                                 </label>
@@ -193,18 +217,19 @@
                         </div>
                     </div>
                     <div class="mt-7">
+                        <input type="hidden" name="gateway" id="payment-gateway" value="stripe">
                         <div class="grid grid-cols-3 gap-4 mt-4">
-                            <div class="border border-b-slate-200 rounded-md  flex justify-center">
+                            <div onclick="selectGateway(this,'stripe')" class="gateway-button selected border border-b-slate-200 rounded-md  flex justify-center">
                                 <img src="{{asset('images/payment/stripe_logo.png')}}" alt="">
                             </div>
-                            <div class="border border-b-slate-200 rounded-md  flex justify-center items-center">
+                            <div onclick="selectGateway(this,'razorpay')" class="gateway-button border border-b-slate-200 rounded-md  flex justify-center items-center">
                                 <img src="{{asset('images/payment/razorpay_logo.png')}}" alt=""
                                      style="width: 70%;height: 40px"/>
                             </div>
-                            <div class="border border-b-slate-200 rounded-md  flex justify-center items-center">
+                            {{-- <div onclick="selectGateway(this,'instamojo')" class="gateway-button border border-b-slate-200 rounded-md  flex justify-center items-center">
                                 <img src="{{asset('images/payment/instamojo.png')}}" alt=""
                                      style="width: 70%;height: 40px"/>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                     <div class="mt-5">
@@ -214,11 +239,11 @@
                                 type="checkbox"
                                 required
                             />
-                            <p id="agree-label" class="text-black">I hereby agree to pay Rs <span id="emi-amount">{{$selectedProduct->price}}</span>/-</p>
+                            <p id="agree-label" class="text-black">I hereby agree to make payment Rs {{$selectedProduct->price}}/-</p>
                             {{-- <p class="text-black">I hereby agree to make the monthly Emi of Rs <span id="emi-amount">13,333.00</span>/-</p> --}}
                         </label>
                         <div class="mt-5">
-                            <button class="btn bg-green-400 font-medium text-white py-4 px-7 rounded-xl text-lg">
+                            <button type="button" onclick="payAttempt(this)" class="btn bg-green-400 font-medium text-white py-4 px-7 rounded-xl text-lg">
                                 Pay Now
                             </button>
                         </div>
@@ -227,7 +252,7 @@
                 <div>
                     <div>
                         <img id="product-img" src="{{($products[0]->image?asset('/images/products/'.$products[0]->image):'')}}" alt="" style="width: 100%;"/>
-                        <div id="product-desc" class="mt-3">
+                        <div id="product-desc" class="mt-3 reset">
                             {!! $products[0]->description !!}
                         </div>
                     </div>
@@ -237,9 +262,67 @@
     </main>
     </form>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+
+<!-- Modal toggle -->
+{{-- <div id="stripeModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Stripe Payment</h4>
+      </div>
+      <div class="modal-body">
+        <div id="stripeForm"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Pay</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div> --}}
+<div id="stripeModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
+    <div class="relative w-full h-full max-w-2xl md:h-auto">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t">
+                <h3 class="text-xl font-semibold">
+                    Stripe Payment
+                </h3>
+                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" onclick="closeModal('#stripeModal')">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            </div>
+            <!-- Modal body -->
+            <div class="p-6 space-y-6">
+                <div id="stripeForm"></div>
+                <div id="payment-message" class="hidden"></div>
+            </div>
+            <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <button type="button" onclick="payUsingStripe(this)" class="btn bg-green-400 font-medium text-white py-4 px-7 rounded-xl text-lg pay-btn">
+                  Pay Now
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+{{-- General Scripts --}}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
+    var backURL = '{{url('/landing/'.$id.'/stripe/success')}}';
+    var newUrl = '';
+    var razorpayBackURL = '{{url('/landing/'.$id.'/razorpay/success')}}';
+    var razorpayNewUrl = '';
     var products = {!! json_encode($products) !!};
     // function oneTime() {
     //     if ($('.rb-one-time').is(":checked"))
@@ -247,18 +330,57 @@
     //     else
     //         $(".one-time").hide();
     // }
+    function closeModal(id)
+    {
+      $(id).hide();
+    }
+    function payAttempt(obj)
+    {
+      document.getElementById('paymentForm').reportValidity()
+      if(document.getElementById('paymentForm').checkValidity())
+      {
+        if($('#payment-gateway').val()=='stripe')
+        {
+          newUrl = backURL + "?" + $('#paymentForm').serialize();
+          if($('input[name="payment_type"]:checked').val()==0)
+            stripeUpdatePaymentIntent($('select[name="product_id"]').find(':selected').data('price'));
+          else
+            stripeUpdatePaymentIntent($('input[name="downpayment"]').val());
+          setLoading(false);
+          $('#stripeModal').show();
+        }
+        else if($('#payment-gateway').val()=='razorpay')
+        {
+          razorpayNewUrl = razorpayBackURL + "?" + $('#paymentForm').serialize();
+          if($('input[name="payment_type"]:checked').val()==0)
+            razorpayCreateOrder($('select[name="product_id"]').find(':selected').data('price'));
+          else
+            razorpayCreateOrder($('input[name="downpayment"]').val());
+        }
+        else if($('#payment-gateway').val()=='instamojo')
+        {
+          
+        }
+      }
+    }
     function showEmi(flg)
     {
         if(flg)
         {
             $('.emi-payment').slideDown('slow');
-            $('#agree-label').html('I hereby agree to make the monthly Emi of Rs <span id="emi-amount">'+$('select[name="emi"]:selected').data('emi')+'</span>');
+            $('#agree-label').html('I hereby agree to make the monthly Emi of Rs <span id="emi-amount">'+$('select[name="emi"]').find(':selected').data('emi')+'</span>');
         }
         else
         {
             $('.emi-payment').slideUp('slow');
-            $('#agree-label').html('I hereby agree to make the monthly Emi of Rs <span id="emi-amount">'+$('select[name="product_id"]:selected').data('price')+'</span>');
+            $('#agree-label').html('I hereby agree to make payment of Rs '+$('select[name="product_id"]').find(':selected').data('price'));
         }
+    }
+    function selectGateway(obj,strData)
+    {
+        $('.gateway-button').removeClass('selected');
+        $(obj).addClass('selected');
+        $('#payment-gateway').val(strData);
     }
     $(document).ready(function(){
         $('.select2').select2();
@@ -268,7 +390,7 @@
                 success: function(result) {
                     if(result.status)
                     {
-                        console.log(result);
+                        pending = parseInt(result.data.price)-parseInt(result.data.downpayment);
                         if(result.data.image!='' && result.data.image!=null && result.data.image!=undefined)
                             $('#product-img').attr('src','{{url('/images/products/')}}/'+result.data.image);
                         else
@@ -277,7 +399,9 @@
                         $('#product-desc').html(result.data.description);
                         $('input[name="downpayment"]').attr('min',result.data.downpayment).val(result.data.downpayment);
                         $('#min-downpayment-span').html(result.data.downpayment);
-                        $('#emi-value').empty().append(`<option value="3">₹``3 Months</option>`);
+                        $('#emi-value').empty().append(`<option value="3" data-emi="`+Math.round(pending/3,2)+`">₹`+Math.round(pending/3,2)+` * 3 Months</option>
+                            <option value="6" data-emi="`+Math.round(pending/6,2)+`">₹`+Math.round(pending/6,2)+` * 6 Months</option>
+                            <option value="9" data-emi="`+Math.round(pending/9,2)+`">₹`+Math.round(pending/9,2)+` * 9 Months</option>`).trigger('change');
 
 
 
@@ -289,9 +413,172 @@
                     console.error(error);
                 }
             })
+        });
+        $('#emi-value').change(function(){
+            $('#emi-amount').html($(this).find(':selected').data('emi'));
         })
+        $('input[name="downpayment"]').keyup(function(){
+          pending = parseInt($('select[name="product_id"]').find(':selected').data('price'))-parseInt($(this).val());
+          $('#min-downpayment-span').html($(this).val());
+          $('#emi-value').empty().append(`<option value="3" data-emi="`+Math.round(pending/3,2)+`">₹`+Math.round(pending/3,2)+` * 3 Months</option>
+              <option value="6" data-emi="`+Math.round(pending/6,2)+`">₹`+Math.round(pending/6,2)+` * 6 Months</option>
+              <option value="9" data-emi="`+Math.round(pending/9,2)+`">₹`+Math.round(pending/9,2)+` * 9 Months</option>`).trigger('change')
+        });
+
     })
+
+{{-- Razorpay Scripts --}}
+function razorpayCreateOrder(amount)
+{
+  $.ajax({
+    url: '{{url('/landing/'.$id.'/razorpay/create-order')}}/'+amount,
+    method: 'post',
+    data: {
+      _token: '{{csrf_token()}}',
+      email: $('input[name="email"]').val(),
+      payment_type: $('input[name="payment_type"]:checked').val()
+    },
+    success: function(result) {
+      if(result.status)
+      {
+        var options = {
+          "key": "rzp_test_uCGRsa9V8YfVBU", // Enter the Key ID generated from the Dashboard
+          "amount": parseInt(amount)*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+          "currency": "INR",
+          "name": "{{config('app.name')}}",
+          "image": "{{asset('/images/app-logo.png')}}",
+          "order_id": result.order_id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+          "callback_url": razorpayNewUrl,
+          "prefill": {
+              "name": $('input[name="first_name"]').val()+' '+$('input[name="last_name"]').val(),
+              "email": $('input[name="email"]').val(),
+              "contact": $('input[name="phone_no"]').val()
+          },
+          "notes": {
+              // "address": "Razorpay Corporate Office"
+          },
+          "theme": {
+              "color": "#0a83e3"
+          }
+          
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.open();
+      }
+      console.log(result);
+    },
+    error: function(e) {
+      console.error(e);
+    }
+
+  })
+}
+
+{{-- Stripe Scripts --}}
+  const stripe = Stripe("{{config('payment.STRIPE_PUBLIC')}}");
+  var paymentIntent = '';
+
+  // Fetches a payment intent and captures the client secret
+async function initialize() {
+  const { clientSecret } = await fetch("{{url('/landing/'.$id.'/stripe/payment-intent')}}/1", {
+    method: "post",
+    headers: { "Content-Type": "application/json" },
+    body: {
+      _token: '{{csrf_token()}}'
+    },
+  }).then((r) => r.json());
+  const appearence = {
+    theme: 'flat'
+  };
+
+  paymentIntent = clientSecret;
+  $('input[name="paymentIntent"]').val(clientSecret);
+  elements = stripe.elements({ clientSecret,appearence });
+
+  const paymentElementOptions = {
+    layout: "tabs",
+  };
+
+  const paymentElement = elements.create("payment", paymentElementOptions);
+  paymentElement.mount("#stripeForm");
+}
+
+async function handleSubmit(e) {
+  e.preventDefault();
+  setLoading(true);
+
+  const { error } = await stripe.confirmPayment({
+    elements,
+    confirmParams: {
+      // Make sure to change this to your payment completion page
+      return_url: newUrl,
+    },
+  });
+
+  // This point will only be reached if there is an immediate error when
+  // confirming the payment. Otherwise, your customer will be redirected to
+  // your `return_url`. For some payment methods like iDEAL, your customer will
+  // be redirected to an intermediate site first to authorize the payment, then
+  // redirected to the `return_url`.
+  if (error.type === "card_error" || error.type === "validation_error") {
+    showMessage(error.message);
+  } else {
+    showMessage("An unexpected error occurred.");
+  }
+
+  setLoading(false);
+}
+
+function setLoading(isLoading) {
+  if (isLoading) {
+    // Disable the button and show a spinner
+    document.querySelector(".pay-btn").disabled = true;
+    document.querySelector(".pay-btn").innerHTML = "Loading...";
+  } else {
+    document.querySelector(".pay-btn").disabled = false;
+    document.querySelector(".pay-btn").innerHTML = "Submit";
+  }
+}
+
+function payUsingStripe(obj)
+{
+  $('#paymentForm').submit(function(e){
+    handleSubmit(e);
+  })
+  $('#paymentForm').submit();
+}
+
+function stripeUpdatePaymentIntent(amount)
+{
+  $.ajax({
+        url: "{{url('/landing/'.$id.'/stripe/payment-intent')}}/"+amount,
+        method: "post",
+        data: {
+          _token: '{{csrf_token()}}',
+          paymentIntent: paymentIntent,
+        },
+        success: function(result) {
+          // const { clientSecret } = JSON.parse(result);
+
+          // elements = stripe.elements({ clientSecret });
+          // const paymentElementOptions = {
+          //   layout: "tabs",
+          // };
+
+          // const paymentElement = elements.create("payment", paymentElementOptions);
+          // paymentElement.mount("#stripeForm");
+          // handleSubmit(event);
+        },
+        error: function(e) {
+          console.error(e);
+        }
+      });
+}
+
+initialize();
+    
 </script>
+
 </body>
 
 </html>
