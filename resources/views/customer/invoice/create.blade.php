@@ -1,16 +1,5 @@
 @extends('layouts.app')
 
-@push('styles')
-  <style type="text/css">
-    .bg-primary{
-      background-color: #4f46e5 !important;
-    }
-    .bg-error{
-      background-color: #ff5724 !important;
-    }
-  </style>
-@endpush
-
 @section('heading', 'Invoice Create')
 
 @section('breadcrums')

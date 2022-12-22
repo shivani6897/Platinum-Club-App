@@ -35,6 +35,9 @@ Route::post('/customer/password/set/{token}',[LoginController::class,'passwordSe
 Route::get('/admin',[LoginController::class,'admin'])->name('adminLogin.index');
 Route::post('/admin', [LoginController::class,'adminLogin'])->name('admin-login');
 
+Route::get('/landing/{id}',[\App\Http\Controllers\Customer\LandingPageController::class,'index'])->name('landing.index');
+Route::get('/landing/{id}/product/{product}',[\App\Http\Controllers\Customer\LandingPageController::class,'getProduct'])->name('landing.product');
+
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => ['auth','verified']], function () {
@@ -46,7 +49,7 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('updateProfile');
 
     // Top Performers
-    ROute::get('top-performers',[App\Http\Controllers\Customer\TopPerformerController::class,'index'])->name('top_performers');
+    Route::get('top-performers',[App\Http\Controllers\Customer\TopPerformerController::class,'index'])->name('top_performers');
 
     // Tasks management
     Route::get('/tasks/calendar',[App\Http\Controllers\Customer\TaskController::class,'calendar'])->name('tasks.calendar');

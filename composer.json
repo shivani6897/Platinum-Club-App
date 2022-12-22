@@ -13,10 +13,14 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^4.1",
+<<<<<<< Updated upstream
         "laravelcollective/html": "^6.3",
         "laraveldaily/laravel-invoices": "3.0",
         "spatie/laravel-ignition": "^1.0",
         "stripe/stripe-php": "^10.2"
+=======
+        "laravelcollective/html": "^6.3"
+>>>>>>> Stashed changes
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",

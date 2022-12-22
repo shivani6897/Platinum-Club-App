@@ -139,7 +139,6 @@
     </div>
 </div>
 @endsection
-
 @push('scripts')
   @include('customer.business.chartJs')
 @endpush
