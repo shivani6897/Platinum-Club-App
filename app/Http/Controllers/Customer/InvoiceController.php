@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\ProductLog;
 use App\Models\Invoice;
 use App\Models\Payment;
+use App\Models\Product;
 use App\Http\Requests\Customer\Invoice\StoreRequest;
 use App\Http\Requests\Customer\Invoice\UpdateRequest;
 use LaravelDaily\Invoices\Invoice AS InvoicePDF;
@@ -33,8 +34,9 @@ class InvoiceController extends Controller
 
     public function create()
     {
+        $products = Product::pluck('name', 'id')->all();
         $customers = Customer::where('user_id',auth()->id())->get(['id','name']);
-        return view('customer.invoice.create',compact('customers'));
+        return view('customer.invoice.create',compact('customers', 'products'));
     }
 
     public function store(StoreRequest $request)
@@ -63,6 +65,8 @@ class InvoiceController extends Controller
         //     // dd($token->id);
         // }
 
+        // dd($request->all(), array_flip($request->product_id));
+
         // Create Invoice
         $invoiceData = $request->only([
             'customer_id',
@@ -76,17 +80,21 @@ class InvoiceController extends Controller
         //Create Product Log and calculate total amount
         $productData = [];
         $total = 0;
-        for($i=0;$i<count($request->product_name);$i++)
+
+        $products = Product::get()->keyBy('id');
+
+        foreach($request->product_id as $key => $product_id)
         {
             $productData[] = [
-                'invoice_id'=>$invoice->id,
-                'name'=>$request->product_name[$i],
-                'price'=>$request->product_price[$i],
-                'qty'=>$request->product_qty[$i],
-                'created_at'=>now(),
-                'updated_at'=>now(),
+                'product_id' => $product_id,
+                'invoice_id' => $invoice->id,
+                'name' => $products[$product_id]->name,
+                'price' => $products[$product_id]->price,
+                'qty' => $request->product_qty[$key],
+                'created_at' => now(),
+                'updated_at' => now(),
             ];
-            $total += ($request->product_price[$i]*$request->product_qty[$i]);
+            $total += ($request->product_price[$key]*$request->product_qty[$key]);
         }
 
         // if($request->payment_method==1 || $request->payment_method==2)
@@ -217,18 +225,23 @@ class InvoiceController extends Controller
             //Create Product Log and calculate total amount
             $productData = [];
             $total = 0;
-            for($i=0;$i<count($request->product_name);$i++)
+
+            $products = Product::get()->keyBy('id');
+
+            foreach($request->product_id as $key => $product_id)
             {
                 $productData[] = [
-                    'invoice_id'=>$invoice->id,
-                    'name'=>$request->product_name[$i],
-                    'price'=>$request->product_price[$i],
-                    'qty'=>$request->product_qty[$i],
-                    'created_at'=>now(),
-                    'updated_at'=>now(),
+                    'product_id' => $product_id,
+                    'invoice_id' => $invoice->id,
+                    'name' => $products[$product_id]->name,
+                    'price' => $products[$product_id]->price,
+                    'qty' => $request->product_qty[$key],
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ];
-                $total += ($request->product_price[$i]*$request->product_qty[$i]);
+                $total += ($request->product_price[$key]*$request->product_qty[$key]);
             }
+
             $productLog = ProductLog::insert($productData);
 
             $payment = Payment::create([

@@ -117,6 +117,7 @@
           return "";
         }
     </script>
+    @include('layouts.ajaxCalls')
     @stack('scripts')
 </body>
 

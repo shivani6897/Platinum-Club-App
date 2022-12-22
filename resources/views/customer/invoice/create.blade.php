@@ -1,5 +1,16 @@
 @extends('layouts.app')
 
+@push('styles')
+  <style type="text/css">
+    .bg-primary{
+      background-color: #4f46e5 !important;
+    }
+    .bg-error{
+      background-color: #ff5724 !important;
+    }
+  </style>
+@endpush
+
 @section('heading', 'Invoice Create')
 
 @section('breadcrums')
@@ -226,24 +237,21 @@
             @endif
             @empty
             <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
-              <label class="block sm:col-span-6">
-                <span>Product Name</span>
+              <label class="block sm:col-span-6 product-label">
+                <span>Product</span>
                 <span class="relative mt-1.5 flex">
-                  <input
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                    @error('product_name')
-                    border-error
-                    @enderror"
-                    placeholder="Product Name"
-                    name="product_name[]"
-                    type="text"
-                    value=""
+                  <select
+                    class="form-select w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent product_id"
+                    name="product_id[]"
+                    onchange="getProduct(this)"
                     required
-                  />
+                  >
+                    <option value="">Select Product</option>
+                    @foreach($products as $key => $product)
+                      <option value="{{$key}}">{{$product}}</option>
+                    @endforeach
+                  </select>
                 </span>
-                @error('product_name')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
               </label>
               <label class="block sm:col-span-2">
                 <span>Product Qty</span>
@@ -266,21 +274,17 @@
                   <span class="text-tiny+ text-error">{{$message}}</span>
                 @enderror
               </label>
-              <label class="block sm:col-span-4">
+              <label class="block sm:col-span-4 product-price-label">
                 <span>Product Price</span>
                 <span class="relative mt-1.5 flex">
                   <input
+                    readonly
                     class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                    @error('product_price')
-                    border-error
-                    @enderror"
+                    product_price"
                     placeholder="Product Price"
                     name="product_price[]"
-                    type="number"
-                    step="0.01"
-                    min="1"
+                    type="text"
                     value=""
-                    required
                   />
                 </span>
                 @error('product_price')
@@ -447,9 +451,9 @@
 
           <div class="flex justify-end mt-2 space-x-2">
             <button
-              class="pay-btn btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+              class="btn bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90 pay-btn"
               type="submit"
-            >
+              >
               <span>Submit</span>
             </button>
           </div>
@@ -466,19 +470,23 @@
   function addProduct()
   {
     $('#products_div').append(`<div class="product_div grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
-              <label class="block sm:col-span-6">
+              <label class="block sm:col-span-6 product-label">
                 <span>Product Name</span>
                 <span class="relative mt-1.5 flex">
-                  <input
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                    placeholder="Product Name"
-                    name="product_name[]"
-                    type="text"
+                  <select
+                    class="form-select w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent product_id"
+                    name="product_id[]"
+                    onchange="getProduct(this)"
                     required
-                  />
+                  >
+                    <option value="">Select Product</option>
+                    @foreach($products as $key => $product)
+                      <option value="{{$key}}">{{$product}}</option>
+                    @endforeach
+                  </select>
                 </span>
               </label>
-              <label class="block sm:col-span-2">
+              <label class="block sm:col-span-2 product-qty-label">
                 <span>Product Qty</span>
                 <span class="relative mt-1.5 flex">
                   <input
@@ -492,10 +500,11 @@
                   />
                 </span>
               </label>
-              <label class="block sm:col-span-2">
+              <label class="block sm:col-span-2 product-price-label">
                 <span>Product Price</span>
                 <span class="relative mt-1.5 flex">
                   <input
+                    readonly
                     class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                     placeholder="Product Price"
                     name="product_price[]"
@@ -639,5 +648,14 @@ function setLoading(isLoading) {
 }
 
 initialize();
+
+  function getProduct(obj) {
+    let data = {product_id:$(obj).val()};
+    let product = ajaxCallRequest('{{ route('products.getProductById') }}',
+                'GET',data);
+    product.then(function(data){
+      $(obj).parents('.product-label').siblings('.product-price-label').find('input').val(data.product.price);
+    });
+  }
 </script>
 @endpush

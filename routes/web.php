@@ -84,6 +84,7 @@ Route::group(['middleware' => ['auth','verified']], function () {
     //    TODO Products Page Route
     // Route::get('/products', function () {return view('products.index');})->name('products.index');
     Route::resource('/products',\App\Http\Controllers\Customer\ProductController::class);
+    Route::get('getProductById', [\App\Http\Controllers\Customer\ProductController::class, 'getProductById'])->name('products.getProductById');
 
     //    TODO Subscription Page Route
     Route::get('/subscription', function () {return view('subscription.index');})->name('subscription.index');
