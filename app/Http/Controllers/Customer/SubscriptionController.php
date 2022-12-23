@@ -11,7 +11,7 @@ class SubscriptionController extends Controller
 {
     public function index()
     {
-        $rinvoices = RecurringInvoice::where('user_id',auth()->id())->paginate(10);
-        return view('subscriptions',compact('rinvoices'));
+        $rinvoices = RecurringInvoice::with(['invoices','customer'])->where('user_id',auth()->id())->paginate(10);
+        return view('customer.subscriptions.index',compact('rinvoices'));
     }
 }

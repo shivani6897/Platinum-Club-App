@@ -94,6 +94,8 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::post('/customer/invoices/test/{amount}', [\App\Http\Controllers\Customer\InvoiceController::class, 'paymentIntent'])->name('customer.invoices.paymentIntent');
     Route::get('/customer/invoices/stripe/success', [\App\Http\Controllers\Customer\InvoiceController::class, 'stripeSuccess'])->name('customer.invoices.stripe.success');
 
+    Route::get('/subscriptions',[\App\Http\Controllers\Customer\SubscriptionController::class,'index'])->name('subscriptions.index');
+
     //    TODO Products Page Route
     // Route::get('/products', function () {return view('products.index');})->name('products.index');
     Route::resource('/products',\App\Http\Controllers\Customer\ProductController::class);
