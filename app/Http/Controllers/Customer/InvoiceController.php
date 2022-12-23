@@ -36,7 +36,7 @@ class InvoiceController extends Controller
 
     public function create()
     {
-        $gateway = PaymentGateway::where('user_id',auth()->id())->first();
+        $gateway = PaymentGateway::where('user_id',auth()->id())->firstOrNew();
         $products = Product::pluck('name', 'id')->all();
         $customers = Customer::where('user_id',auth()->id())->get(['id','name']);
         return view('customer.invoice.create',compact('customers', 'products','gateway'));

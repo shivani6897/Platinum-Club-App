@@ -79,6 +79,8 @@ class DashboardController extends Controller
             })->sum('converted_customer');
         $customers = Customer::where('user_id',auth()->id())->count();
         $profitability = ($revenue>0?$net_profit*100/$revenue:-100);
+        if($revenue==0 && $net_profit==0)
+            $profitability=0;
 
         // Profit% and Net Profit Graph
         // $stat = DB::select("SELECT DATE_FORMAT(`date`, '%b-%Y') as month,
@@ -92,18 +94,20 @@ class DashboardController extends Controller
                     IFNULL(incomes.date, expenses.date) AS date,
                     SUM(`expenses`.`expense`) as 'expense',
                     incomes.id AS iid,
+                    `incomes`.`user_id`,
                     `incomes`.`income`
                   FROM
                     `incomes`
-                    LEFT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date` AND `incomes`.`user_id`=".auth()->id()." AND `expenses`.`user_id`=".auth()->id()."
+                    LEFT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date` AND `expenses`.`user_id`=`incomes`.`user_id`
                     WHERE `incomes`.`deleted_at` IS NULL
                     AND `expenses`.`deleted_at` IS NULL
                     ".(request('filter_from')?
-                        "AND DATE(`incomes`.`date`)>='".request('filter_from')."'":
-                        "AND DATE(`incomes`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
+                        " AND DATE(`incomes`.`date`)>='".request('filter_from')."'":
+                        " AND DATE(`incomes`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
                         (request('filter_to')?
-                        "AND DATE(`incomes`.`date`)<='".request('filter_to')."'":
-                        "AND DATE(`incomes`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
+                        " AND DATE(`incomes`.`date`)<='".request('filter_to')."'":
+                        " AND DATE(`incomes`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
+                        AND (`incomes`.`user_id`=".auth()->id().")
                     GROUP BY `date`,`iid`
                 )
                 UNION ALL
@@ -112,18 +116,20 @@ class DashboardController extends Controller
                     IFNULL(incomes.date, expenses.date) AS date,
                     SUM(`expenses`.`expense`) as 'expense',
                     incomes.id AS iid,
+                    `incomes`.`user_id`,
                     `incomes`.`income`
                   FROM
                     `incomes`
-                    RIGHT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date` AND `incomes`.`user_id`=".auth()->id()." AND `expenses`.`user_id`=".auth()->id()."
+                    RIGHT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date` AND `expenses`.`user_id`=`incomes`.`user_id`
                     WHERE `incomes`.`deleted_at` IS NULL
                     AND `expenses`.`deleted_at` IS NULL
                     ".(request('filter_from')?
-                        "AND DATE(`expenses`.`date`)>='".request('filter_from')."'":
-                        "AND DATE(`expenses`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
+                        " AND DATE(`expenses`.`date`)>='".request('filter_from')."'":
+                        " AND DATE(`expenses`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
                         (request('filter_to')?
-                        "AND DATE(`expenses`.`date`)<='".request('filter_to')."'":
-                        "AND DATE(`expenses`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
+                        " AND DATE(`expenses`.`date`)<='".request('filter_to')."'":
+                        " AND DATE(`expenses`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
+                        AND (`incomes`.`user_id`=".auth()->id().")
                     GROUP BY `date`,`iid`
                 )
             ) AS dt 
