@@ -106,6 +106,8 @@
                                     Credit Card
                                     @elseif($invoice->payment_method==2)
                                     Debit Card
+                                    @elseif($invoice->payment_method==3)
+                                    Gateway ({{$invoice->payments?->last()?->gateway}})
                                     @else
                                     Unknown
                                     @endif

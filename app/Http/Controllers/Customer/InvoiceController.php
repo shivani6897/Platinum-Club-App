@@ -171,9 +171,9 @@ class InvoiceController extends Controller
 
         $customer = new Party([
             'name'          => $invoice->customer?->name,
+            'phone' => $invoice->customer?->phone_no,
             'custom_fields' => [
                 'email' => $invoice->customer?->email,
-                'Contact Number' => $invoice->customer?->phone_no,
                 'GST Number' => $invoice->customer?->gst_no,
             ],
         ]);
