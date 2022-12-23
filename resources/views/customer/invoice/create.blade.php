@@ -320,6 +320,7 @@
               />
               <span>Offline</span>
             </label>
+            @if($gateway->stripe_active)
             <label class="inline-flex items-center space-x-2 pt-2">
               <input
                 class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
@@ -340,103 +341,18 @@
               />
               <span>Debit Card</span>
             </label>
+            @endif
             @error('payment_method')
               <span class="text-tiny+ text-error">{{$message}}</span>
             @enderror
           </label>
 
+
+          @if($gateway->stripe_active)
           <div id="payment_fields" style="display: none;">
             <div id="stripeForm"></div>
-            <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-4">
-              {{-- <label class="block mt-2 sm:col-span-2">
-                <span>Name on card</span>
-                <span class="relative mt-1.5 flex">
-                  <input
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                    @error('name_on_card')
-                    border-error
-                    @enderror"
-                    placeholder="Name on card"
-                    name="name_on_card"
-                    type="text"
-                    value="{{old('name_on_card')}}"
-                    
-                  />
-                </span>
-                @error('name_on_card')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
-              </label>
-              <label class="block mt-2 sm:col-span-2">
-                <span>Card Number</span>
-                <span class="relative mt-1.5 flex">
-                  <input
-                    x-input-mask="{
-                        numeric:true,
-                        blocks: [4, 4, 4, 4],
-                    }"
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                    @error('card_number')
-                    border-error
-                    @enderror"
-                    placeholder="Card Number"
-                    name="card_number"
-                    type="text"
-                    value="{{old('card_number')}}"
-                    
-                  />
-                </span>
-                @error('card_number')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
-              </label>
-              <label class="block mt-2 sm:col-span-2">
-                <span>Expiry Date</span>
-                <span class="relative mt-1.5 flex">
-                  <input
-                    x-input-mask="{
-                      numericOnly: true, 
-                      blocks: [2, 2], 
-                      delimiters: ['/']
-                    }"
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                    @error('expiry_date')
-                    border-error
-                    @enderror"
-                    placeholder="Expiry Date"
-                    name="expiry_date"
-                    type="text"
-                    value="{{old('expiry_date')}}"
-                    
-                  />
-                </span>
-                @error('expiry_date')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
-              </label>
-              <label class="block mt-2 sm:col-span-2">
-                <span>Security Code</span>
-                <span class="relative mt-1.5 flex">
-                  <input
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                    @error('security_code')
-                    border-error
-                    @enderror"
-                    placeholder="Card Number"
-                    name="security_code"
-                    type="number"
-                    min="0"
-                    max="9999"
-                    value="{{old('security_code')}}"
-                    
-                  />
-                </span>
-                @error('security_code')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
-              </label> --}}
-            </div>
           </div>
+          @endif
 
           <div class="flex justify-end mt-2 space-x-2">
             <button
