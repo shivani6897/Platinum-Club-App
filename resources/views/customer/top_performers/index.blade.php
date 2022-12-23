@@ -142,7 +142,7 @@
                 >{{$stat->user?->club?->name}}</td>
                 <td
                   class="whitespace-nowrap px-3 py-3 sm:px-5"
-                >{{$stat->profit}}</td>
+                >₹ {{number_format($stat->revenue,2)}}</td>
               </tr>
               @empty
               <tr>
