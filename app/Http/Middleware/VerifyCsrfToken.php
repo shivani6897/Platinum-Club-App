@@ -15,5 +15,6 @@ class VerifyCsrfToken extends Middleware
         '/customer/invoices/test/*',
         '/landing/*/stripe/payment-intent/*',
         '/landing/*/razorpay/success',
+        '/invoices/payment/*/*/*/razorpay/success',
     ];
 }

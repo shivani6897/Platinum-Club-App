@@ -43,7 +43,7 @@
                     Subscriptions Table
                 </h2>
                 <div class="flex">
-                    <div class="flex items-center" x-data="{isInputActive:false}">
+                    {{-- <div class="flex items-center" x-data="{isInputActive:false}">
                         <label class="block">
                             <span class="relative mr-1.5 flex">
                               <input
@@ -61,7 +61,7 @@
                         class="inline-flex"
                     >
                         <a href="{{route('invoices.create')}}" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Invoice</a>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <div class="card mt-3">
@@ -131,14 +131,14 @@
                                         @else
                                         Pending
                                         @endif
-                                    @elseif($rinvoice->status==3)
+                                    @elseif($rinvoice->status==1)
                                     Paid
                                     @else
                                     Unknown
                                     @endif
                                  </td>
                                  <td class="whitespace-nowrap px-4 py-3 sm:px-5">
-                                     <a href="" title="Share next emi invoice now"><i class="fa-solid fa-share-from-square"></i></a>
+                                     <a href="{{route('invoices.payment',['id'=>auth()->id(),'invoiceId'=>0,'rinvoiceId'=>$rinvoice->id])}}" target="_blank" title="Share next emi invoice now"><i class="fa-solid fa-share-from-square"></i></a>
                                  </td>
                                 {{-- <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                                         <div

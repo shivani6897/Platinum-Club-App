@@ -130,6 +130,7 @@
                                             @click.outside="if(isShowPopper) isShowPopper = false"
                                             class="inline-flex"
                                         >
+                                        <a href="{{route('invoices.payment',['id'=>auth()->id(),'invoiceId'=>$invoice->id,'rinvoiceId'=>0])}}" target="_blank" title="Share invoice now"><i class="fa-solid fa-share-from-square"></i></a>
                                             <button
                                                 x-ref="popperRef"
                                                 @click="isShowPopper = !isShowPopper"

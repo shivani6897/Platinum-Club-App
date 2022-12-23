@@ -60,12 +60,16 @@
                                 Due Amount
                             </p>
                             <p class="text-3xl text-black font-bold">
-                                ₹ 13,000
+                                ₹ {{number_format($data['due'],2)}}
                             </p>
                         </div>
-                        <button class="btn bg-green-400 font-medium text-white py-2 px-5 rounded-lg text-md">
+                        @if($data['status']==0)
+                        <a href="{{route('invoices.payment.page',['id'=>$id,'invoiceId'=>$invoiceId,'rinvoiceId'=>$rinvoiceId,'amount'=>$data['due']])}}" class="btn bg-green-400 font-medium text-white py-2 px-5 rounded-lg text-md">
                             Pay Now
-                        </button>
+                        </a>
+                        @else
+                        <span class="text-success">Paid</span>
+                        @endif
                     </div>
                 </div>
                 <div class="mt-4 rounded-lg  bg-white" style="padding-bottom: 150px">
@@ -77,22 +81,24 @@
                                     Member
                                 </p>
                                 <p class="text-md font-bold text-black">
-                                    Invoice No: PAY-1001
+                                    Invoice No: {{$data['invoice_number']}}
                                 </p>
+                                <input type="hidden" value="{{$data['invoiceId']}}" name="invoiceId">
+                                <input type="hidden" value="{{$data['invoice_number']}}" name="invoice_number">
                             </div>
                             <div class="sm:justify-between sm:flex">
                                 <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">Phone :</p>+1234567890
+                                    <p class="text-md font-bold text-black mr-2">Phone :</p>{{ $data['user']->phone_no }}
                                 </span>
                                 <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">Due Date :</p>20-2-2022</span>
+                                    <p class="text-md font-bold text-black mr-2">Due Date :</p>{{ $data['due_date'] }}</span>
                             </div>
                             <div class="sm:justify-between sm:flex">
                                 <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">Email :</p>hello@owlsy.dev
+                                    <p class="text-md font-bold text-black mr-2">Email :</p>{{ $data['user']->email }}
                                 </span>
                                 <span class="flex items-center text-md">
-                                    <span class="text-md font-bold text-black mr-2">Gateway :</span>Offline
+                                    <span class="text-md font-bold text-black mr-2">Gateway :</span> {{ $data['paid_by'] }}
                                 </span>
                             </div>
                         </div>
@@ -107,25 +113,25 @@
                             <div class="sm:justify-between sm:flex">
                                  <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">Name :</p>
-                                    Sandy Kumar
+                                    {{ $data['customer']->name }}
                                </span>
                                 <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">Invoice Date :</p>
-                                    20-02-2022
+                                    {{ $data['invoice_date'] }}
                                </span>
                             </div>
                             <div class="justify-between flex">
                                 <p class="text-md font-bold text-black mr-2">India</p>
                                 <span class="flex items-center text-md">
-                                    Due Amount
+                                    {{ ($data['status']==0?'Due':'Paid') }} Amount
                                </span>
                             </div>
                             <div class="justify-between flex">
                                 <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">Phone :</p>+1234567890
+                                    <p class="text-md font-bold text-black mr-2">Phone :</p>{{ $data['customer']->phone_no}}
                                 </span>
                                 <span class="flex items-center text-md">
-                                    <p class="text-xl font-bold text-black ">₹ 14,750.00</p>
+                                    <p class="text-xl font-bold text-black ">₹ {{ number_format($data['due'],2) }}</p>
                                 </span>
                             </div>
                         </div>
@@ -149,56 +155,74 @@
                             </tr>
                             </thead>
                             <tbody>
+                            @if(!empty($data['products']))
+                            @foreach($data['products'] as $product)
                             <tr>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">Product 1 (1st EMI)</td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">1</td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">12500.00</td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">12500.00</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$product->name}}</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$product->qty}}</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$product->price}}</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">{{$product->price*$product->qty}}</td>
                             </tr>
+                            @endforeach
+                            @else
+                            <tr>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$data['product']->name}} [ EMI {{$data['emi']}} ]</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">1</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{number_format($data['subtotal'],2)}}</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">{{number_format($data['subtotal'],2)}}</td>
+                            </tr>
+                            @endif
                             </tbody>
                         </table>
                     </div>
                     <div class="float-right pr-5">
                        <span class="flex items-center flex justify-end text-md">
-                           <p class="text-md text-black mr-4">Subtotal :</p>12,500.00
+                           <p class="text-md text-black mr-4">Subtotal :</p> {{ number_format($data['subtotal'],2) }}
                        </span>
                         <span class="flex items-center text-md flex justify-end">
-                           <p class="text-md text-black mr-4">GST 18% :</p>2,500.00
+                           <p class="text-md text-black mr-4">GST 18% :</p> {{ number_format($data['due']-$data['subtotal'],2) }}
                        </span>
                         <span class="flex items-center text-md font-bold text-black justify-end">
-                           <p class="text-md text-black mr-4 font-bold">Total :</p>14,500.00
+                           <p class="text-md text-black mr-4 font-bold">Total :</p> {{ number_format($data['due'],2) }}
                        </span>
                         <button disabled class="btn px-6 py-4 text-xl mt-2 text-black font-bold"
-                                style="background-color: #FFD2D2">
-                            <span class="pr-4">Due</span>
-                            <span>₹ 14,750.00</span>
+                                style="background-color: {{($data['status']==0?'#FFD2D2':'#d2ffea')}}">
+                            <span class="pr-4">{{($data['status']==0?'Due':'Paid')}}</span>
+                            <span>₹ {{ number_format($data['due'],2) }}</span>
                         </button>
                     </div>
                 </div>
                 <div class="mt-4 rounded-lg p-4 bg-white">
+                    <center><p class="text-2xl  text-black font-bold pt-5">Product Description</p></center>
+                    @if(!empty($data['products']))
+                    @foreach($data['products'] as $product)
                     <div>
-                        <center><p class="text-2xl  text-black font-bold pt-5">Product Description</p></center>
+                        <h2 class="text-2xl  text-black font-bold pt-5">{{$product->name}}</h2>
                         <div class="grid md:grid-cols-2 gap-4 mt-4 p-4">
                             <div class=" flex justify-center">
-                                <img src="{{asset('images/payment/marketing-online.png')}}" alt="">
+                                @if(!empty($product->product))
+                                <img src="{{(!empty($product->product->image)?asset('images/products/'.$product->product->image):'')}}" alt="{{$product->name}} Image">
+                                @endif
                             </div>
                             <div class="mt-3">
-                                <p class="text-black">
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusantium consequuntur
-                                    cupiditate fugiat harum illo, laborum magnam maiores neque odio quaerat quibusdam
-                                    quidem, recusandae reiciendis sed veritatis vero vitae voluptate.
-                                </p>
-                                <ul style="list-style: disc" class="text-black mt-3 ml-3">
-                                    <li> Lorem ipsum dolor sit amet, </li>
-                                    <li>  ipsum dolor sit amet, </li>
-                                    <li> dolor sit amet, </li>
-                                </ul>
-                                <p class="text-black mt-2">
-                                    when an unknown printer took a galley of type and scrambled it.
-                                </p>
+                                {!! $product->product?->description !!}
                             </div>
                         </div>
                     </div>
+                    @endforeach
+                    @else
+                    <div>
+                        <h2 class="text-2xl  text-black font-bold pt-5">{{$data['product']->name}}</h2>
+                        <div class="grid md:grid-cols-2 gap-4 mt-4 p-4">
+                            <div class=" flex justify-center">
+                                <img src="{{(!empty($data['product']->image)?asset('images/products/'.$data['product']->image):'')}}" alt="{{$data['product']->name}} Image">
+                            </div>
+                            <div class="mt-3">
+                                {!! $data['product']->description !!}
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

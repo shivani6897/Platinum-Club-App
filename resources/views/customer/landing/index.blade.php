@@ -455,7 +455,7 @@ function razorpayCreateOrder(amount)
       if(result.status)
       {
         var options = {
-          "key": "rzp_test_uCGRsa9V8YfVBU", // Enter the Key ID generated from the Dashboard
+          "key": "{{$gateway->razorpay_key}}", // Enter the Key ID generated from the Dashboard
           "amount": parseInt(amount)*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
           "currency": "INR",
           "name": "{{config('app.name')}}",

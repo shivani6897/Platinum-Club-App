@@ -46,6 +46,12 @@ Route::get('/landing/{id}/stripe/success',[\App\Http\Controllers\Customer\Landin
 Route::post('/landing/{id}/razorpay/create-order/{amount}',[\App\Http\Controllers\Customer\LandingPageController::class,'razorpayCreateOrder']);
 Route::post('/landing/{id}/razorpay/success',[\App\Http\Controllers\Customer\LandingPageController::class,'razorpaySuccess']);
 
+Route::get('/invoices/payment/{id}/{invoiceId}/{rinvoiceId}',[\App\Http\Controllers\Customer\SubscriptionController::class,'getInvoiceLink'])->name('invoices.payment');
+Route::get('/invoices/payment/{id}/{invoiceId}/{rinvoiceId}/{amount}',[\App\Http\Controllers\Customer\SubscriptionController::class,'paymentPage'])->name('invoices.payment.page');
+
+Route::get('/invoices/payment/{id}/{invoiceId}/{rinvoiceId}/stripe/success',[\App\Http\Controllers\Customer\SubscriptionController::class,'stripeSuccess'])->name('invoices.payment.stripe.success');
+Route::post('/invoices/payment/{id}/{invoiceId}/{rinvoiceId}/razorpay/success',[\App\Http\Controllers\Customer\SubscriptionController::class,'razorpaySuccess'])->name('invoices.payment.razorpay.success');
+
 
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

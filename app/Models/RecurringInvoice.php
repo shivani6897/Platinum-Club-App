@@ -20,4 +20,9 @@ class RecurringInvoice extends Model
     {
         return $this->belongsTo('App\Models\Customer','customer_id','id');
     }
+
+    public function product()
+    {
+        return $this->belongsTo('App\Models\Product','product_id','id');
+    }
 }

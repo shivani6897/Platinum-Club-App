@@ -26,7 +26,7 @@ class LandingPageController extends Controller
         $selectedProduct = Product::where('user_id',$id)->first();
         if(count($products)==0)
             return redirect()->back()->with('error','Please add products to generate sharable link');
-        $gateway = PaymentGateway::where('user_id',auth()->id())->first();
+        $gateway = PaymentGateway::where('user_id',$id)->firstOrNew();
         if($gateway->stripe_active!=1 && $gateway->razorpay_active!=1)
             return redirect()->back()->with('error','At least one payment gateway should active to access sharable link.');
 
