@@ -58,11 +58,11 @@
         .select2-container--default .select2-selection--single .select2-selection__arrow {
             top: 15px;
         }
-    
+
     .gateway-button {
         cursor: pointer;
         transition: all .2s;
-    }    
+    }
     .gateway-button.selected {
         border: 3px solid #0a86df;
     }
@@ -85,16 +85,16 @@
 <!-- Main Content Wrapper -->
 <div>
     <form id="paymentForm">
-    <main class="container mx-auto p-10">
+    <main class="container mx-auto md:p-10 p-4">
         <div>
             <center>
                 <p style="font-size: 2.5rem;font-weight: bold"
                    class="text-black"
                 >Paymentz</p>
             </center>
-            <div class="grid grid-cols-2 gap-6 mt-7">
+            <div class="grid md:grid-cols-2 md:gap-6 mt-7">
                 <div>
-                    <div class="grid grid-cols-2 gap-4 ">
+                    <div class="grid md:grid-cols-2 md:gap-4 ">
                         <div>
                             <label class="block">
                                 <span class="text-black">First Name:</span>
@@ -116,7 +116,7 @@
                             </label>
 
                         </div>
-                        <div>
+                        <div class="mt-3 md:mt-0">
                             <label class="block">
                                 <span class="text-black">Email:</span>
                                 <input
@@ -186,7 +186,7 @@
                             </label>
                         </div> --}}
                         <div class="emi-payment hidden">
-                            <div class="grid grid-cols-2 gap-4 mt-6">
+                            <div class="grid lg:grid-cols-2 lg:gap-4 mt-6">
                                 <label class="block">
                                     <span class="text-black">What is your Downpayment? (Min <span id="min-downpayment-span">{{$selectedProduct->downpayment}}</span>/-)</span>
                                     <input
@@ -199,7 +199,7 @@
                                         required
                                         />
                                 </label>
-                                <label class="block">
+                                <label class="block mt-3 lg:mt-0">
                                     <span class="text-black">How many EMI do you Need?</span>
                                     <select
                                         id="emi-value"
@@ -253,7 +253,7 @@
                         </div>
                     </div>
                 </div>
-                <div>
+                <div class="mt-5 md:mt-0">
                     <div>
                         <img id="product-img" src="{{($products[0]->image?asset('/images/products/'.$products[0]->image):'')}}" alt="" style="width: 100%;"/>
                         <div id="product-desc" class="mt-3 reset">
@@ -363,7 +363,7 @@
         }
         else if($('#payment-gateway').val()=='instamojo')
         {
-          
+
         }
       }
     }
@@ -473,7 +473,7 @@ function razorpayCreateOrder(amount)
           "theme": {
               "color": "#0a83e3"
           }
-          
+
         };
         var rzp1 = new Razorpay(options);
         rzp1.open();
@@ -589,7 +589,7 @@ function stripeUpdatePaymentIntent(amount)
 }
 
 initialize();
-    
+
 </script>
 
 </body>
