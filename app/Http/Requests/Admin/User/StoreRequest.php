@@ -24,7 +24,7 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
-             'club_id'=>'required|exists:clubs,id',
+             // 'club_id'=>'required|exists:clubs,id',
              'first_name'=>'required', 'string', 'max:255',
              'phone_no'=>'required',
              'last_name' => 'required', 'string', 'max:255',
