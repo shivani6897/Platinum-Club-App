@@ -443,9 +443,11 @@
     }).trigger('change');
   });
 
-  const stripe = Stripe("{{config('payment.STRIPE_PUBLIC')}}");
+@if($gateway->stripe_active)
+  const stripe = Stripe("{{$gateway->stripe_public}}");
   var backURL = '{{url('/customer/invoices/stripe/success')}}';
   var paymentIntent = '';
+@endif
 
   $('#createInvoiceForm').submit(function(e){
     e.preventDefault();
