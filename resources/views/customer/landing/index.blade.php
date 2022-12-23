@@ -488,7 +488,7 @@ function razorpayCreateOrder(amount)
 }
 
 {{-- Stripe Scripts --}}
-  const stripe = Stripe("{{config('payment.STRIPE_PUBLIC')}}");
+  const stripe = Stripe("{{$gateway->stripe_public}}");
   var paymentIntent = '';
 
   // Fetches a payment intent and captures the client secret
