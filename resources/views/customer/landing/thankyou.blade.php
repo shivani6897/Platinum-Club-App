@@ -10,7 +10,7 @@
       content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
 
-    <title>Lineone - Error 401</title>
+    <title>Thank you</title>
     <link rel="icon" type="image/png" href="{{asset('images/favicon.png')}}" />
 
     <!-- CSS Assets -->
