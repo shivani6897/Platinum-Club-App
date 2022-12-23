@@ -112,6 +112,14 @@
         <i class="fa-solid fa-ranking-star fa-2x"></i>
       </a>
 
+      <a
+          href="{{route('paymentgateways')}}"
+          class="flex h-11 w-11 items-center justify-center rounded-lg outline-none transition-colors duration-200 hover:bg-primary/20 focus:bg-primary/20 active:bg-primary/25 dark:bg-navy-600 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+          x-tooltip.placement.right="'Payment Gateways'"
+      >
+          <i class="fa-solid fa-gear fa-2x"></i>
+      </a>
+
         {{-- <!-- Business Stats -->
         <a
           href="{{url('business-stats')}}"

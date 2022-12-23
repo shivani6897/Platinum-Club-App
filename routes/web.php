@@ -35,6 +35,19 @@ Route::post('/customer/password/set/{token}',[LoginController::class,'passwordSe
 Route::get('/admin',[LoginController::class,'admin'])->name('adminLogin.index');
 Route::post('/admin', [LoginController::class,'adminLogin'])->name('admin-login');
 
+
+// Landing page routes
+Route::get('/landing/{id}',[\App\Http\Controllers\Customer\LandingPageController::class,'index'])->name('landing.index');
+Route::get('/landing/{id}/product/{product}',[\App\Http\Controllers\Customer\LandingPageController::class,'getProduct'])->name('landing.product');
+// landing pay with stripe
+Route::post('/landing/{id}/stripe/payment-intent/{amount}',[\App\Http\Controllers\Customer\LandingPageController::class,'stripePaymentIntent']);
+Route::get('/landing/{id}/stripe/success',[\App\Http\Controllers\Customer\LandingPageController::class,'stripeSuccess']);
+// landing pay with razorpay
+Route::post('/landing/{id}/razorpay/create-order/{amount}',[\App\Http\Controllers\Customer\LandingPageController::class,'razorpayCreateOrder']);
+Route::post('/landing/{id}/razorpay/success',[\App\Http\Controllers\Customer\LandingPageController::class,'razorpaySuccess']);
+
+
+
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::group(['middleware' => ['auth','verified']], function () {
@@ -46,7 +59,7 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::post('profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('updateProfile');
 
     // Top Performers
-    ROute::get('top-performers',[App\Http\Controllers\Customer\TopPerformerController::class,'index'])->name('top_performers');
+    Route::get('top-performers',[App\Http\Controllers\Customer\TopPerformerController::class,'index'])->name('top_performers');
 
     // Tasks management
     Route::get('/tasks/calendar',[App\Http\Controllers\Customer\TaskController::class,'calendar'])->name('tasks.calendar');
@@ -84,6 +97,13 @@ Route::group(['middleware' => ['auth','verified']], function () {
     //    TODO Products Page Route
     // Route::get('/products', function () {return view('products.index');})->name('products.index');
     Route::resource('/products',\App\Http\Controllers\Customer\ProductController::class);
+    Route::get('getProductById', [\App\Http\Controllers\Customer\ProductController::class, 'getProductById'])->name('products.getProductById');
+
+    Route::get('/customer/payment-gateways', [\App\Http\Controllers\Customer\PaymentGatewayController::class, 'index'])->name('paymentgateways');
+    Route::get('/customer/payment-gateways/changeVisibility/{id}/{visibility}/{type}', [\App\Http\Controllers\Customer\PaymentGatewayController::class, 'changeVisibility'])->name('changeVisibility');
+    Route::get('/customer/payment-gateways/show/{id}/{type}', [\App\Http\Controllers\Customer\PaymentGatewayController::class, 'show'])->name('customer.create');
+    Route::post('/customer/payment-gateways/store', [\App\Http\Controllers\Customer\PaymentGatewayController::class, 'store'])->name('customer.store');
+
 
     //    TODO Subscription Page Route
     Route::get('/subscription', function () {return view('subscription.index');})->name('subscription.index');

@@ -8,6 +8,7 @@ use App\Http\Requests\Customer\Product\StoreRequest;
 use App\Http\Requests\Customer\Product\UpdateRequest;
 use App\Models\Product;
 use App\Services\Utilities\ImageService;
+use Illuminate\Support\Facades\Response;
 
 class ProductController extends Controller
 {
@@ -106,5 +107,16 @@ class ProductController extends Controller
         $imageService->destroy('/images/products',$product->image);
         $product->delete();
         return redirect()->back()->with('success','Product Deleted');
+    }
+
+    /**
+     * Return product by product id
+     * @param  Request $request 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getProductById(Request $request)
+    {
+        $product = Product::findOrFail($request->product_id);
+        return Response::json(['product' => $product]);
     }
 }

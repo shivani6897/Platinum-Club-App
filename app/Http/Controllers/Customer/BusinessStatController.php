@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Auth;
 use DB;
-
 class BusinessStatController extends Controller
 {
     /**

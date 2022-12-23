@@ -226,24 +226,21 @@
             @endif
             @empty
             <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
-              <label class="block sm:col-span-6">
-                <span>Product Name</span>
+              <label class="block sm:col-span-6 product-label">
+                <span>Product</span>
                 <span class="relative mt-1.5 flex">
-                  <input
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                    @error('product_name')
-                    border-error
-                    @enderror"
-                    placeholder="Product Name"
-                    name="product_name[]"
-                    type="text"
-                    value=""
+                  <select
+                    class="form-select w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent product_id"
+                    name="product_id[]"
+                    onchange="getProduct(this)"
                     required
-                  />
+                  >
+                    <option value="">Select Product</option>
+                    @foreach($products as $key => $product)
+                      <option value="{{$key}}">{{$product}}</option>
+                    @endforeach
+                  </select>
                 </span>
-                @error('product_name')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
               </label>
               <label class="block sm:col-span-2">
                 <span>Product Qty</span>
@@ -266,21 +263,17 @@
                   <span class="text-tiny+ text-error">{{$message}}</span>
                 @enderror
               </label>
-              <label class="block sm:col-span-4">
+              <label class="block sm:col-span-4 product-price-label">
                 <span>Product Price</span>
                 <span class="relative mt-1.5 flex">
                   <input
+                    readonly
                     class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                    @error('product_price')
-                    border-error
-                    @enderror"
+                    product_price"
                     placeholder="Product Price"
                     name="product_price[]"
-                    type="number"
-                    step="0.01"
-                    min="1"
+                    type="text"
                     value=""
-                    required
                   />
                 </span>
                 @error('product_price')
@@ -327,6 +320,7 @@
               />
               <span>Offline</span>
             </label>
+            @if($gateway->stripe_active)
             <label class="inline-flex items-center space-x-2 pt-2">
               <input
                 class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
@@ -347,109 +341,24 @@
               />
               <span>Debit Card</span>
             </label>
+            @endif
             @error('payment_method')
               <span class="text-tiny+ text-error">{{$message}}</span>
             @enderror
           </label>
 
+
+          @if($gateway->stripe_active)
           <div id="payment_fields" style="display: none;">
             <div id="stripeForm"></div>
-            <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-4">
-              {{-- <label class="block mt-2 sm:col-span-2">
-                <span>Name on card</span>
-                <span class="relative mt-1.5 flex">
-                  <input
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                    @error('name_on_card')
-                    border-error
-                    @enderror"
-                    placeholder="Name on card"
-                    name="name_on_card"
-                    type="text"
-                    value="{{old('name_on_card')}}"
-                    
-                  />
-                </span>
-                @error('name_on_card')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
-              </label>
-              <label class="block mt-2 sm:col-span-2">
-                <span>Card Number</span>
-                <span class="relative mt-1.5 flex">
-                  <input
-                    x-input-mask="{
-                        numeric:true,
-                        blocks: [4, 4, 4, 4],
-                    }"
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                    @error('card_number')
-                    border-error
-                    @enderror"
-                    placeholder="Card Number"
-                    name="card_number"
-                    type="text"
-                    value="{{old('card_number')}}"
-                    
-                  />
-                </span>
-                @error('card_number')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
-              </label>
-              <label class="block mt-2 sm:col-span-2">
-                <span>Expiry Date</span>
-                <span class="relative mt-1.5 flex">
-                  <input
-                    x-input-mask="{
-                      numericOnly: true, 
-                      blocks: [2, 2], 
-                      delimiters: ['/']
-                    }"
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                    @error('expiry_date')
-                    border-error
-                    @enderror"
-                    placeholder="Expiry Date"
-                    name="expiry_date"
-                    type="text"
-                    value="{{old('expiry_date')}}"
-                    
-                  />
-                </span>
-                @error('expiry_date')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
-              </label>
-              <label class="block mt-2 sm:col-span-2">
-                <span>Security Code</span>
-                <span class="relative mt-1.5 flex">
-                  <input
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
-                    @error('security_code')
-                    border-error
-                    @enderror"
-                    placeholder="Card Number"
-                    name="security_code"
-                    type="number"
-                    min="0"
-                    max="9999"
-                    value="{{old('security_code')}}"
-                    
-                  />
-                </span>
-                @error('security_code')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
-              </label> --}}
-            </div>
           </div>
+          @endif
 
           <div class="flex justify-end mt-2 space-x-2">
             <button
-              class="pay-btn btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+              class="btn bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90 pay-btn"
               type="submit"
-            >
+              >
               <span>Submit</span>
             </button>
           </div>
@@ -466,19 +375,23 @@
   function addProduct()
   {
     $('#products_div').append(`<div class="product_div grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
-              <label class="block sm:col-span-6">
+              <label class="block sm:col-span-6 product-label">
                 <span>Product Name</span>
                 <span class="relative mt-1.5 flex">
-                  <input
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                    placeholder="Product Name"
-                    name="product_name[]"
-                    type="text"
+                  <select
+                    class="form-select w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent product_id"
+                    name="product_id[]"
+                    onchange="getProduct(this)"
                     required
-                  />
+                  >
+                    <option value="">Select Product</option>
+                    @foreach($products as $key => $product)
+                      <option value="{{$key}}">{{$product}}</option>
+                    @endforeach
+                  </select>
                 </span>
               </label>
-              <label class="block sm:col-span-2">
+              <label class="block sm:col-span-2 product-qty-label">
                 <span>Product Qty</span>
                 <span class="relative mt-1.5 flex">
                   <input
@@ -492,10 +405,11 @@
                   />
                 </span>
               </label>
-              <label class="block sm:col-span-2">
+              <label class="block sm:col-span-2 product-price-label">
                 <span>Product Price</span>
                 <span class="relative mt-1.5 flex">
                   <input
+                    readonly
                     class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                     placeholder="Product Price"
                     name="product_price[]"
@@ -543,7 +457,7 @@
       $('input[name="product_price[]"]').each(function(i,v){
         total += (parseInt($('input[name="product_price[]"]').get(i).value)*parseInt($('input[name="product_qty[]"]').get(i).value));
       });
-      console.log(paymentIntent);
+      
       backURL = backURL + "?" + $(this).serialize();
       $.ajax({
         url: "{{url('/customer/invoices/test')}}/"+total,
@@ -639,5 +553,14 @@ function setLoading(isLoading) {
 }
 
 initialize();
+
+  function getProduct(obj) {
+    let data = {product_id:$(obj).val()};
+    let product = ajaxCallRequest('{{ route('products.getProductById') }}',
+                'GET',data);
+    product.then(function(data){
+      $(obj).parents('.product-label').siblings('.product-price-label').find('input').val(data.product.price);
+    });
+  }
 </script>
 @endpush
