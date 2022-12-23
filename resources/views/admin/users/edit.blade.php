@@ -78,8 +78,9 @@
                                     @enderror"
                                     name="club_id"
                                 >
+
+                                    <option value="">Select Club</option>
                                     @foreach($clubs as $key=>$club)
-                                        <option value="">Select Club</option>
                                         <option value="{{$club->id}}" @selected(old('club_id',0)==$club->id)>{{$club->name}}</option>
                                     @endforeach
                                 </select>
