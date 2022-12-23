@@ -200,8 +200,8 @@
                         <h2 class="text-2xl  text-black font-bold pt-5">{{$product->name}}</h2>
                         <div class="grid md:grid-cols-2 gap-4 mt-4 p-4">
                             <div class=" flex justify-center">
-                                @if(!empty($product->product))
-                                <img src="{{(!empty($product->product->image)?asset('images/products/'.$product->product->image):'')}}" alt="{{$product->name}} Image">
+                                @if(!empty($product->product) && !empty($product->product->image))
+                                <img src="{{asset('images/products/'.$product->product->image)}}" alt="{{$product->name}} Image">
                                 @endif
                             </div>
                             <div class="mt-3">
@@ -215,7 +215,9 @@
                         <h2 class="text-2xl  text-black font-bold pt-5">{{$data['product']->name}}</h2>
                         <div class="grid md:grid-cols-2 gap-4 mt-4 p-4">
                             <div class=" flex justify-center">
-                                <img src="{{(!empty($data['product']->image)?asset('images/products/'.$data['product']->image):'')}}" alt="{{$data['product']->name}} Image">
+                                @if(!empty($data['product']->image))
+                                <img src="{{asset('images/products/'.$data['product']->image)}}" alt="{{$data['product']->name}} Image">
+                                @endif
                             </div>
                             <div class="mt-3">
                                 {!! $data['product']->description !!}
