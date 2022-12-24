@@ -40,7 +40,7 @@ class DashboardController extends Controller
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
-                $q->whereDate('date','>=',Carbon::now()->format('Y-m-d'));
+                $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->sum('income');
         $ad_spends = Expense::when(request('user'),function($q) {
                 $q->where('user_id',request('user'));
@@ -56,7 +56,7 @@ class DashboardController extends Controller
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
-                $q->whereDate('date','>=',Carbon::now()->format('Y-m-d'));
+                $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->where('expense_category_id',1)->sum('expense');
         $overheads = Expense::when(request('user'),function($q) {
                 $q->where('user_id',request('user'));
@@ -72,7 +72,7 @@ class DashboardController extends Controller
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
-                $q->whereDate('date','>=',Carbon::now()->format('Y-m-d'));
+                $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->whereNot('expense_category_id',1)->sum('expense');
         $net_profit = $revenue-$ad_spends-$overheads;
         $leads = Lead::when(request('user'),function($q) {
@@ -89,7 +89,7 @@ class DashboardController extends Controller
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
-                $q->whereDate('date','>=',Carbon::now()->format('Y-m-d'));
+                $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->sum('lead_generated');
         $cost_per_lead = $ad_spends/($leads>0?$leads:1);
         $converted_customers = Lead::when(request('user'),function($q) {
@@ -106,7 +106,7 @@ class DashboardController extends Controller
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
-                $q->whereDate('date','>=',Carbon::now()->format('Y-m-d'));
+                $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->sum('converted_customer');
         $customers = Customer::when(request('user'),function($q) {
                 $q->where('user_id',request('user'));
@@ -115,101 +115,130 @@ class DashboardController extends Controller
                 $q->whereIn('user_id',$userIds);
             })->count();
         $profitability = ($revenue>0?$net_profit*100/$revenue:-100);
+        if($revenue==0 && $net_profit==0)
+            $profitability = 0;
 
         // Profit% and Net Profit Graph
         // $stat = DB::select("SELECT DATE_FORMAT(`date`, '%b-%Y') as month,
         //             sum(`expense`) as expense,
         //             sum(`income`) as income
-        $stat = DB::select("SELECT `date`,
-                    MAX(`expense`) AS 'expense',
-                    SUM(`income`) AS 'income'
-            FROM (  (
-                  SELECT
-                    IFNULL(incomes.date, expenses.date) AS date,
-                    SUM(`expenses`.`expense`) as 'expense',
-                    incomes.id AS iid,
-                    `incomes`.`income`
-                  FROM
-                    `incomes`
-                    LEFT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date` ".(request('user')?" AND `expenses`.`user_id`=".request('user'):"").(count($userIds)>0?" AND `expenses`.`user_id` IN (".implode(',',$userIds).")":"").
-                        (request('user')?" AND `incomes`.`user_id`=".request('user'):"").
-                        (count($userIds)>0?" AND `incomes`.`user_id` IN (".implode(',',$userIds).")":"")."
-                    WHERE `incomes`.`deleted_at` IS NULL
-                    AND `expenses`.`deleted_at` IS NULL
-                    ".(request('filter_from')?
-                        "AND DATE(`incomes`.`date`)>='".request('filter_from')."'":
-                        "AND DATE(`incomes`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
-                        (request('filter_to')?
-                        "AND DATE(`incomes`.`date`)<='".request('filter_to')."'":
-                        "AND DATE(`incomes`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
-                    GROUP BY `date`,`iid`
-                )
-                UNION ALL
-                (
-                  SELECT
-                    IFNULL(incomes.date, expenses.date) AS date,
-                    SUM(`expenses`.`expense`) as 'expense',
-                    incomes.id AS iid,
-                    `incomes`.`income`
-                  FROM
-                    `incomes`
-                    RIGHT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date` ".(request('user')?" AND `expenses`.`user_id`=".request('user'):"").(count($userIds)>0?" AND `expenses`.`user_id` IN (".implode(',',$userIds).")":"").
-                        (request('user')?" AND `incomes`.`user_id`=".request('user'):"").
-                        (count($userIds)>0?" AND `incomes`.`user_id` IN (".implode(',',$userIds).")":"")."
-                    WHERE `incomes`.`deleted_at` IS NULL
-                    AND `expenses`.`deleted_at` IS NULL
-                    ".(request('filter_from')?
-                        "AND DATE(`expenses`.`date`)>='".request('filter_from')."'":
-                        "AND DATE(`expenses`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
-                        (request('filter_to')?
-                        "AND DATE(`expenses`.`date`)<='".request('filter_to')."'":
-                        "AND DATE(`expenses`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
-                    GROUP BY `date`,`iid`
-                )
-            ) AS dt 
-            GROUP BY `date`
-            ORDER BY `date`");
+        // $stat = DB::select("SELECT `date`,
+        //             MAX(`expense`) AS 'expense',
+        //             SUM(`income`) AS 'income'
+        //     FROM (  (
+        //           SELECT
+        //             IFNULL(incomes.date, expenses.date) AS date,
+        //             SUM(`expenses`.`expense`) as 'expense',
+        //             incomes.id AS iid,
+        //             `incomes`.`income`
+        //           FROM
+        //             `incomes`
+        //             LEFT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date` ".(request('user')?" AND `expenses`.`user_id`=".request('user'):"").(count($userIds)>0?" AND `expenses`.`user_id` IN (".implode(',',$userIds).")":"").
+        //                 (request('user')?" AND `incomes`.`user_id`=".request('user'):"").
+        //                 (count($userIds)>0?" AND `incomes`.`user_id` IN (".implode(',',$userIds).")":"")."
+        //             WHERE `incomes`.`deleted_at` IS NULL
+        //             AND `expenses`.`deleted_at` IS NULL
+        //             ".(request('filter_from')?
+        //                 "AND DATE(`incomes`.`date`)>='".request('filter_from')."'":
+        //                 "AND DATE(`incomes`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
+        //                 (request('filter_to')?
+        //                 "AND DATE(`incomes`.`date`)<='".request('filter_to')."'":
+        //                 "AND DATE(`incomes`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
+        //             GROUP BY `date`,`iid`
+        //         )
+        //         UNION ALL
+        //         (
+        //           SELECT
+        //             IFNULL(incomes.date, expenses.date) AS date,
+        //             SUM(`expenses`.`expense`) as 'expense',
+        //             incomes.id AS iid,
+        //             `incomes`.`income`
+        //           FROM
+        //             `incomes`
+        //             RIGHT JOIN `expenses` ON `incomes`.`date` = `expenses`.`date` ".(request('user')?" AND `expenses`.`user_id`=".request('user'):"").(count($userIds)>0?" AND `expenses`.`user_id` IN (".implode(',',$userIds).")":"").
+        //                 (request('user')?" AND `incomes`.`user_id`=".request('user'):"").
+        //                 (count($userIds)>0?" AND `incomes`.`user_id` IN (".implode(',',$userIds).")":"")."
+        //             WHERE `incomes`.`deleted_at` IS NULL
+        //             AND `expenses`.`deleted_at` IS NULL
+        //             ".(request('filter_from')?
+        //                 "AND DATE(`expenses`.`date`)>='".request('filter_from')."'":
+        //                 "AND DATE(`expenses`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
+        //                 (request('filter_to')?
+        //                 "AND DATE(`expenses`.`date`)<='".request('filter_to')."'":
+        //                 "AND DATE(`expenses`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
+        //             GROUP BY `date`,`iid`
+        //         )
+        //     ) AS dt 
+        //     GROUP BY `date`
+        //     ORDER BY `date`");
 
 
+        //     //GROUP BY `month`
+        //     //ORDER BY `month`");
+
+        // $dateArray = [];
+        // $profitArray = [];
+        // $netProfitArray = [];
+
+        // $date = '';
+        // $incomeData = 0;
+        // $expenseData = 0;
+        // foreach($stat as $st)
+        // {
+        //     // $dateArray[] = $st->month;
+        //     $dateArray[] = $st->date;
+        //     $profitArray[] = ($st->income>0?($st->income-$st->expense)*100/$st->income:-100);
+        //     $netProfitArray[] = $st->income-$st->expense;
+        // }
+
+        $stat = DB::select("SELECT 
+                    `date`,
+                    SUM(`expense`) AS 'expense',SUM(`income`) AS 'income', 
+                    SUM(`income`)-SUM(`expense`) AS 'net_profit' ,
+                    IF(SUM(`income`)>0,ROUND((SUM(`income`)-SUM(`expense`))*100/SUM(`income`),2),-100) AS 'profitability' 
+                FROM
+                    (SELECT incomes.date,
+                           0 AS 'expense',
+                          SUM(`incomes`.`income`) AS 'income'
+                          FROM
+                          `incomes`
+                          WHERE `incomes`.`deleted_at` IS NULL
+                          ".(request('filter_from')?
+                            " AND DATE(`incomes`.`date`)>='".request('filter_from')."'":
+                            " AND DATE(`incomes`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
+                        (request('filter_to')?
+                            " AND DATE(`incomes`.`date`)<='".request('filter_to')."'":
+                            " AND DATE(`incomes`.`date`)<='".Carbon::now()->format('Y-m-d')."'").
+                        (request('user')?" AND `incomes`.`user_id`=".request('user'):"").
+                        (count($userIds)>0?" AND `incomes`.`user_id` IN (".implode(',',$userIds).")":"")."
+                          GROUP BY `date`
+                          
+                    UNION ALL
+                          
+                    SELECT expenses.date,
+                          SUM(`expenses`.`expense`) AS 'expense',
+                          0 AS 'income'
+                          FROM
+                          `expenses`
+                          WHERE `expenses`.`deleted_at` IS NULL
+                          ".(request('filter_from')?
+                        " AND DATE(`expenses`.`date`)>='".request('filter_from')."'":
+                        " AND DATE(`expenses`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
+                        (request('filter_to')?
+                        " AND DATE(`expenses`.`date`)<='".request('filter_to')."'":
+                        " AND DATE(`expenses`.`date`)<='".Carbon::now()->format('Y-m-d')."'").
+                        (request('user')?" AND `expenses`.`user_id`=".request('user'):"").
+                        (count($userIds)>0?" AND `expenses`.`user_id` IN (".implode(',',$userIds).")":"")."
+                          GROUP BY `date`
+                    ) AS tbl
+                    GROUP BY `date`
+                    ORDER BY `date`"
+                );
             //GROUP BY `month`
             //ORDER BY `month`");
-
-        $dateArray = [];
-        $profitArray = [];
-        $netProfitArray = [];
-
-        $date = '';
-        $incomeData = 0;
-        $expenseData = 0;
-        foreach($stat as $st)
-        {
-            // $dateArray[] = $st->month;
-            $dateArray[] = $st->date;
-            $profitArray[] = ($st->income>0?($st->income-$st->expense)*100/$st->income:-100);
-            $netProfitArray[] = $st->income-$st->expense;
-            // if($date!=$st->date)
-            // {
-            //     $dateArray[] = $date;
-            //     $profitArray[] = ($incomeData>0?($incomeData-$expenseData)*100/$incomeData:-100);
-            //     $netProfitArray[] = $incomeData-$expenseData;
-            //     $date = $st->date;
-            //     $incomeData = $st->income;
-            //     $expeseData = $st->expense;
-
-            // }
-            // else
-            // {
-            //     $incomeData += $st->income;
-            //     $expeseData += $st->expense;
-            // }
-        }
-        // $dateArray[] = $date;
-        // $profitArray[] = ($incomeData>0?($incomeData-$expenseData)*100/$incomeData:-100);
-        // $netProfitArray[] = $incomeData-$expenseData;
-        // array_shift($dateArray);
-        // array_shift($profitArray);
-        // array_shift($netProfitArray);
-        // dd($dateArray,$profitArray,$netProfitArray,$stat);
+        $dateArray = array_column($stat, 'date');
+        $profitArray = array_column($stat, 'profitability');
+        $netProfitArray = array_column($stat, 'net_profit');
 
 
         // Revenue
@@ -227,7 +256,7 @@ class DashboardController extends Controller
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
-                $q->whereDate('date','>=',Carbon::now()->format('Y-m-d'));
+                $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->orderBy('date')->pluck('date')->all();
         $revenueArray['y'] = Income::when(request('user'),function($q) {
                 $q->where('user_id',request('user'));
@@ -243,7 +272,7 @@ class DashboardController extends Controller
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
-                $q->whereDate('date','>=',Carbon::now()->format('Y-m-d'));
+                $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->orderBy('date')->pluck('revenue')->all();
 
         // dd($revenueArray);
@@ -263,7 +292,7 @@ class DashboardController extends Controller
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
-                $q->whereDate('date','>=',Carbon::now()->format('Y-m-d'));
+                $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->where('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->pluck('date')->all();
         $ad_spendsArray['y'] = Expense::when(request('user'),function($q) {
                 $q->where('user_id',request('user'));
@@ -279,7 +308,7 @@ class DashboardController extends Controller
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
-                $q->whereDate('date','>=',Carbon::now()->format('Y-m-d'));
+                $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->where('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->pluck('expense')->all();
 
         // Ad Spends
@@ -297,7 +326,7 @@ class DashboardController extends Controller
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
-                $q->whereDate('date','>=',Carbon::now()->format('Y-m-d'));
+                $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->whereNot('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->pluck('date')->all();
         $overheadsArray['y'] = Expense::when(request('user'),function($q) {
                 $q->where('user_id',request('user'));
@@ -313,7 +342,7 @@ class DashboardController extends Controller
             ->when(request('filter_to'),function($q) {
                 $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
-                $q->whereDate('date','>=',Carbon::now()->format('Y-m-d'));
+                $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->whereNot('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->pluck('expense')->all();
 
         return view('admin.dashboard',compact('revenue','ad_spends','overheads','net_profit','leads','cost_per_lead','converted_customers','customers','profitability','dateArray','profitArray','netProfitArray','revenueArray','ad_spendsArray','overheadsArray','users','clubs'));
