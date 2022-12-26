@@ -36,8 +36,8 @@ class InvoiceController extends Controller
 
     public function create()
     {
-        $gateway = PaymentGateway::where('user_id',auth()->id())->first();
-        $products = Product::pluck('name', 'id')->all();
+        $gateway = PaymentGateway::where('user_id',auth()->id())->firstOrNew();
+        $products = Product::where('user_id',auth()->id())->pluck('name', 'id')->all();
         $customers = Customer::where('user_id',auth()->id())->get(['id','name']);
         return view('customer.invoice.create',compact('customers', 'products','gateway'));
     }
@@ -171,9 +171,9 @@ class InvoiceController extends Controller
 
         $customer = new Party([
             'name'          => $invoice->customer?->name,
+            'phone' => $invoice->customer?->phone_no,
             'custom_fields' => [
                 'email' => $invoice->customer?->email,
-                'Contact Number' => $invoice->customer?->phone_no,
                 'GST Number' => $invoice->customer?->gst_no,
             ],
         ]);

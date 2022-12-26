@@ -62,6 +62,9 @@
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Gateway Name
                             </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Status
+                            </th>
                             <th class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Action
                             </th>
@@ -72,6 +75,13 @@
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">1</td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> <img class="tbl-img" src="{{ asset('/images/stripe.png') }}"> </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> Stripe </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> 
+                                    @if($paymentgateway->stripe_active==1)
+                                        <span class="text-success">Active</span>
+                                    @else
+                                        <span class="text-error">InActive</span>
+                                    @endif
+                                </td>
 
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                                     <div
@@ -140,6 +150,13 @@
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">2</td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> <img class="tbl-img2" src="{{ asset('/images/Razorpay_logo.svg') }}"> </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> RazorPay </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> 
+                                    @if($paymentgateway->razorpay_active==1)
+                                        <span class="text-success">Active</span>
+                                    @else
+                                        <span class="text-error">InActive</span>
+                                    @endif
+                                </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                                     <div
                                         x-data="usePopper({placement:'bottom-end',offset:4})"

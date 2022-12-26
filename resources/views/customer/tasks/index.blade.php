@@ -467,7 +467,7 @@
                   </label>
                 </th>
                 <th style="min-width: 120px;">
-                  <button class="btn space-x-2 bg-primary mr-2 font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"><i class="fa-solid fa-filter"></i></button><a href="{{route('tasks.index')}}" class="btn space-x-2 ml-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"><i class="fa-solid fa-rotate-right"></i></a>
+                  <button class="btn space-x-2 bg-primary mr-2 font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"><i class="fa-solid fa-filter"></i></button><a href="{{route('tasks.index')}}" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"><i class="fa-solid fa-rotate-right"></i></a>
                 </th>
               </tr>
 

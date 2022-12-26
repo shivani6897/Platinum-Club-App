@@ -45,7 +45,7 @@
           <div class="text-center">
             <img
               class="mx-auto h-16 w-16"
-              src="{{asset('images/app-logo.svg')}}"
+              src="{{asset('images/app-logo.png')}}"
               alt="logo"
             />
             <div class="mt-4">

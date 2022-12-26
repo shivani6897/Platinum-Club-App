@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('heading', 'Invoices')
+@section('heading', 'Subscriptions')
 @section('breadcrums')
     <div class="hidden h-full py-1 sm:flex">
         <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
@@ -28,7 +28,7 @@
                 />
             </svg>
         </li>
-        <li>Invoices</li>
+        <li>Subscriptions</li>
     </ul>
 @endsection
 
@@ -40,10 +40,10 @@
                 <h2
                     class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"
                 >
-                    Invoice Table
+                    Subscriptions Table
                 </h2>
                 <div class="flex">
-                    <div class="flex items-center" x-data="{isInputActive:false}">
+                    {{-- <div class="flex items-center" x-data="{isInputActive:false}">
                         <label class="block">
                             <span class="relative mr-1.5 flex">
                               <input
@@ -61,7 +61,7 @@
                         class="inline-flex"
                     >
                         <a href="{{route('invoices.create')}}" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Invoice</a>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <div class="card mt-3">
@@ -73,16 +73,34 @@
                                 #
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                Invoice Number
+                                Last Invoice Number
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                               Customer Name
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Downpayment
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Paid Amount
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Pending Amount
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Total Amount
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                Payment Method
+                                EMI Amount
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Next EMI Date
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                EMI Paid
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Total EMI
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Status
@@ -93,44 +111,41 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @forelse($invoices as $invoice)
+                        @forelse($rinvoices as $rinvoice)
                              <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->invoice_number }} </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->customer->name }} </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $invoice->total_amount}} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $rinvoice->invoices->last()?->invoice_number }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $rinvoice->customer?->name }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->downpayment}} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->paid}} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->pending}} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ ($rinvoice->paid+$rinvoice->pending) }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->emi_amount}} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $rinvoice->next_emi_date->format('d-m-Y') }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $rinvoice->paid_emis}} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $rinvoice->total_emis}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > 
-                                    @if($invoice->payment_method==0)
-                                    Offline
-                                    @elseif($invoice->payment_method==1)
-                                    Credit Card
-                                    @elseif($invoice->payment_method==2)
-                                    Debit Card
-                                    @elseif($invoice->payment_method==3)
-                                    Gateway ({{$invoice->payments?->last()?->gateway}})
+                                    @if($rinvoice->status==0)
+                                        @if($rinvoice->next_emi_date->isPast())
+                                        Overdue
+                                        @else
+                                        Pending
+                                        @endif
+                                    @elseif($rinvoice->status==1)
+                                    Paid
                                     @else
                                     Unknown
                                     @endif
                                  </td>
-                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > 
-                                    @if($invoice->status==0)
-                                    Sent
-                                    @elseif($invoice->status==1)
-                                    Succeeded
-                                    @elseif($invoice->status==2)
-                                    Pending
-                                    @else
-                                    Unknown
-                                    @endif
+                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
+                                     <a href="{{route('invoices.payment',['id'=>auth()->id(),'invoiceId'=>0,'rinvoiceId'=>$rinvoice->id])}}" target="_blank" title="Share next emi invoice now"><i class="fa-solid fa-share-from-square"></i></a>
                                  </td>
-
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">
+                                {{-- <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                                         <div
                                             x-data="usePopper({placement:'bottom-end',offset:4})"
                                             @click.outside="if(isShowPopper) isShowPopper = false"
                                             class="inline-flex"
                                         >
-                                        <a href="{{route('invoices.payment',['id'=>auth()->id(),'invoiceId'=>$invoice->id,'rinvoiceId'=>0])}}" target="_blank" title="Share invoice now"><i class="fa-solid fa-share-from-square"></i></a>
                                             <button
                                                 x-ref="popperRef"
                                                 @click="isShowPopper = !isShowPopper"
@@ -171,15 +186,15 @@
                                             </div>
                                         </div>
                                     </td>
-                                </tr>
+                                </tr> --}}
                         @empty
-                            <td colspan="5" class="text-center">No record found</td>
+                            <td colspan="12" class="text-center">No record found</td>
                         @endforelse
                         </tbody>
                     </table>
                 </div>
                 <div class="flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5">
-                    {{$invoices->links()}}
+                    {{$rinvoices->links()}}
                 </div>
             </div>
         </div>

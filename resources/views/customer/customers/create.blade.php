@@ -151,7 +151,6 @@
                                         name="company_name"
                                         autocomplete="off"
                                         value="{{ old('company_name') }}"
-                                        required
                                     />
                                 </span>
                                 @error('company_name')

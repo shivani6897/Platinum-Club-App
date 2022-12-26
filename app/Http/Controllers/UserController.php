@@ -10,7 +10,10 @@ class UserController extends Controller
 {
     public function profile(User $user)
     {
-        return view('user.profile', compact('user'));
+        if(auth()->user()->role<2)
+            return view('user.admin_profile', compact('user'));
+        else
+            return view('user.profile', compact('user'));
     }
 
     public function updateProfile(Request $request)

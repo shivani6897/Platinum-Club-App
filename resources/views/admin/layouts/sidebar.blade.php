@@ -4,7 +4,7 @@
   >
     <!-- Application Logo -->
     <div class="flex pt-4">
-      <a href="/">
+      <a href="{{route('admin.dashboard')}}">
         <img
           class="h-11 w-11 transition-transform duration-500 ease-in-out hover:rotate-[360deg]"
           src="/images/app-logo.png"

@@ -24,13 +24,13 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'club_id'=>'required|exists:clubs,id',
+            // 'club_id'=>'required|exists:clubs,id',
             'first_name'=>'required', 'string', 'max:255',
             'phone_no'=>'required',
             'last_name' => 'required', 'string', 'max:255',
             'city' => 'required', 'string', 'max:255',
-            'email' => 'nullable',
-//            'email' => 'nullable|unique:users,email,'.$users->id.',id,deleted_at,NULL',
+            // 'email' => 'nullable',
+           'email' => 'nullable|unique:users,email,'.$this->user->id,
 //            'password' => 'required', 'string', 'min:8', 'confirmed',
         ];
     }

@@ -93,7 +93,7 @@
                         </div>
 
                         <div
-                            class="bg-ohrelative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 p-3.5">
+                            class="bg-ohrelative relative flex flex-col overflow-hidden rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 p-3.5">
                             <p class="text-xs uppercase text-sky-100">Overheads</p>
                             <div class="flex items-end justify-between space-x-2">
                                 <p class="mt-4 text-2xl font-medium text-white"><i
