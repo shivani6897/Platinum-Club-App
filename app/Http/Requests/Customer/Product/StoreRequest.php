@@ -27,6 +27,8 @@ class StoreRequest extends FormRequest
             'name'=>'required|string|max:255',
             'price'=>'required|numeric|min:1',
             'downpayment'=>'required|numeric|min:0',
+            'tax'=>'required|numeric|min:0',
+            'emi'=>'nullable',
             'image'=>'nullable|mimes:jpg,jpeg,png',
             'description'=>'nullable',
         ];

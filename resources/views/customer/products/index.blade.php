@@ -28,7 +28,7 @@
         d="M9 5l7 7-7 7"
       />
     </svg>
-    
+
   </li>
   <li>Products</li>
 </ul>
@@ -89,6 +89,9 @@
                              <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Downpayment
                             </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Tax
+                            </th>
                             <th class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Action
                             </th>
@@ -102,6 +105,7 @@
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> <img class="tbl-img" src="{{ asset($product->image?'/images/products/'.$product->image:'/images/200x200.png') }}"> </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $product->price }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $product->downpayment }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $product->tax }} </td>
 
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                                     <div

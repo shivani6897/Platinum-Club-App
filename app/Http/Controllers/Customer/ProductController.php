@@ -23,7 +23,8 @@ class ProductController extends Controller
         ->when(request('search'),function($q) {
             $q->where('name','LIKE','%'.request('search').'%')
                 ->orWhere('price','LIKE','%'.request('search').'%')
-                ->orWhere('downpayment','LIKE','%'.request('search').'%');
+                ->orWhere('downpayment','LIKE','%'.request('search').'%')
+                ->orWhere('tax','LIKE','%'.request('search').'%');
         })->paginate('10');
         return view('customer.products.index',compact('products'));
     }
@@ -50,9 +51,12 @@ class ProductController extends Controller
             'name',
             'price',
             'downpayment',
+//            'emi',
+            'tax',
             'description'
         ]);
         $array['user_id'] = auth()->id();
+        $array['emi'] = $request->emi ? 1 : 0;
         $array['image'] = $imageService->store($request->image, '/images/products', $request->name);
         $product = Product::create($array);
         return redirect()->route('products.index')->with('success','Product Created');
@@ -82,10 +86,15 @@ class ProductController extends Controller
             'name',
             'price',
             'downpayment',
+            'tax',
+//            'emi',
             'description'
         ]);
         $array['user_id'] = auth()->id();
         $array['image'] = $product->image;
+        $array['emi'] = $request->emi ? 1 : 0;
+
+
         if(!empty($request->image))
         {
             $imageService->destroy('/images/products',$product->image);
@@ -111,7 +120,7 @@ class ProductController extends Controller
 
     /**
      * Return product by product id
-     * @param  Request $request 
+     * @param  Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function getProductById(Request $request)
@@ -119,4 +128,8 @@ class ProductController extends Controller
         $product = Product::findOrFail($request->product_id);
         return Response::json(['product' => $product]);
     }
+//    public function updateEmiStatus(Product $product, Request $request){
+//        $product->update(['emi' => $request->emi ? 1 :0 ]);
+//        return redirect()->route('products.index')->with('success','Product Updated');
+//    }
 }

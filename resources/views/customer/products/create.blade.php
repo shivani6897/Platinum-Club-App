@@ -83,41 +83,91 @@
                             <span class="text-tiny+ text-error">{{$message}}</span>
                             @enderror
                         </label>
-                        <label class="block">
-                            <span>Price</span> <span>*</span>
-                            <span class="relative mt-1.5 flex">
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <label class="block">
+                                <span>Price</span> <span>*</span>
+                                <span class="relative mt-1.5 flex">
+                                    <input
+                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        placeholder="Product Price"
+                                        type="number"
+                                        name="price"
+                                        min="1"
+                                        step="0.01"
+                                        value="{{ old('price') }}"
+                                        required
+                                    />
+                                </span>
+                                @error('price')
+                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                @enderror
+                            </label>
+                            <label class="block">
+                                <span>Downpayment</span>
+                                <span class="relative mt-1.5 flex">
+                                    <input
+                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        placeholder="Product Downpayment"
+                                        type="number"
+                                        name="downpayment"
+                                        min="0"
+                                        step="0.01"
+                                        value="{{ old('downpayment',0) }}"
+                                    />
+                                </span>
+                                @error('downpayment')
+                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                @enderror
+                            </label>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <label class="block">
+                                <span>Tax</span>
+                                <span class="relative mt-1.5 flex">
+                                    <input
+                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        placeholder="Product Tax"
+                                        type="number"
+                                        name="tax"
+                                        min="0"
+                                        max="50"
+                                        step="0.01"
+                                        value="{{ old('tax',0) }}"
+                                    />
+                                </span>
+                                @error('tax')
+                                    <span class="text-tiny+ text-error">{{$message}}</span>
+                                @enderror
+                            </label>
+                            <label class="inline-flex items-center space-x-2" x-data="{emi: ['emi']}" style="margin-top: 27px">
                                 <input
-                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                    placeholder="Product Price"
-                                    type="number"
-                                    name="price"
-                                    min="1"
-                                    step="0.01"
-                                    value="{{ old('price') }}"
-                                    required
-                                />
-                            </span>
-                            @error('price')
-                            <span class="text-tiny+ text-error">{{$message}}</span>
-                            @enderror
-                        </label>
-                        <label class="block">
-                            <span>Downpayment</span>
-                            <span class="relative mt-1.5 flex">
-                                <input
-                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                    placeholder="Product Downpayment"
-                                    type="number"
-                                    name="downpayment"
-                                    min="0"
-                                    step="0.01"
-                                    value="{{ old('downpayment',0) }}"
-                                />
-                            </span>
-                            @error('downpayment')
-                            <span class="text-tiny+ text-error">{{$message}}</span>
-                            @enderror
-                        </label>
+                                    x-model="emi"
+                                    type="checkbox"
+                                    class="form-checkbox is-outline h-5 w-5 rounded-full border-slate-400/70 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
+                                    name="emi"
+                                    id="emi"
+                                    value="emi"
+                                >
+                                <p class="" for="emi">Emi</p>
+                            </label>
+
+
+{{--                            <label class="inline-flex items-center space-x-2 ml-4" style="margin-top: 27px">--}}
+{{--                                <input--}}
+{{--                                    class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"--}}
+{{--                                    name="emi" checked--}}
+{{--                                    step="0.01"--}}
+{{--                                    value="1"--}}
+{{--                                    type="radio"/>--}}
+{{--                                <p>EMI</p>--}}
+{{--                                @error('downpayment')--}}
+{{--                                <span class="text-tiny+ text-error">{{$message}}</span>--}}
+{{--                                @enderror--}}
+{{--                            </label>--}}
+                        </div>
+
+
                         <label class="block">
                             <span>Image</span>
                             <span class="relative mt-1.5 flex">
