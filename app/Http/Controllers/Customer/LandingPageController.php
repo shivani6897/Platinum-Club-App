@@ -41,7 +41,9 @@ class LandingPageController extends Controller
             'price'=>$product->price,
             'image'=>$product->image,
             'description'=>$product->description,
-            'downpayment'=>$product->downpayment
+            'downpayment'=>$product->downpayment,
+            'emi'=>$product->emi,
+            'tax'=>$product->tax
         ];
 
         return response()->json(['status'=>1,'message'=>'Data retrived','data'=>$json]);
@@ -59,7 +61,7 @@ class LandingPageController extends Controller
         $gateway = PaymentGateway::where('user_id',$id)->first();
         \Stripe\Stripe::setApiKey($gateway->stripe_secret);
         $stripe = new \Stripe\StripeClient($gateway->stripe_secret);
-        
+
         try
         {
             $paymentIntent = $stripe->paymentIntents->retrieve(

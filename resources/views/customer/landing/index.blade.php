@@ -161,15 +161,17 @@
                                 type="radio"/>
                             <p>One-time</p>
                         </label>
-                        <label class="inline-flex items-center space-x-2 ml-4">
-                            <input
-                                class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
-                                name="payment_type"
-                                value="1"
-                                onclick="showEmi(1)"
-                                type="radio"/>
-                            <p>EMI</p>
-                        </label>
+                        @if($selectedProduct->emi ==1)
+                            <label class="inline-flex items-center space-x-2 ml-4 emi-field">
+                                <input
+                                    class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
+                                    name="payment_type"
+                                    value="1"
+                                    onclick="showEmi(1)"
+                                    type="radio"/>
+                                <p>EMI</p>
+                            </label>
+                        @endif
                         {{-- <div class="">
                             <label class="block mt-4">
                                 <span>Price <sup class="text-rose-500">*</sup></span>
@@ -244,6 +246,7 @@
                                 required
                             />
                             <p id="agree-label" class="text-black">I hereby agree to make payment Rs {{$selectedProduct->price}}/-</p>
+                            <p id="tax-detail"></p>
                             {{-- <p class="text-black">I hereby agree to make the monthly Emi of Rs <span id="emi-amount">13,333.00</span>/-</p> --}}
                         </label>
                         <div class="mt-5">
@@ -394,12 +397,18 @@
                 success: function(result) {
                     if(result.status)
                     {
+                        if(result.data.emi == 1){
+                            $('.emi-field').slideDown('slow');
+                        }
+                        else {
+                            $('.emi-field').slideUp('slow');
+                        }
                         pending = parseInt(result.data.price)-parseInt(result.data.downpayment);
                         if(result.data.image!='' && result.data.image!=null && result.data.image!=undefined)
                             $('#product-img').attr('src','{{url('/images/products/')}}/'+result.data.image);
                         else
                             $('#product-img').attr('src','');
-
+                        console.log(result)
                         $('#product-desc').html(result.data.description);
                         $('input[name="downpayment"]').attr('min',result.data.downpayment).val(result.data.downpayment);
                         $('#min-downpayment-span').html(result.data.downpayment);
@@ -417,7 +426,7 @@
                             $('.emi-payment').slideUp('slow');
                             $('#agree-label').html('I hereby agree to make payment of Rs '+$('select[name="product_id"]').find(':selected').data('price'));
                         }
-
+                        $('#tax-detail').html('('+ result.data.tax +' % GST inclusive)');
                     }
                     else
                         console.error(result.message);
