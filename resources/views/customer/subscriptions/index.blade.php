@@ -73,7 +73,7 @@
                                 #
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                Last Invoice Number
+                                Invoice Number
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                               Customer Name
@@ -82,28 +82,28 @@
                                 Downpayment
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                Paid Amount
+                                Product Cost
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Pending Amount
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                Total Amount
+                                No of Emi’s Approved
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                EMI Amount
+                                Monthly EMI
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Next EMI Date
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                EMI Paid
+                                No of Paid EMI’s
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                Total EMI
+                                No of Due EMI's
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                Status
+                                Subscription Status
                             </th>
                             <th class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Action
@@ -117,14 +117,14 @@
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $rinvoice->invoices->last()?->invoice_number }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $rinvoice->customer?->name }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->downpayment}} </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->paid}} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->product->price}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->pending}} </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ ($rinvoice->paid+$rinvoice->pending) }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->total_emis }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->emi_amount}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $rinvoice->next_emi_date->format('d-m-Y') }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $rinvoice->paid_emis}} </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $rinvoice->total_emis}} </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > 
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ ($rinvoice->total_emis - $rinvoice->paid_emis)}} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >
                                     @if($rinvoice->status==0)
                                         @if($rinvoice->next_emi_date->isPast())
                                         Overdue
