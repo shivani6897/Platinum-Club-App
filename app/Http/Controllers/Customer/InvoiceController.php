@@ -51,10 +51,12 @@ class InvoiceController extends Controller
             'description',
             'payment_method'
         ]);
-        $customers = Customer::where('user_id',auth()->id())->where('id',$request->customer_id)->get(['name','company_name']);
+//        $customer = Customer::where('user_id',auth()->id())->where('id',$request->customer_id)->first(['name','company_name']);
         $invoicecount = Invoice::whereYear('created_at', date('Y'))->count();
+//        $customercount = strlen($customers->count());
+//        dd($customercount);
         $invoicecount = strlen($invoicecount) == 1 ?  '0'.$invoicecount+1 : $invoicecount+1;
-        $invoiceData['invoice_number'] = substr($customers, 10, 3).date('Y').$invoicecount;
+        $invoiceData['invoice_number'] = substr(auth()->user()->first_name, 0, 3).date('Y').$invoicecount;
         $invoiceData['total_amount'] = 0;
         $invoice = Invoice::create($invoiceData);
 

@@ -32,49 +32,56 @@ class SubscriptionController extends Controller
         // $customer = Customer::find($customerId);
 
         $data = [];
-        if(!empty($invoice))
-        {
-            $due = $invoice->total_amount;
-            $subtotal = $due*0.82;
-            $data = [
-                'due'=>$due,
-                'due_date'=>Carbon::now()->format('d-m-Y'),
-                'invoice_date'=>$invoice->created_at->format('d-m-Y'),
-                'invoiceId'=>$invoice->id,
-                'invoice_number'=>$invoice->invoice_number,
-                'subtotal'=>$subtotal,
-                'emi'=>0,
-                'products'=>$invoice->product_log,
-                'product'=>new \stdClass(),
-                'status'=>$invoice->status,
-                'user'=>$user,
-                'customer'=>$invoice->customer, 
-                'gateway'=>$gateway,
-                'paid_by'=>($invoice->payments->last()?->gateway)?$invoice->payments->last()->gateway:'Offline',
-            ];
-        }
-        else
-        {
-            $due = $rinvoice->emi_amount;
-            $subtotal = $due*0.82;
-            $emi = $rinvoice->paid_emis+1;
-            $data = [
-                'due'=>$due,
-                'due_date'=>$rinvoice->next_emi_date->format('d-m-Y'),
-                'invoice_date'=>Carbon::now()->format('d-m-Y'),
-                'invoiceId'=>0,
-                'invoice_number'=>date('Ymd').rand(1000,9999),
-                'subtotal'=>$subtotal,
-                'emi'=>$emi,
-                'products'=>[],
-                'product'=> $rinvoice->product,
-                'status'=>0,
-                'user'=>$user,
-                'customer'=>$rinvoice->customer, 
-                'gateway'=>$gateway,
-                'paid_by'=>'Pending',
-            ];
-        }
+         if(!empty($invoice))
+         {
+//             dd($invoice);
+//             $tax = $rinvoice?->product?->tax;
+             $due = $invoice->total_amount;
+             $subtotal = $due*0.82;
+             $data = [
+                 'due'=>$due,
+//                 'tax'=>$tax,
+                 'due_date'=>Carbon::now()->format('d-m-Y'),
+                 'invoice_date'=>$invoice->created_at->format('d-m-Y'),
+                 'invoiceId'=>$invoice->id,
+                 'invoice_number'=>$invoice->invoice_number,
+                 'subtotal'=>$subtotal,
+                 'emi'=>0,
+                 'products'=>$invoice->product_log,
+                 'product'=>new \stdClass(),
+                 'status'=>$invoice->status,
+                 'user'=>$user,
+                 'customer'=>$invoice->customer,
+                 'gateway'=>$gateway,
+                 'paid_by'=>($invoice->payments->last()?->gateway)?$invoice->payments->last()->gateway:'Offline',
+             ];
+         }
+         else
+         {
+             $tax = $rinvoice->product->tax;
+             $due = $rinvoice->emi_amount;
+             $subtotal = $due * 100 / (100 + $tax);
+
+             $emi = $rinvoice->paid_emis+1;
+             $data = [
+                 'due'=>$due,
+                 'tax'=>$tax,
+                 'due_date'=>$rinvoice->next_emi_date->format('d-m-Y'),
+                 'invoice_date'=>Carbon::now()->format('d-m-Y'),
+                 'invoiceId'=>0,
+                 'invoice_number'=>date('Ymd').rand(1000,9999),
+                 'subtotal'=>$subtotal,
+                 'emi'=>$emi,
+                 'products'=>[],
+                 'product'=> $rinvoice->product,
+                 'status'=>0,
+                 'user'=>$user,
+                 'customer'=>$rinvoice->customer,
+                 'gateway'=>$gateway,
+                 'paid_by'=>'Pending',
+             ];
+         }
+
         return view('customer.subscriptions.invoice',compact('id','invoiceId','rinvoiceId','data'));
     }
 
@@ -111,7 +118,7 @@ class SubscriptionController extends Controller
         $gateway = PaymentGateway::where('user_id',$id)->first();
         \Stripe\Stripe::setApiKey($gateway->stripe_secret);
         $stripe = new \Stripe\StripeClient($gateway->stripe_secret);
-        
+
         try
         {
             $paymentIntent = $stripe->paymentIntents->retrieve(
@@ -231,7 +238,7 @@ class SubscriptionController extends Controller
         }
         else
             $amount = $invoice->total_amount;
-        
+
         $gateway = PaymentGateway::where('user_id',$id)->first();
         $generated_signature = hash_hmac('sha256',$request->razorpay_order_id . "|" . $request->razorpay_payment_id, $gateway->razorpay_secret);
 
@@ -247,7 +254,7 @@ class SubscriptionController extends Controller
                 'rinvoiceId'=>$rinvoiceId,
                 'amount'=>$amount,
             ])->withInput($request->all())->with('error','Cannot reload, Please try again');
-        
+
 
             // Redirect if amount paid less then actual amount
             if(($razorpayment->amount/100)<($amount-1))
