@@ -36,11 +36,12 @@ class SubscriptionController extends Controller
          {
 //             dd($invoice);
 //             $tax = $rinvoice?->product?->tax;
+             $tax = $invoice->product_log?->first()->product?->tax;
              $due = $invoice->total_amount;
              $subtotal = $due*0.82;
              $data = [
                  'due'=>$due,
-//                 'tax'=>$tax,
+                 'tax'=>$tax,
                  'due_date'=>Carbon::now()->format('d-m-Y'),
                  'invoice_date'=>$invoice->created_at->format('d-m-Y'),
                  'invoiceId'=>$invoice->id,
