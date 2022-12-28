@@ -123,4 +123,15 @@ Route::group(['middleware' => ['auth','verified']], function () {
     //    TODO Invoice page
     Route::get('/invoice', function () {return view('invoice.invoice');})->name('invoice');
 
+
+    //userprofile
+    Route::get('/user-profile', function () {
+        return view('user.profile.general_info');
+    });
+    Route::get('/business-profile', function () {
+        return view('user.profile.business_physical_add');
+    });
+    Route::get('/authorized_contact', function () {
+        return view('user.profile.authorized_contact');
+    });
 });
