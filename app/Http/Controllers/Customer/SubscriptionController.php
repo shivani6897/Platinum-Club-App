@@ -38,7 +38,7 @@ class SubscriptionController extends Controller
 //             $tax = $rinvoice?->product?->tax;
              $tax = $invoice->product_log?->first()->product?->tax;
              $due = $invoice->total_amount;
-             $subtotal = $due*0.82;
+             $subtotal = $due * 100 / (100 + $tax);
              $data = [
                  'due'=>$due,
                  'tax'=>$tax,
