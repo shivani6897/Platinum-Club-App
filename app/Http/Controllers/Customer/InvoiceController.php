@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\ProductLog;
@@ -50,7 +51,10 @@ class InvoiceController extends Controller
             'description',
             'payment_method'
         ]);
-        $invoiceData['invoice_number'] = date('Ymd').rand(10000,99999);
+        $customers = Customer::where('user_id',auth()->id())->where('id',$request->customer_id)->get(['name','company_name']);
+        $invoicecount = Invoice::whereYear('created_at', date('Y'))->count();
+        $invoicecount = strlen($invoicecount) == 1 ?  '0'.$invoicecount+1 : $invoicecount+1;
+        $invoiceData['invoice_number'] = substr($customers, 10, 3).date('Y').$invoicecount;
         $invoiceData['total_amount'] = 0;
         $invoice = Invoice::create($invoiceData);
 
@@ -100,7 +104,7 @@ class InvoiceController extends Controller
 
         \Stripe\Stripe::setApiKey($gateway->stripe_secret);
         $stripe = new \Stripe\StripeClient($gateway->stripe_secret);
-        
+
         try
         {
             $paymentIntent = $stripe->paymentIntents->retrieve(
