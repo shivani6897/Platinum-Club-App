@@ -95,27 +95,55 @@
                         </h4>
                     </div>
                 </div>
-                <div class="space-y-4 p-4 sm:p-5">
-                    <label class="block">
-                        <span>Name*</span>
+                <form method="Post" action="{{ route('user.authorizeContact.post') }}">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="user_id" value="{{$userdetails ? $userdetails->id : ''}}">
 
-                        <input
-                            class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                            placeholder="Enter Name"
-                            type="text"
-                            name="name"
-                            required
-                        />
-                    </label>
+                    <div class="space-y-4 p-4 sm:p-5">
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+                        <label class="block">
+                            <span>Name</span>
+
+                            <input
+                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                placeholder="Enter Name"
+                                type="text"
+                                name="auth_name"
+                                value="{{ old('auth_name',$userdetails->auth_name ?? '') }}"
+{{--                                required--}}
+                            />
+                        </label>
+                        <label class="block">
+                            <span>Job Position</span>
+                            <select
+                                class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
+                                @error('job_position_id')
+                                    border-error
+                                @enderror"
+                                name="job_position_id"
+                                required
+                            >
+                                @foreach($jobpositions as $jobposition)
+                                    <option value="{{$jobposition->id}}" @selected(old('job_position_id',0)==$jobposition->id)>{{$jobposition->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('job_position_id')
+                            <span class="text-tiny+ text-error">{{$message}}</span>
+                            @enderror
+                        </label>
+                    </div>
+
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <label class="block">
-                            <span>Email*</span>
+                            <span>Email</span>
                             <input
                                 class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                 placeholder="Enter Email Address"
                                 type="email"
-                                name="email"
-                                required
+                                name="auth_email"
+                                value="{{ old('name',$userdetails->auth_email ?? '') }}"
+{{--                                required--}}
                             />
                         </label>
 
@@ -125,13 +153,15 @@
                                 class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                 placeholder="Enter Phone Number"
                                 type="number"
+                                name="auth_phone_no"
+                                value="{{ old('auth_phone_no',$userdetails->auth_phone_no ?? '') }}"
                             />
                         </label>
                     </div>
 
                     <div class="flex justify-center space-x-2 pt-4">
                         <a
-                            href="/business-profile"
+                            href="{{route('user.businessProfile')}}"
                             class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
                         >
                             <svg
@@ -149,9 +179,10 @@
                             <span>Prev</span>
                         </a>
                         <button
+                            type="submit"
                             class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
                         >
-                            <span>Save</span>
+                            <span>Next</span>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 class="h-5 w-5"
@@ -167,6 +198,7 @@
                         </button>
                     </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>

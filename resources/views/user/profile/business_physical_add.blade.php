@@ -94,113 +94,125 @@
                         </h4>
                     </div>
                 </div>
-                <div class="space-y-4 p-4 sm:p-5">
-                    <label class="block">
-                        <span>Street Address*</span>
 
-                        <input
-                            class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                            placeholder="Enter Street Address"
-                            name="address"
-                            type="text"
-                            required
-                        />
-                    </label>
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <form method="POST" action="{{ route('user.business_add.post') }}">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="user_id" value="{{$userdetails ? $userdetails->id : ''}}">
+
+                    <div class="space-y-4 p-4 sm:p-5">
                         <label class="block">
-                            <span>City*</span>
+                            <span>Street Address</span>
+
                             <input
                                 class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                placeholder="Enter City"
+                                placeholder="Enter Street Address"
+                                name="business_address"
                                 type="text"
-                                name="city"
-                                required
+                                value="{{ old('business_address',$userdetails->business_address ?? '') }}"
+{{--                                required--}}
                             />
                         </label>
-
-                        <label class="block">
-                            <span>Pincode*</span>
-                            <input
-                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                placeholder="Pincode"
-                                type="number"
-                                name="pincode"
-                                required
-                            />
-                        </label>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                        <label class="block">
-                            <span>State/Prov/Region*</span>
-                            <input
-                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                placeholder="State/Prov/Region"
-                                type="text"
-                                name="state"
-                                required
-                            />
-                        </label>
-                        <label class="block">
-                            <span>Country</span>
-                            <input
-                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                placeholder="Country"
-                                name="country"
-                                type="text"
-                            />
-                        </label>
-                        <label class="block">
-                            <span>Time Zone</span>
-                            <input
-                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                placeholder="Time Zone"
-                                name="timezone"
-                                type="text"
-                            />
-                        </label>
-                    </div>
-
-
-                    <div class="flex justify-center space-x-2 pt-4">
-                        <a
-                            href="/user-profile"
-                            class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-5 w-5"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
-                                    clip-rule="evenodd"
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <label class="block">
+                                <span>City</span>
+                                <input
+                                    class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                    placeholder="Enter City"
+                                    type="text"
+                                    name="business_city"
+                                    value="{{ old('business_city',$userdetails->business_city ?? '') }}"
+{{--                                    required--}}
                                 />
-                            </svg>
-                            <span>Prev</span>
-                        </a>
-                        <a
-                            href="/authorized_contact"
-                            class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
-                        >
-                            <span>Next</span>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-5 w-5"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                                    clip-rule="evenodd"
+                            </label>
+
+                            <label class="block">
+                                <span>Pincode</span>
+                                <input
+                                    class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                    placeholder="Pincode"
+                                    type="number"
+                                    name="business_pincode"
+                                    value="{{ old('business_pincode',$userdetails->business_pincode ?? '') }}"
+{{--                                    required--}}
                                 />
-                            </svg>
-                        </a>
+                            </label>
+                        </div>
+
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                            <label class="block">
+                                <span>State/Prov/Region</span>
+                                <input
+                                    class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                    placeholder="State/Prov/Region"
+                                    type="text"
+                                    name="business_state"
+                                    value="{{ old('business_state',$userdetails->business_state ?? '') }}"
+{{--                                    required--}}
+                                />
+                            </label>
+                            <label class="block">
+                                <span>Country</span>
+                                <input
+                                    class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                    placeholder="Country"
+                                    name="business_country"
+                                    value="{{ old('business_country',$userdetails->business_country ?? '') }}"
+                                    type="text"
+                                />
+                            </label>
+                            <label class="block">
+                                <span>Time Zone</span>
+                                <input
+                                    class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                    placeholder="Time Zone"
+                                    name="business_timezone"
+                                    value="{{ old('business_timezone',$userdetails->business_timezone ?? '') }}"
+                                    type="text"
+                                />
+                            </label>
+                        </div>
+
+                        <div class="flex justify-center space-x-2 pt-4">
+                            <a
+                                href="{{route('user.profile')}}"
+                                class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+                                <span>Prev</span>
+                            </a>
+                            <button
+                                type="submit"
+{{--                                href="{{route('user.authorizedContact')}}"--}}
+                                class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                            >
+                                <span>Next</span>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-5 w-5"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                                        clip-rule="evenodd"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>

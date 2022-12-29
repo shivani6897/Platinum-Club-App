@@ -110,62 +110,141 @@
                         </h4>
                     </div>
                 </div>
-                <div class="space-y-4 p-4 sm:p-5">
-                    <label class="block">
-                        <span>Product name</span>
 
-                        <input
-                            class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                            placeholder="Enter product name"
-                            type="text"
-                        />
-                    </label>
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <label class="block">
-                            <span>Category</span>
-                            <select
-                                class="mt-1.5 w-full"
-                                x-init="$el._x_tom = new Tom($el,{create: true,sortField: {field: 'text',direction: 'asc'}})"
-                            >
-                                <option>Digital</option>
-                                <option>Technology</option>
-                                <option>Home</option>
-                                <option>Other</option>
-                            </select>
+                <form method="POST" action="{{ route('user.profile.post') }}">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="user_id" value="{{$userdetails ? $userdetails->id : ''}}">
+
+                    <div class="space-y-4 p-4 sm:p-5">
+
+                        <div id="profilepicdiv">
+                            <img src="{{asset($userdetails->profile?'/images/users/'.$userdetails->profile:'images/200x200.png')}}">
+                        </div>
+                        <label class="block" style="display: none;">
+                            <span>Profile Picture </span>
+                            <span class="relative mt-1.5 flex">
+	                  			<input
+                                    class="form-input peer w-full rounded-full border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                    placeholder=""
+                                    type="file"
+                                    id="profile_picture"
+                                    name="profile"
+                                />
+	                  			<span
+                                    class="pointer-events-none absolute flex h-full w-10 items-center justify-center text-slate-400 peer-focus:text-primary dark:text-navy-300 dark:peer-focus:text-accent"
+                                >
+	                    			<i class="fa-regular fa-user text-base"></i>
+	                  			</span>
+	                		</span>
                         </label>
 
-                        <div class="grid grid-cols-2 gap-4">
-                            <label class="block">
-                                <span>SKU</span>
-                                <input
-                                    class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                    placeholder="SKU"
-                                    type="text"
-                                />
-                            </label>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <label class="block">
+                            <span>First Name*</span>
 
-                            <label class="block">
-                                <span>Price</span>
-                                <input
-                                    class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                    placeholder="Price"
-                                    type="text"
-                                />
-                            </label>
-                        </div>
-                    </div>
-                    <div>
-                        <span>Images</span>
-                        <div
-                            class="filepond fp-bordered fp-grid mt-1.5 [--fp-grid:2]"
-                        >
                             <input
-                                type="file"
-                                x-init="$el._x_filepond = FilePond.create($el)"
-                                multiple
+                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                placeholder="Enter your name"
+                                type="text"
+                                name="first_name"
+                                value="{{ old('first_name',$userdetails->first_name ?? '') }}"
+                                required
                             />
-                        </div>
+                        </label>
+                        <label class="block">
+                            <span>Your Name*</span>
+
+                            <input
+                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                placeholder="Enter your name"
+                                type="text"
+                                name="last_name"
+                                value="{{ old('last_name',$userdetails->last_name ?? '') }}"
+                                required
+                            />
+                        </label>
                     </div>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <label class="block">
+                            <span>Email*</span>
+                            <input
+                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                placeholder="Enter email "
+                                type="email"
+                                name="email"
+                                required
+                                value="{{ old('email',$userdetails->email ?? '') }}"
+                            />
+                        </label>
+
+                        <label class="block">
+                            <span>Phone*</span>
+                            <input
+                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                placeholder="Phone number"
+                                type="number"
+                                name="phone_no"
+                                value="{{ old('phone_no',$userdetails->phone_no ?? '') }}"
+                                required
+                            />
+                        </label>
+                    </div>
+                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <label class="block">
+                            <span>Business Legal Name</span>
+                            <input
+                                class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                placeholder="Enter Business legal name"
+                                type="text"
+                                name="business_name"
+                                value="{{ old('business_name',$userdetails->business_name ?? '') }}"
+                            />
+                        </label>
+                        <label class="block">
+                            <span>Business Niche</span>
+                            <select
+                                class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
+                                @error('business_id')
+                                    border-error
+                                @enderror"
+                                name="business_id"
+                                required
+                            >
+                                @foreach($businesses as $business)
+                                    <option value="{{$business->id}}" @selected(old('business_id',0)==$business->id)>{{$business->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('business_id')
+                            <span class="text-tiny+ text-error">{{$message}}</span>
+                            @enderror
+                        </label>
+                    </div>
+                    <label class="block">
+                        <span>Business Website</span>
+                        <input
+                            class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                            placeholder="Enter Business website"
+                            name="business_website"
+                            type="url"
+                            value="{{ old('business_website',$userdetails->business_website ?? '') }}"
+
+                        />
+                    </label>
+{{--                    <div>--}}
+{{--                        <span>Images</span>--}}
+{{--                        <div--}}
+{{--                            class="filepond fp-bordered fp-grid mt-1.5 [--fp-grid:2]"--}}
+{{--                        >--}}
+{{--                            <input--}}
+{{--                                type="file"--}}
+{{--                                x-init="$el._x_filepond = FilePond.create($el)"--}}
+{{--                                single--}}
+{{--                                name="profile"--}}
+{{--                                value="{{ old('profile',$userdetails->profile ?? '') }}"--}}
+{{--                            />--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+
                     <div class="flex justify-center space-x-2 pt-4">
 {{--                        <button--}}
 {{--                            class="btn space-x-2 bg-slate-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"--}}
@@ -185,8 +264,8 @@
 {{--                            </svg>--}}
 {{--                            <span>Prev</span>--}}
 {{--                        </button>--}}
-                        <a
-                            href="/business-profile"
+                        <button
+                            type="submit"
                             class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
                         >
                             <span>Next</span>
@@ -202,17 +281,51 @@
                                     clip-rule="evenodd"
                                 />
                             </svg>
-                        </a>
+                        </button>
                     </div>
                 </div>
+                </form>
             </div>
         </div>
     </div>
 
 @endsection
+
+@push('styles')
+    <style type="text/css">
+        #profilepicdiv img{
+            border-radius: 50%;
+            height: 80px;
+            width: 80px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+    </style>
+@endpush
+
 @push('scripts')
 
     <script>
         window.addEventListener("DOMContentLoaded", () => Alpine.start());
+    </script>
+
+    <script type="text/javascript">
+        function loadImage(input,img) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $(img).attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $('#profile_picture').change(function(){
+            loadImage(this,'#profilepicdiv img');
+        });
+        $('#profilepicdiv').click(function(){
+            $('#profile_picture').click();
+        });
     </script>
 @endpush

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\Customer\UserDetailsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -129,14 +130,29 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::get('/invoice', function () {return view('invoice.invoice');})->name('invoice');
 
 
+//    //userprofile
+//    Route::get('/user-profile', function () {
+//        return view('user.profile.general_info');
+//    });
+//    Route::get('/business-profile', function () {
+//        return view('user.profile.business_physical_add');
+//    });
+//    Route::get('/authorized_contact', function () {
+//        return view('user.profile.authorized_contact');
+//    });
+
+
     //userprofile
-    Route::get('/user-profile', function () {
-        return view('user.profile.general_info');
-    });
-    Route::get('/business-profile', function () {
-        return view('user.profile.business_physical_add');
-    });
-    Route::get('/authorized_contact', function () {
-        return view('user.profile.authorized_contact');
-    });
+//    Route::get('/user/profile', [\App\Http\Controllers\Customer\UserDetailsController::class, 'generalInfo'])->name('user.profile');
+    Route::get('/user-profile/', [UserDetailsController::class, 'generalInfo'])->name('user.profile');
+    Route::post('/user-profile/post/', [UserDetailsController::class, 'postGeneralInfo'])->name('user.profile.post');
+
+    Route::get('/user-business-profile/', [UserDetailsController::class, 'businessAdd'])->name('user.businessProfile');
+    Route::post('/user-business-profile/post/', [UserDetailsController::class, 'postBusinessAdd'])->name('user.business_add.post');
+
+    Route::get('/user-authorized_contact/', [UserDetailsController::class, 'authorizeContact'])->name('user.authorizedContact');
+    Route::post('/user-authorized_contact/post/', [UserDetailsController::class, 'postAuthorizeContact'])->name('user.authorizeContact.post');
+
+//    Route::get('/user-profile/preview/', [UserDetailsController::class, 'previewDetails'])->name('user.profile.preview');
+//    Route::post('/user-profile/update/', [UserDetailsController::class, 'updateProfile'])->name('user.profile.update');
 });

@@ -92,7 +92,7 @@
                                     <option value="{{$expenseCateogry->id}}" @selected(old('expense_category_id',0)==$expenseCateogry->id)>{{$expenseCateogry->name}}</option>
                                 @endforeach
                             </select>
-                            @error('club_id')
+                            @error('expense_category_id')
                             <span class="text-tiny+ text-error">{{$message}}</span>
                             @enderror
                         </label>
