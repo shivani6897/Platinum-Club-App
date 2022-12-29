@@ -81,6 +81,14 @@
                         class="inline-flex"
                     >
                         <a href="{{route('customers.create')}}" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Customers</a>
+                        @if(count($customer) > 0)
+                        <a href="{{route('customers.export')}}" class="btn ml-1 space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Export</a>
+                        @endif
+                        <a href="{{ route('customers.file.import') }}" data-ajax-popup="true"
+                           data-title="{{ __('Import  employee CSV file') }}" data-bs-toggle="tooltip" title=""
+                           class="btn ml-1 space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                           >Import
+                        </a>
                     </div>
                 </div>
             </div>

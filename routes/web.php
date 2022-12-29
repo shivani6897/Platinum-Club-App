@@ -87,7 +87,12 @@ Route::group(['middleware' => ['auth','verified']], function () {
     Route::get('/customer/setpassword/{userToken}', [\App\Http\Controllers\Admin\UserController::class, 'userPassword'])->name('setuserpassword');
     Route::post('/customer/setpassword/{userToken}', [\App\Http\Controllers\Admin\UserController::class, 'userPasswordUpdate'])->name('userpassword.update');
 
+    Route::get('/customers/export',[CustomerController::class, 'export'])->name('customers.export');
+    Route::post('/customers/import',[CustomerController::class, 'import'])->name('customers.import');
+    Route::get('/customers/file/import',[CustomerController::class, 'importFile'])->name('customers.file.import');
+
     Route::resource('/customers', CustomerController::class);
+
     Route::resource('/incomes', \App\Http\Controllers\Customer\IncomeController::class);
     Route::resource('/expenses', \App\Http\Controllers\Customer\ExpenseController::class);
 
