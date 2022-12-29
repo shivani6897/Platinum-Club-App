@@ -13,7 +13,7 @@ class CustomerExport implements FromCollection,WithHeadings
     */
     public function collection()
     {
-        $data = Customer::get();
+        $data = Customer::where('user_id',auth()->id())->get();
         foreach($data as $k=>$customer )
         {
             $data[$k]["created_by"]=$customer->user?->first_name . " " . $customer->user?->last_name;
