@@ -147,7 +147,7 @@
                                 placeholder="Enter your name"
                                 type="text"
                                 name="first_name"
-                                value="{{ old('first_name',$userdetails->first_name ?? '') }}"
+                                value="{{ isset(auth()->user()->first_name) ? auth()->user()->first_name : old('first_name',$userdetails->first_name ?? '') }}"
                                 required
                             />
                         </label>
@@ -159,7 +159,7 @@
                                 placeholder="Enter your name"
                                 type="text"
                                 name="last_name"
-                                value="{{ old('last_name',$userdetails->last_name ?? '') }}"
+                                value="{{ isset(auth()->user()->last_name) ? auth()->user()->last_name : old('last_name',$userdetails->last_name ?? '') }}"
                                 required
                             />
                         </label>
@@ -173,7 +173,7 @@
                                 type="email"
                                 name="email"
                                 required
-                                value="{{ old('email',$userdetails->email ?? '') }}"
+                                value="{{ isset(auth()->user()->email) ? auth()->user()->email : old('email',$userdetails->email ?? '') }}"
                             />
                         </label>
 
@@ -184,7 +184,7 @@
                                 placeholder="Phone number"
                                 type="number"
                                 name="phone_no"
-                                value="{{ old('phone_no',$userdetails->phone_no ?? '') }}"
+                                value="{{ isset(auth()->user()->phone_no) ? auth()->user()->phone_no : old('phone_no',$userdetails->phone_no ?? '') }}"
                                 required
                             />
                         </label>
