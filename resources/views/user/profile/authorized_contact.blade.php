@@ -110,7 +110,7 @@
                                 placeholder="Enter Name"
                                 type="text"
                                 name="auth_name"
-                                value="{{ old('auth_name',$userdetails->auth_name ?? '') }}"
+                                value="{{ isset($userdetails->auth_name) ? $userdetails->auth_name : old('auth_name',$userdetails->auth_name ?? '') }}"
 {{--                                required--}}
                             />
                         </label>
@@ -142,7 +142,7 @@
                                 placeholder="Enter Email Address"
                                 type="email"
                                 name="auth_email"
-                                value="{{ old('name',$userdetails->auth_email ?? '') }}"
+                                value="{{ isset($userdetails->auth_email) ? $userdetails->auth_email :old('name',$userdetails->auth_email ?? '') }}"
 {{--                                required--}}
                             />
                         </label>
@@ -154,7 +154,7 @@
                                 placeholder="Enter Phone Number"
                                 type="number"
                                 name="auth_phone_no"
-                                value="{{ old('auth_phone_no',$userdetails->auth_phone_no ?? '') }}"
+                                value="{{ isset($userdetails->auth_phone_no) ? $userdetails->auth_phone_no :old('auth_phone_no',$userdetails->auth_phone_no ?? '') }}"
                             />
                         </label>
                     </div>

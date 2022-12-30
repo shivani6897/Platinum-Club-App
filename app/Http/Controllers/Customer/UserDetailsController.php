@@ -13,7 +13,7 @@ class UserDetailsController extends Controller
     public function generalInfo(Request $request)
     {
         $businesses = Business::all(['id','name']);
-        $userdetails = $request->session()->get('userdetails');
+        $userdetails = UserDetail::where('user_id', auth()->id())->first();
         return view('user.profile.general_info', compact('userdetails','businesses'));
     }
     public function postGeneralInfo(Request $request){
@@ -48,7 +48,7 @@ class UserDetailsController extends Controller
 
     public function businessAdd(Request $request)
     {
-        $userdetails = $request->session()->get('userdetails');
+        $userdetails = UserDetail::where('user_id', auth()->id())->first();
         return view('user.profile.business_physical_add', compact('userdetails'));
     }
 
@@ -72,7 +72,7 @@ class UserDetailsController extends Controller
     public function authorizeContact(Request $request)
     {
         $jobpositions = JobPosition::all(['id','name']);
-        $userdetails = $request->session()->get('userdetails');
+        $userdetails = UserDetail::where('user_id', auth()->id())->first();
         return view('user.profile.authorized_contact', compact('userdetails', 'jobpositions'));
     }
 

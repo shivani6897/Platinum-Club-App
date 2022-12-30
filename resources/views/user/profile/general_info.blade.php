@@ -197,7 +197,7 @@
                                 placeholder="Enter Business legal name"
                                 type="text"
                                 name="business_name"
-                                value="{{ old('business_name',$userdetails->business_name ?? '') }}"
+                                value="{{ isset($userdetails->business_name) ? $userdetails->business_name : old('business_name',$userdetails->business_name ?? '') }}"
                             />
                         </label>
                         <label class="block">
@@ -226,7 +226,7 @@
                             placeholder="Enter Business website"
                             name="business_website"
                             type="url"
-                            value="{{ old('business_website',$userdetails->business_website ?? '') }}"
+                            value="{{ isset($userdetails->business_website) ? $userdetails->business_website : old('business_website',$userdetails->business_website ?? '') }}"
 
                         />
                     </label>
