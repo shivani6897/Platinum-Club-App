@@ -95,7 +95,7 @@
                     </div>
                 </div>
 
-                <form method="POST" action="{{ route('user.business_add.post') }}">
+                <form method="POST" action="{{ route('user.business_add.post') }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <input type="hidden" name="user_id" value="{{$userdetails ? $userdetails->id : ''}}">
 

@@ -95,7 +95,7 @@
                         </h4>
                     </div>
                 </div>
-                <form method="Post" action="{{ route('user.authorizeContact.post') }}">
+                <form method="Post" action="{{ route('user.authorizeContact.post') }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <input type="hidden" name="user_id" value="{{$userdetails ? $userdetails->id : ''}}">
 

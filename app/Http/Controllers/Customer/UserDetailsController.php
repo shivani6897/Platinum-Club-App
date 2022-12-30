@@ -7,6 +7,7 @@ use App\Models\Business;
 use App\Models\JobPosition;
 use App\Models\UserDetail;
 use Illuminate\Http\Request;
+use File;
 
 class UserDetailsController extends Controller
 {
@@ -31,7 +32,9 @@ class UserDetailsController extends Controller
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'business_website' => 'nullable|url',
         ]);
-            $file = auth()->user()->profile;
+
+        $array = $request->only(['first_name','last_name','email','phone_no','file']);
+        $file = auth()->user()->profile;
             if(!empty($request->profile))
             {
                 $file = $userdetails->id.time().'.'.$request->profile->extension();
@@ -40,7 +43,7 @@ class UserDetailsController extends Controller
             }
             $array['profile'] = $file;
 
-        auth()->user()->update($request->only(['first_name','last_name','email','phone_no','file']));
+        auth()->user()->update($array);
         $userdetails = UserDetail::updateOrCreate(['user_id'=> auth()->id()], $request->only(['business_name','business_id','business_website']));
 
         return redirect()->route('user.businessProfile');

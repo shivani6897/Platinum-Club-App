@@ -111,14 +111,15 @@
                     </div>
                 </div>
 
-                <form method="POST" action="{{ route('user.profile.post') }}">
+                <form method="POST" action="{{ route('user.profile.post') }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <input type="hidden" name="user_id" value="{{$userdetails ? $userdetails->id : ''}}">
 
                     <div class="space-y-4 p-4 sm:p-5">
 
                         <div id="profilepicdiv">
-                            <img src="{{asset($userdetails?->profile?'/images/users/'.$userdetails?->profile:'images/200x200.png')}}">
+{{--                            @dd($userdetails)--}}
+                            <img src="{{asset(auth()->user()?->profile?'/images/users/'.auth()->user()?->profile:'images/200x200.png')}}">
                         </div>
                         <label class="block" style="display: none;">
                             <span>Profile Picture </span>
