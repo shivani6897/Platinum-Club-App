@@ -122,7 +122,7 @@
                                     border-error
                                 @enderror"
                                 name="job_position_id"
-                                required
+{{--                                required--}}
                             >
                                 @foreach($jobpositions as $jobposition)
                                     <option value="{{$jobposition->id}}" @selected(old('job_position_id',0)==$jobposition->id)>{{$jobposition->name}}</option>

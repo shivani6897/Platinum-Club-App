@@ -208,7 +208,7 @@
                                     border-error
                                 @enderror"
                                 name="business_id"
-                                required
+{{--                                required--}}
                             >
                                 @foreach($businesses as $business)
                                     <option value="{{$business->id}}" @selected(old('business_id',0)==$business->id)>{{$business->name}}</option>
