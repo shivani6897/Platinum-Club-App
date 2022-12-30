@@ -21,13 +21,11 @@ class UserDetailsController extends Controller
         $userdetails = UserDetail::where('user_id', auth()->id())->first();
 
         $validatedData = $request->validate([
-//            dd(auth()->id()),
             'first_name' => 'required',
             'last_name' => 'required',
             'phone_no' => 'required|numeric',
             'business_name' => 'nullable',
             'email' => 'nullable|unique:users,email,'.auth()->id().',id,deleted_at,NULL',
-//            'email' => 'required|unique:users',
             'business_id' => 'nullable',
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'business_website' => ['nullable','regex:/\b[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i'],
@@ -83,8 +81,8 @@ class UserDetailsController extends Controller
         $validatedData = $request->validate([
             'auth_name' => 'nullable',
             'auth_phone_no' => 'nullable',
-//            'auth_email' => 'nullable|unique:user_details,email,'.auth()->id().',id,deleted_at,NULL',
-            'auth_email' => 'nullable|unique:user_details',
+            'auth_email' => 'nullable|unique:user_details,email,'.auth()->id().',id,deleted_at,NULL',
+//            'auth_email' => 'nullable|unique:user_details',
             'job_position_id' => 'nullable',
        ]);
         $userdetails = UserDetail::updateOrCreate(['user_id'=> auth()->id()], $validatedData);

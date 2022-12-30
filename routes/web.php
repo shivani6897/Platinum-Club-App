@@ -143,7 +143,6 @@ Route::group(['middleware' => ['auth','verified']], function () {
 
 
     //userprofile
-//    Route::get('/user/profile', [\App\Http\Controllers\Customer\UserDetailsController::class, 'generalInfo'])->name('user.profile');
     Route::get('/user-profile/', [UserDetailsController::class, 'generalInfo'])->name('user.profile');
     Route::post('/user-profile/post/', [UserDetailsController::class, 'postGeneralInfo'])->name('user.profile.post');
 
@@ -152,7 +151,4 @@ Route::group(['middleware' => ['auth','verified']], function () {
 
     Route::get('/user-authorized_contact/', [UserDetailsController::class, 'authorizeContact'])->name('user.authorizedContact');
     Route::post('/user-authorized_contact/post/', [UserDetailsController::class, 'postAuthorizeContact'])->name('user.authorizeContact.post');
-
-//    Route::get('/user-profile/preview/', [UserDetailsController::class, 'previewDetails'])->name('user.profile.preview');
-//    Route::post('/user-profile/update/', [UserDetailsController::class, 'updateProfile'])->name('user.profile.update');
 });
