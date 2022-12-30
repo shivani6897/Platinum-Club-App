@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Income;
+use App\Models\UserDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Customer;
@@ -51,14 +53,14 @@ class InvoiceController extends Controller
             'description',
             'payment_method'
         ]);
-//        $customer = Customer::where('user_id',auth()->id())->where('id',$request->customer_id)->first(['name','company_name']);
+        $user_deatils = UserDetail::where('user_id',auth()->id())->first('business_name');
+
         $invoicecount = Invoice::whereYear('created_at', date('Y'))->count();
-//        $customercount = strlen($customers->count());
-//        dd($customercount);
         $invoicecount = strlen($invoicecount) == 1 ?  '0'.$invoicecount+1 : $invoicecount+1;
-        $invoiceData['invoice_number'] = substr(auth()->user()->first_name, 0, 3).date('Y').$invoicecount;
+        $invoiceData['invoice_number'] = $user_deatils ? substr($user_deatils , 2, 3).date('Y').$invoicecount : (substr(auth()->user()->first_name , 0, 3)).date('Y').$invoicecount ;
         $invoiceData['total_amount'] = 0;
         $invoice = Invoice::create($invoiceData);
+
 
         //Create Product Log and calculate total amount
         $productData = [];
@@ -84,6 +86,17 @@ class InvoiceController extends Controller
             'total_amount'=>$total
         ]);
         $productLog = ProductLog::insert($productData);
+        $incomeData = $request->only([
+            'date', 'income'
+        ]);
+//        $incomeData['invoice_id'] = $customer->id;
+        $incomeData['user_id'] = auth()->id();
+        $incomeData['invoice_id'] = $invoice->id;
+        $incomeData['date'] = Carbon::now()->format('Y-m-d');
+        $incomeData['income'] = $invoice->total_amount;
+        $incomeData['description'] = 'Payment from Invoice';
+        $incomeData['income_category_id'] = 1;
+        $income = Income::create($incomeData);
 
         return redirect()->route('invoices.index')->with('success','Invoice created');
     }
@@ -154,6 +167,17 @@ class InvoiceController extends Controller
                 'payment_response'=>json_encode($paymentIntent),
                 'gateway'=>'stripe'
             ]);
+            $incomeData = $request->only([
+                'date', 'income'
+            ]);
+//        $incomeData['invoice_id'] = $customer->id;
+            $incomeData['user_id'] = auth()->id();
+            $incomeData['invoice_id'] = $invoice->id;
+            $incomeData['date'] = Carbon::now()->format('Y-m-d');
+            $incomeData['income'] = $invoice->total_amount;
+            $incomeData['description'] = 'Payment from Invoice';
+            $incomeData['income_category_id'] = 1;
+            $income = Income::create($incomeData);
 
             return redirect()->route('invoices.index')->with('success','Invoice Paid');
         }

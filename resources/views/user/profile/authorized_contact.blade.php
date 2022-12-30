@@ -95,7 +95,7 @@
                         </h4>
                     </div>
                 </div>
-                <form method="Post" action="{{ route('user.authorizeContact.post') }}">
+                <form method="Post" action="{{ route('user.authorizeContact.post') }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <input type="hidden" name="user_id" value="{{$userdetails ? $userdetails->id : ''}}">
 
@@ -110,7 +110,7 @@
                                 placeholder="Enter Name"
                                 type="text"
                                 name="auth_name"
-                                value="{{ old('auth_name',$userdetails->auth_name ?? '') }}"
+                                value="{{ isset($userdetails->auth_name) ? $userdetails->auth_name : old('auth_name',$userdetails->auth_name ?? '') }}"
 {{--                                required--}}
                             />
                         </label>
@@ -122,7 +122,7 @@
                                     border-error
                                 @enderror"
                                 name="job_position_id"
-                                required
+{{--                                required--}}
                             >
                                 @foreach($jobpositions as $jobposition)
                                     <option value="{{$jobposition->id}}" @selected(old('job_position_id',0)==$jobposition->id)>{{$jobposition->name}}</option>
@@ -142,7 +142,7 @@
                                 placeholder="Enter Email Address"
                                 type="email"
                                 name="auth_email"
-                                value="{{ old('name',$userdetails->auth_email ?? '') }}"
+                                value="{{ isset($userdetails->auth_email) ? $userdetails->auth_email :old('name',$userdetails->auth_email ?? '') }}"
 {{--                                required--}}
                             />
                         </label>
@@ -154,7 +154,7 @@
                                 placeholder="Enter Phone Number"
                                 type="number"
                                 name="auth_phone_no"
-                                value="{{ old('auth_phone_no',$userdetails->auth_phone_no ?? '') }}"
+                                value="{{ isset($userdetails->auth_phone_no) ? $userdetails->auth_phone_no :old('auth_phone_no',$userdetails->auth_phone_no ?? '') }}"
                             />
                         </label>
                     </div>

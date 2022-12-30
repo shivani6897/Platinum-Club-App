@@ -95,7 +95,7 @@
                     </div>
                 </div>
 
-                <form method="POST" action="{{ route('user.business_add.post') }}">
+                <form method="POST" action="{{ route('user.business_add.post') }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <input type="hidden" name="user_id" value="{{$userdetails ? $userdetails->id : ''}}">
 
@@ -108,7 +108,7 @@
                                 placeholder="Enter Street Address"
                                 name="business_address"
                                 type="text"
-                                value="{{ old('business_address',$userdetails->business_address ?? '') }}"
+                                value="{{ isset($userdetails->business_address) ? $userdetails->business_address : old('business_address',$userdetails->business_address ?? '') }}"
 {{--                                required--}}
                             />
                         </label>
@@ -120,7 +120,7 @@
                                     placeholder="Enter City"
                                     type="text"
                                     name="business_city"
-                                    value="{{ old('business_city',$userdetails->business_city ?? '') }}"
+                                    value="{{ isset($userdetails->business_city) ? $userdetails->business_city : old('business_city',$userdetails->business_city ?? '') }}"
 {{--                                    required--}}
                                 />
                             </label>
@@ -132,7 +132,7 @@
                                     placeholder="Pincode"
                                     type="number"
                                     name="business_pincode"
-                                    value="{{ old('business_pincode',$userdetails->business_pincode ?? '') }}"
+                                    value="{{ isset($userdetails->business_pincode) ? $userdetails->business_pincode : old('business_pincode',$userdetails->business_pincode ?? '') }}"
 {{--                                    required--}}
                                 />
                             </label>
@@ -146,7 +146,7 @@
                                     placeholder="State/Prov/Region"
                                     type="text"
                                     name="business_state"
-                                    value="{{ old('business_state',$userdetails->business_state ?? '') }}"
+                                    value="{{ isset($userdetails->business_state) ? $userdetails->business_state : old('business_state',$userdetails->business_state ?? '') }}"
 {{--                                    required--}}
                                 />
                             </label>
@@ -156,7 +156,7 @@
                                     class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                     placeholder="Country"
                                     name="business_country"
-                                    value="{{ old('business_country',$userdetails->business_country ?? '') }}"
+                                    value="{{ isset($userdetails->business_country) ? $userdetails->business_country : old('business_country',$userdetails->business_country ?? '') }}"
                                     type="text"
                                 />
                             </label>
@@ -166,7 +166,7 @@
                                     class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                     placeholder="Time Zone"
                                     name="business_timezone"
-                                    value="{{ old('business_timezone',$userdetails->business_timezone ?? '') }}"
+                                    value="{{ isset($userdetails->business_timezone) ? $userdetails->business_timezone : old('business_timezone',$userdetails->business_timezone ?? '') }}"
                                     type="text"
                                 />
                             </label>

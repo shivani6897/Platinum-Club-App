@@ -111,14 +111,15 @@
                     </div>
                 </div>
 
-                <form method="POST" action="{{ route('user.profile.post') }}">
+                <form method="POST" action="{{ route('user.profile.post') }}" enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <input type="hidden" name="user_id" value="{{$userdetails ? $userdetails->id : ''}}">
 
                     <div class="space-y-4 p-4 sm:p-5">
 
                         <div id="profilepicdiv">
-                            <img src="{{asset($userdetails?->profile?'/images/users/'.$userdetails?->profile:'images/200x200.png')}}">
+{{--                            @dd($userdetails)--}}
+                            <img src="{{asset(auth()->user()?->profile?'/images/users/'.auth()->user()?->profile:'images/200x200.png')}}">
                         </div>
                         <label class="block" style="display: none;">
                             <span>Profile Picture </span>
@@ -147,7 +148,7 @@
                                 placeholder="Enter your name"
                                 type="text"
                                 name="first_name"
-                                value="{{ old('first_name',$userdetails->first_name ?? '') }}"
+                                value="{{ isset(auth()->user()->first_name) ? auth()->user()->first_name : old('first_name',$userdetails->first_name ?? '') }}"
                                 required
                             />
                         </label>
@@ -159,7 +160,7 @@
                                 placeholder="Enter your name"
                                 type="text"
                                 name="last_name"
-                                value="{{ old('last_name',$userdetails->last_name ?? '') }}"
+                                value="{{ isset(auth()->user()->last_name) ? auth()->user()->last_name : old('last_name',$userdetails->last_name ?? '') }}"
                                 required
                             />
                         </label>
@@ -173,7 +174,7 @@
                                 type="email"
                                 name="email"
                                 required
-                                value="{{ old('email',$userdetails->email ?? '') }}"
+                                value="{{ isset(auth()->user()->email) ? auth()->user()->email : old('email',$userdetails->email ?? '') }}"
                             />
                         </label>
 
@@ -184,7 +185,7 @@
                                 placeholder="Phone number"
                                 type="number"
                                 name="phone_no"
-                                value="{{ old('phone_no',$userdetails->phone_no ?? '') }}"
+                                value="{{ isset(auth()->user()->phone_no) ? auth()->user()->phone_no : old('phone_no',$userdetails->phone_no ?? '') }}"
                                 required
                             />
                         </label>
@@ -197,7 +198,7 @@
                                 placeholder="Enter Business legal name"
                                 type="text"
                                 name="business_name"
-                                value="{{ old('business_name',$userdetails->business_name ?? '') }}"
+                                value="{{ isset($userdetails->business_name) ? $userdetails->business_name : old('business_name',$userdetails->business_name ?? '') }}"
                             />
                         </label>
                         <label class="block">
@@ -208,7 +209,7 @@
                                     border-error
                                 @enderror"
                                 name="business_id"
-                                required
+{{--                                required--}}
                             >
                                 @foreach($businesses as $business)
                                     <option value="{{$business->id}}" @selected(old('business_id',0)==$business->id)>{{$business->name}}</option>
@@ -225,8 +226,8 @@
                             class="form-input mt-1.5 w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                             placeholder="Enter Business website"
                             name="business_website"
-                            type="url"
-                            value="{{ old('business_website',$userdetails->business_website ?? '') }}"
+                            type="text"
+                            value="{{ isset($userdetails->business_website) ? $userdetails->business_website : old('business_website',$userdetails->business_website ?? '') }}"
 
                         />
                     </label>

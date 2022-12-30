@@ -139,7 +139,7 @@
                                         @forelse($income as $single_income)
                                             <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
                                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
-                                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_income->income }} </td>
+                                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ number_format($single_income->income,2) }} </td>
                                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $single_income->date ? ($single_income->date?->format('d-m-Y')) : '' }} </td>
 
                                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
