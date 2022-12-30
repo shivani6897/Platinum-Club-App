@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Income;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Services\Payment\StripeService;
@@ -147,6 +148,18 @@ class LandingPageController extends Controller
                 $rinvoice->invoices()->attach($invoice->id);
             }
 
+            $incomeData = $request->only([
+                'date', 'income'
+            ]);
+//        $incomeData['invoice_id'] = $customer->id;
+            $incomeData['user_id'] = auth()->id();
+            $incomeData['invoice_id'] = $invoice->id;
+            $incomeData['date'] = Carbon::now()->format('Y-m-d');
+            $incomeData['income'] = $invoice->total_amount;
+            $incomeData['description'] = 'Payment from Invoice';
+            $incomeData['income_category_id'] = 1;
+            $income = Income::create($incomeData);
+
             return view('customer.landing.thankyou',compact('id'))->with('success','Purchase Successful');
         }
         catch(\Exception $e)
@@ -255,6 +268,18 @@ class LandingPageController extends Controller
 
                 $rinvoice->invoices()->attach($invoice->id);
             }
+
+            $incomeData = $request->only([
+                'date', 'income'
+            ]);
+//        $incomeData['invoice_id'] = $customer->id;
+            $incomeData['user_id'] = auth()->id();
+            $incomeData['invoice_id'] = $invoice->id;
+            $incomeData['date'] = Carbon::now()->format('Y-m-d');
+            $incomeData['income'] = $invoice->total_amount;
+            $incomeData['description'] = 'Payment from Invoice';
+            $incomeData['income_category_id'] = 1;
+            $income = Income::create($incomeData);
 
             return view('customer.landing.thankyou',compact('id'))->with('success','Purchase Successful');
         }

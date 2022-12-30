@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\Income;
 use App\Models\UserDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -60,6 +61,7 @@ class InvoiceController extends Controller
         $invoiceData['total_amount'] = 0;
         $invoice = Invoice::create($invoiceData);
 
+
         //Create Product Log and calculate total amount
         $productData = [];
         $total = 0;
@@ -84,6 +86,17 @@ class InvoiceController extends Controller
             'total_amount'=>$total
         ]);
         $productLog = ProductLog::insert($productData);
+        $incomeData = $request->only([
+            'date', 'income'
+        ]);
+//        $incomeData['invoice_id'] = $customer->id;
+        $incomeData['user_id'] = auth()->id();
+        $incomeData['invoice_id'] = $invoice->id;
+        $incomeData['date'] = Carbon::now()->format('Y-m-d');
+        $incomeData['income'] = $invoice->total_amount;
+        $incomeData['description'] = 'Payment from Invoice';
+        $incomeData['income_category_id'] = 1;
+        $income = Income::create($incomeData);
 
         return redirect()->route('invoices.index')->with('success','Invoice created');
     }
@@ -154,6 +167,17 @@ class InvoiceController extends Controller
                 'payment_response'=>json_encode($paymentIntent),
                 'gateway'=>'stripe'
             ]);
+            $incomeData = $request->only([
+                'date', 'income'
+            ]);
+//        $incomeData['invoice_id'] = $customer->id;
+            $incomeData['user_id'] = auth()->id();
+            $incomeData['invoice_id'] = $invoice->id;
+            $incomeData['date'] = Carbon::now()->format('Y-m-d');
+            $incomeData['income'] = $invoice->total_amount;
+            $incomeData['description'] = 'Payment from Invoice';
+            $incomeData['income_category_id'] = 1;
+            $income = Income::create($incomeData);
 
             return redirect()->route('invoices.index')->with('success','Invoice Paid');
         }
