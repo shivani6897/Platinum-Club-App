@@ -30,7 +30,7 @@ class UserDetailsController extends Controller
 //            'email' => 'required|unique:users',
             'business_id' => 'nullable',
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'business_website' => 'nullable|url',
+            'business_website' => ['nullable','regex:/\b[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i'],
         ]);
 
         $array = $request->only(['first_name','last_name','email','phone_no','file']);
