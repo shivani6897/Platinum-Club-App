@@ -408,7 +408,7 @@
                             $('#product-img').attr('src','{{url('/images/products/')}}/'+result.data.image);
                         else
                             $('#product-img').attr('src','');
-                        console.log(result)
+                        
                         $('#product-desc').html(result.data.description);
                         $('input[name="downpayment"]').attr('min',result.data.downpayment).val(result.data.downpayment);
                         $('#min-downpayment-span').html(result.data.downpayment);
@@ -426,7 +426,10 @@
                             $('.emi-payment').slideUp('slow');
                             $('#agree-label').html('I hereby agree to make payment of Rs '+$('select[name="product_id"]').find(':selected').data('price'));
                         }
-                        $('#tax-detail').html('('+ result.data.tax +' % GST inclusive)');
+                        if(result.data.tax!==null && result.data.tax!==undefined)
+                            $('#tax-detail').html('('+ result.data.tax +' % GST inclusive)');
+                        else
+                            $('#tax-detail').html('');
                     }
                     else
                         console.error(result.message);
