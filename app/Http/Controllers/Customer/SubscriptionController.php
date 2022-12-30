@@ -98,9 +98,17 @@ class SubscriptionController extends Controller
         {
             $rinvoice = RecurringInvoice::find($rinvoiceId);
             $customer = $rinvoice->customer;
+            if($amount<$rinvoice->emi_amount)
+                $amount=$rinvoice->emi_amount;
+            if($amount>$rinvoice->pending)
+                $amount=$rinvoice->pending;
         }
         else
+        {
+            if($amount!=$invoice->total_amount)
+                return redirect()->back()->with('error','Payment amount did not matched');
             $customer = $invoice->customer;
+        }
 
         return view('customer.subscriptions.invoice_payment',compact('id','invoiceId','rinvoiceId','amount','gateway','customer'));
     }
