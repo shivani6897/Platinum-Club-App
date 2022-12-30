@@ -31,7 +31,7 @@ class UserDetailsController extends Controller
             'business_website' => ['nullable','regex:/\b[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i'],
         ]);
 
-        $array = $request->only(['first_name','last_name','email','phone_no','file']);
+        $array = $request->only(['first_name','last_name','email','phone_no']);
         $file = auth()->user()->profile;
             if(!empty($request->profile))
             {
@@ -81,8 +81,8 @@ class UserDetailsController extends Controller
         $validatedData = $request->validate([
             'auth_name' => 'nullable',
             'auth_phone_no' => 'nullable',
-            'auth_email' => 'nullable|unique:user_details,email,'.auth()->id().',id,deleted_at,NULL',
-//            'auth_email' => 'nullable|unique:user_details',
+            // 'auth_email' => 'nullable|unique:user_details,email,'.auth()->id().',id,deleted_at,NULL',
+           'auth_email' => 'nullable',
             'job_position_id' => 'nullable',
        ]);
         $userdetails = UserDetail::updateOrCreate(['user_id'=> auth()->id()], $validatedData);
