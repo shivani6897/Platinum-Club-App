@@ -180,7 +180,7 @@
         >
           <img
             class="rounded-full"
-            src="/images/200x200.png"
+            src="{{asset(auth()->user()?->profile?'/images/users/'.auth()->user()?->profile:'images/200x200.png')}}"
             alt="avatar"
           />
           <span
@@ -202,7 +202,7 @@
               <div class="avatar h-14 w-14">
                 <img
                   class="rounded-full"
-                  src="{{asset('images/200x200.png')}}"
+                  src="{{asset(auth()->user()?->profile?'/images/users/'.auth()->user()?->profile:'images/200x200.png')}}"
                   alt="avatar"
                 />
               </div>
@@ -217,7 +217,7 @@
             </div>
             <div class="flex flex-col pt-2 pb-5">
               <a
-                href="{{route('profile', Auth::user()->id)}}"
+                href="{{route('user.profile')}}"
                 class="group flex items-center space-x-3 py-2 px-4 tracking-wide outline-none transition-all hover:bg-slate-100 focus:bg-slate-100 dark:hover:bg-navy-600 dark:focus:bg-navy-600"
               >
                 <div
