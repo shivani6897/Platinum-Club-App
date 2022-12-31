@@ -47,7 +47,7 @@ class SubscriptionController extends Controller
                  'due_date'=>Carbon::now()->format('d-m-Y'),
                  'invoice_date'=>$invoice->created_at->format('d-m-Y'),
                  'invoiceId'=>$invoice->id,
-                 'invoice_number'=>$invoiceService->generateInvoiceNumber(),
+                 'invoice_number'=>$invoiceService->invoice_number,
                  'subtotal'=>$subtotal,
                  'emi'=>0,
                  'products'=>$invoice->product_log,
