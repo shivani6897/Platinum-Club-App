@@ -19,6 +19,7 @@ use LaravelDaily\Invoices\Classes\Party;
 use LaravelDaily\Invoices\Classes\InvoiceItem;
 use App\Models\PaymentGateway;
 use App\Services\Payment\StripeService;
+use App\Services\Payment\InvoiceService;
 
 class InvoiceController extends Controller
 {
@@ -45,7 +46,7 @@ class InvoiceController extends Controller
         return view('customer.invoice.create',compact('customers', 'products','gateway'));
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request, InvoiceService $invoiceService)
     {
         // Create Invoice
         $invoiceData = $request->only([
@@ -57,8 +58,10 @@ class InvoiceController extends Controller
 
         $invoicecount = Invoice::whereYear('created_at', date('Y'))->count();
         $invoicecount = strlen($invoicecount) == 1 ?  '0'.$invoicecount+1 : $invoicecount+1;
-        $invoiceData['invoice_number'] = $user_deatils ? substr($user_deatils , 2, 3).date('Y').$invoicecount : (substr(auth()->user()->first_name , 0, 3)).date('Y').$invoicecount ;
+        $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
         $invoiceData['total_amount'] = 0;
+        $invoiceData['status'] = 1;
+
         $invoice = Invoice::create($invoiceData);
 
 
@@ -111,7 +114,7 @@ class InvoiceController extends Controller
         return $stripe->paymentIntent($amount,explode('_secret_',request('paymentIntent',''))[0]);
     }
 
-    public function stripeSuccess(Request $request)
+    public function stripeSuccess(Request $request, InvoiceService $invoiceService)
     {
         $gateway = PaymentGateway::where('user_id',auth()->id())->first();
         if(empty($gateway))
@@ -132,7 +135,8 @@ class InvoiceController extends Controller
                 'description',
                 'payment_method'
             ]);
-            $invoiceData['invoice_number'] = date('Ymd').rand(10000,99999);
+
+            $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
             $invoiceData['total_amount'] = $paymentIntent->amount/100;
             $invoiceData['status'] = ($paymentIntent->status=="succeeded"?1:2);
             $invoice = Invoice::create($invoiceData);

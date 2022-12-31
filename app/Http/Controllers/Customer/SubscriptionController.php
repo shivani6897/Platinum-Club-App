@@ -15,6 +15,7 @@ use App\Models\Payment;
 use App\Models\Product;
 use App\Models\ProductLog;
 use Razorpay\Api\Api;
+use App\Services\Payment\InvoiceService;
 
 class SubscriptionController extends Controller
 {
@@ -24,7 +25,7 @@ class SubscriptionController extends Controller
         return view('customer.subscriptions.index',compact('rinvoices'));
     }
 
-    public function getInvoiceLink($id,$invoiceId,$rinvoiceId)
+    public function getInvoiceLink($id,$invoiceId,$rinvoiceId, InvoiceService $invoiceService)
     {
         $rinvoice = RecurringInvoice::find($rinvoiceId);
         $invoice = Invoice::find($invoiceId);
@@ -46,7 +47,7 @@ class SubscriptionController extends Controller
                  'due_date'=>Carbon::now()->format('d-m-Y'),
                  'invoice_date'=>$invoice->created_at->format('d-m-Y'),
                  'invoiceId'=>$invoice->id,
-                 'invoice_number'=>$invoice->invoice_number,
+                 'invoice_number'=>$invoiceService->generateInvoiceNumber(),
                  'subtotal'=>$subtotal,
                  'emi'=>0,
                  'products'=>$invoice->product_log,
@@ -71,7 +72,7 @@ class SubscriptionController extends Controller
                  'due_date'=>$rinvoice->next_emi_date->format('d-m-Y'),
                  'invoice_date'=>Carbon::now()->format('d-m-Y'),
                  'invoiceId'=>0,
-                 'invoice_number'=>date('Ymd').rand(1000,9999),
+                 'invoice_number'=>$invoiceService->generateInvoiceNumber(),
                  'subtotal'=>$subtotal,
                  'emi'=>$emi,
                  'products'=>[],
@@ -114,7 +115,7 @@ class SubscriptionController extends Controller
         return view('customer.subscriptions.invoice_payment',compact('id','invoiceId','rinvoiceId','amount','gateway','customer'));
     }
 
-    public function stripeSuccess($id,$invoiceId,$rinvoiceId,Request $request)
+    public function stripeSuccess($id,$invoiceId,$rinvoiceId,Request $request, InvoiceService $invoiceService)
     {
         $invoice = Invoice::find($invoiceId);
         $amount = 0;
@@ -186,7 +187,7 @@ class SubscriptionController extends Controller
                     'customer_id'=>$invoice->customer_id,
                     'description'=>$invoice->description,
                     'payment_method'=>3,
-                    'invoice_number'=>date('Ymd').rand(10000,99999),
+                    'invoice_number'=>$invoiceService->generateInvoiceNumber(),
                     'total_amount'=>$paymentIntent->amount/100,
                     'status'=>($paymentIntent->status=="succeeded"?1:2),
                 ];
@@ -247,7 +248,7 @@ class SubscriptionController extends Controller
         }
     }
 
-    public function razorpaySuccess($id,$invoiceId,$rinvoiceId,Request $request)
+    public function razorpaySuccess($id,$invoiceId,$rinvoiceId,Request $request,InvoiceService $invoiceService)
     {
         $invoice = Invoice::find($invoiceId);
         $amount = 0;
@@ -322,7 +323,7 @@ class SubscriptionController extends Controller
                     'customer_id'=>$invoice->customer_id,
                     'description'=>$invoice->description,
                     'payment_method'=>3,
-                    'invoice_number'=>date('Ymd').rand(10000,99999),
+                    'invoice_number'=>$invoiceService->generateInvoiceNumber(),
                     'total_amount'=>$razorpayment->amount/100,
                     'status'=>($razorpayment->status=="captured"?1:2),
                 ];

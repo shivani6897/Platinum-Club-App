@@ -114,9 +114,9 @@
                                  </td>
                                  <td class="whitespace-nowrap px-4 py-3 sm:px-5" > 
                                     @if($invoice->status==0)
-                                    Sent
+                                    Pending
                                     @elseif($invoice->status==1)
-                                    Succeeded
+                                    Paid
                                     @elseif($invoice->status==2)
                                     Pending
                                     @else
