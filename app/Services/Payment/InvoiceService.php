@@ -11,7 +11,8 @@ class InvoiceService {
         $user_deatils = UserDetail::where('user_id',auth()->id())->first('business_name');
         $invoicecount = Invoice::whereYear('created_at', date('Y'))->count();
         $invoicecount = strlen($invoicecount) == 1 ?  '0'.$invoicecount+1 : $invoicecount+1;
-        $invoice_number = $user_deatils ? strtoupper(substr($user_deatils->business_name , 0, 3)).date('Y').$invoicecount : strtoupper(substr(auth()->user()->first_name , 0, 3)).date('Y').$invoicecount;
+
+        $invoice_number = (!empty($user_deatils) && !empty($user_deatils->business_name)) ? strtoupper(substr($user_deatils->business_name , 0, 3)).date('Y').$invoicecount : strtoupper(substr(auth()->user()->first_name , 0, 3)).date('Y').$invoicecount;
 
         return $invoice_number;
     }
