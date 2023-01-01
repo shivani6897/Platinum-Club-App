@@ -62,11 +62,11 @@
 
                         <input type="hidden" name="id" value="{{$paymentGateway->id}}">
                         @if($type==2)
-                        <label>RazorPay Key </label>
-                        <input type="text" name="razorpay_key"
-                               class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                               placeholder="RazorPay Key"
-                               value="{{$paymentGateway->razorpay_key}}">
+                            <label>RazorPay Key </label>
+                            <input type="text" name="razorpay_key"
+                                   class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                   placeholder="RazorPay Key"
+                                   value="{{$paymentGateway->razorpay_key}}">
                     </div>
                     <div class="mt-4 space-y-4">
                         <label>RazorPay Secret</label>
@@ -76,7 +76,22 @@
                                value="{{$paymentGateway->razorpay_secret}}">
                     </div>
                     @endif
-                    @if($type==1)
+                    @if($type==3)
+                        <label>Instamojo Client ID </label>
+                        <input type="text" name="instamojo_key"
+                               class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                               placeholder="Instamojo Key"
+                               value="{{$paymentGateway->instamojo_key}}">
+                </div>
+                <div class="mt-4 space-y-4">
+                    <label>Instamojo Client Secret</label>
+                    <input type="text" name="instamojo_token"
+                           class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                           placeholder="Instamojo Token"
+                           value="{{$paymentGateway->instamojo_token}}">
+                </div>
+                @endif
+                @if($type==1)
                     <div class="mt-4 space-y-4">
                         <label> Stripe Key </label> <input
                             class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
@@ -95,17 +110,17 @@
                             value="{{$paymentGateway->stripe_secret}}"
                         />
                     </div>
-                    @endif
-                    <div class="flex flex-col pt-2 pb-5">
-                        <div class="mt-3 px-4">
-                            <button type="submit"
-                                    class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
-                                Save
-                            </button>
-                        </div>
+                @endif
+                <div class="flex flex-col pt-2 pb-5">
+                    <div class="mt-3 px-4">
+                        <button type="submit"
+                                class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">
+                            Save
+                        </button>
                     </div>
                 </div>
             </div>
+        </div>
         </div>
 
     </form>
