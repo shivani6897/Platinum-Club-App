@@ -11,6 +11,7 @@ class Customer extends Model
     use HasFactory,SoftDeletes;
 
     protected $guarded = ['id'];
+    protected $dates = ['created_at'];
     public function user()
     {
         return $this->hasOne('App\Models\User', 'id', 'user_id');

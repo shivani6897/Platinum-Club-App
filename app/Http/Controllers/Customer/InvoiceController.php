@@ -31,7 +31,8 @@ class InvoiceController extends Controller
             ->when(request('search'),function($q){
                 $q->where('invoice_number','LIKE','%'.request('search').'%')
                     ->orWhereHas('customer',function($q2){
-                        $q2->where('name','LIKE','%'.request('search').'%');
+                        $q2->where('name','LIKE','%'.request('search').'%')
+                            ->where('gst_no','LIKE','%'.request('search').'%');
                     })
                     ->orWhere('total_amount','LIKE','%'.request('search').'%');
             })->latest()->paginate(10);

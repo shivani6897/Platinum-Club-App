@@ -27,6 +27,7 @@ class UserDetailsController extends Controller
             'business_name' => 'nullable',
             'email' => 'nullable|unique:users,email,'.auth()->id().',id,deleted_at,NULL',
             'business_id' => 'nullable',
+            'business_gst_no' => 'nullable',
             'profile' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'business_website' => ['nullable','regex:/\b[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i'],
         ]);
@@ -42,7 +43,7 @@ class UserDetailsController extends Controller
             $array['profile'] = $file;
 
         auth()->user()->update($array);
-        $userdetails = UserDetail::updateOrCreate(['user_id'=> auth()->id()], $request->only(['business_name','business_id','business_website']));
+        $userdetails = UserDetail::updateOrCreate(['user_id'=> auth()->id()], $request->only(['business_name','business_id','business_website','business_gst_no']));
 
         return redirect()->route('user.businessProfile');
     }

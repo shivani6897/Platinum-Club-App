@@ -82,6 +82,9 @@
                                 Total Amount
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                GST Number
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Payment Method
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
@@ -99,7 +102,8 @@
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->invoice_number }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->customer->name }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $invoice->total_amount}} </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > 
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ isset($invoice->customer->gst_no) ? $invoice->customer->gst_no : '-' }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >
                                     @if($invoice->payment_method==0)
                                     Offline
                                     @elseif($invoice->payment_method==1)
@@ -112,7 +116,7 @@
                                     Unknown
                                     @endif
                                  </td>
-                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > 
+                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >
                                     @if($invoice->status==0)
                                     Pending
                                     @elseif($invoice->status==1)

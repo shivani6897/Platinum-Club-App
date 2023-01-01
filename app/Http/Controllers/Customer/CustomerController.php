@@ -23,9 +23,13 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         $customer = Customer::where('user_id', auth()->id())
+            ->whereNull('deleted_at')
             ->when(request('search'), function ($q) {
                 $q->where('name', 'LIKE', '%' . request('search') . '%')
-                    ->orWhere('company_name', 'LIKE', '%' . request('search') . '%');
+                    ->orWhere('name', 'LIKE', '%' . request('search') . '%')
+                    ->orWhere('company_name', 'LIKE', '%' . request('search') . '%')
+                    ->orWhere('state', 'LIKE', '%' . request('search') . '%')
+                    ->orWhereDate('created_at', 'LIKE', '%' . request('search') . '%');
             })
             ->paginate(10);
         return view('customer/customers/index', compact('customer'));

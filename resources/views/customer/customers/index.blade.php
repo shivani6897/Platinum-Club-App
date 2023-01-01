@@ -101,6 +101,9 @@
                                 #
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Date
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Name
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
@@ -118,6 +121,7 @@
                         @forelse($customer as $key=>$single_customer)
                              <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_customer->created_at->format('Y-m-d') }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_customer->name }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_customer->company_name }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $single_customer->state}} </td>
