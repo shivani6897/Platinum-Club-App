@@ -89,15 +89,15 @@
 
                             <div class="justify-between flex">
                                 <p class="text-md font-bold text-black">
-                                    @if($data['userdetails']?->business_name)
+{{--                                    @if($data['userdetails']?->business_name)--}}
                                         Name of Company: {{$data['userdetails']->business_name}}
-                                    @endif
+{{--                                    @endif--}}
                                 </p>
 
                                 <p class="text-md font-bold text-black">
-                                    @if($data['user']?->email)
+{{--                                    @if($data['user']?->email)--}}
                                         Email: {{$data['user']?->email}}
-                                    @endif
+{{--                                    @endif--}}
                                 </p>
 {{--                                <input type="hidden" value="{{$data['invoiceId']}}" name="invoiceId">--}}
 {{--                                <input type="hidden" value="{{$data['invoice_number']}}" name="invoice_number">--}}
@@ -105,21 +105,21 @@
 
                             <div class="sm:justify-between sm:flex">
                                 <span class="flex items-center text-md">
-                                    @if($data['user']?->phone_no)
+{{--                                    @if($data['user']?->phone_no)--}}
                                         <p class="text-md font-bold text-black mr-2">Phone :</p>{{ $data['user']?->phone_no }}
-                                    @endif
+{{--                                    @endif--}}
                                 </span>
                                 <span class="flex items-center text-md">
-                                    @if( $data['business_address'] )
+{{--                                    @if( $data['business_address'] )--}}
                                         <p class="text-md font-bold text-black mr-2">Address :</p>{{ $data['business_address'] }}
-                                    @endif
+{{--                                    @endif--}}
                                 </span>
                             </div>
                             <div class="sm:justify-between sm:flex">
                                 <span class="flex items-center text-md">
-                                    @if( $data['userdetails']?->business_gst_no )
+{{--                                    @if( $data['userdetails']?->business_gst_no )--}}
                                         <p class="text-md font-bold text-black mr-2">GST Number :</p>{{  $data['userdetails']?->business_gst_no }}
-                                    @endif
+{{--                                    @endif--}}
                                 </span>
 {{--                                <span class="flex items-center text-md">--}}
 {{--                                    <span class="text-md font-bold text-black mr-2">Gateway :</span> {{ $data['paid_by'] }}--}}
@@ -147,10 +147,10 @@
                             </div>
                             <div class="justify-between flex">
                                 <span class="flex items-center text-md">
-                                    @if($data['customer']->company_address)
+{{--                                    @if($data['customer']->company_address)--}}
                                         <p class="text-md font-bold text-black mr-2">Address :</p>
                                         {{ $data['customer']->company_address }}
-                                    @endif
+{{--                                    @endif--}}
                                  </span>
                                 <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">GST Number :</p>
