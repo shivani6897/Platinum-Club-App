@@ -117,8 +117,8 @@
                             </div>
                             <div class="sm:justify-between sm:flex">
                                 <span class="flex items-center text-md">
-                                    @if( $data['customer']?->gst_no )
-                                        <p class="text-md font-bold text-black mr-2">GST Number :</p>{{ $data['customer']->gst_no }}
+                                    @if( $data['userdetails']?->business_gst_no )
+                                        <p class="text-md font-bold text-black mr-2">GST Number :</p>{{  $data['userdetails']?->business_gst_no }}
                                     @endif
                                 </span>
 {{--                                <span class="flex items-center text-md">--}}
@@ -147,8 +147,10 @@
                             </div>
                             <div class="justify-between flex">
                                 <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">Address :</p>
-                                    {{ $data['customer']->company_address }}
+                                    @if($data['customer']->company_address)
+                                        <p class="text-md font-bold text-black mr-2">Address :</p>
+                                        {{ $data['customer']->company_address }}
+                                    @endif
                                  </span>
                                 <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">GST Number :</p>
