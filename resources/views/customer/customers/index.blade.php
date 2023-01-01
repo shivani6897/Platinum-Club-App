@@ -94,16 +94,21 @@
             </div>
             <div class="card mt-3">
                 <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
-                    <table class="is-hoverable w-full text-left">
+                    <table class="is-hoverable w-full text-left table-sortable">
                         <thead>
                         <tr>
                             <th class="whitespace-nowrap rounded-tl-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 #
                             </th>
-                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                            <th
+                                data-title="Date"
+                                data-order=""
+                                class="table-sort whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+                            >
+{{--                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">--}}
                                 Date
                             </th>
-                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                            <th class=" table-sortable whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Name
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
@@ -118,6 +123,7 @@
                         </tr>
                         </thead>
                         <tbody>
+{{--                        <form id="filterForm">--}}
                         @forelse($customer as $key=>$single_customer)
                              <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
@@ -230,4 +236,93 @@
                 })
             }
         </script>
-    @endpush
+        <script src="./src/tablesort.js"></script>
+
+        <script>
+            /**
+             * Sorts a HTML table.
+             *
+             * @param {HTMLTableElement} table The table to sort
+             * @param {number} column The index of the column to sort
+             * @param {boolean} asc Determines if the sorting will be in ascending
+             */
+            function sortTableByColumn(table, column, asc = true) {
+                const dirModifier = asc ? 1 : -1;
+                const tBody = table.tBodies[0];
+                const rows = Array.from(tBody.querySelectorAll("tr"));
+
+                // Sort each row
+                const sortedRows = rows.sort((a, b) => {
+                    const aColText = a.querySelector(`td:nth-child(${ column + 1 })`).textContent.trim();
+                    const bColText = b.querySelector(`td:nth-child(${ column + 1 })`).textContent.trim();
+
+                    return aColText > bColText ? (1 * dirModifier) : (-1 * dirModifier);
+                });
+
+                // Remove all existing TRs from the table
+                while (tBody.firstChild) {
+                    tBody.removeChild(tBody.firstChild);
+                }
+
+                // Re-add the newly sorted rows
+                tBody.append(...sortedRows);
+
+                // Remember how the column is currently sorted
+                table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
+                table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-asc", asc);
+                table.querySelector(`th:nth-child(${ column + 1})`).classList.toggle("th-sort-desc", !asc);
+            }
+
+            document.querySelectorAll(".table-sortable th").forEach(headerCell => {
+                headerCell.addEventListener("click", () => {
+                    const tableElement = headerCell.parentElement.parentElement.parentElement;
+                    const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
+                    const currentIsAscending = headerCell.classList.contains("th-sort-asc");
+
+                    sortTableByColumn(tableElement, headerIndex, !currentIsAscending);
+                });
+            });
+
+        </script>
+@endpush
+
+@push('styles')
+    <style>
+        /*.table-sortable .th-sort-asc,*/
+        /*.table-sortable .th-sort-desc {*/
+        /*    font-family: "Font Awesome 6 Free";*/
+        /*    content: "\f0dc";*/
+        /*    display: inline-block;*/
+        /*}*/
+        .table-sortable th {
+            cursor: pointer;
+        }
+
+        .table-sortable .th-sort-asc::after {
+            font-family: "Font Awesome 6 Free";
+            content: "\f0d8";
+            display: inline-block;
+            /*content: "\25b4";*/
+        }
+
+        .table-sortable .th-sort-desc::after {
+            font-family: "Font Awesome 6 Free";
+            content: "\f0d7";
+            display: inline-block;
+        }
+
+        .table-sortable .th-sort-asc::after,
+        .table-sortable .th-sort-desc::after {
+            margin-left: 5px;
+        }
+
+        .table-sort{
+            content: "\f0dc";
+            /*position: relative;*/
+            /*cursor: pointer;*/
+            /*font-weight: 900;*/
+            /*font-family: "Font Awesome 6 Free";*/
+        }
+
+    </style>
+@endpush
