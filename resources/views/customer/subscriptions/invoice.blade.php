@@ -86,20 +86,44 @@
                                 <input type="hidden" value="{{$data['invoiceId']}}" name="invoiceId">
                                 <input type="hidden" value="{{$data['invoice_number']}}" name="invoice_number">
                             </div>
+
+                            <div class="justify-between flex">
+                                <p class="text-md font-bold text-black">
+                                    @if($data['userdetails']?->business_name)
+                                        Name of Company: {{$data['userdetails']->business_name}}
+                                    @endif
+                                </p>
+
+                                <p class="text-md font-bold text-black">
+                                    @if($data['user']?->email)
+                                        Email: {{$data['user']?->email}}
+                                    @endif
+                                </p>
+{{--                                <input type="hidden" value="{{$data['invoiceId']}}" name="invoiceId">--}}
+{{--                                <input type="hidden" value="{{$data['invoice_number']}}" name="invoice_number">--}}
+                            </div>
+
                             <div class="sm:justify-between sm:flex">
                                 <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">Phone :</p>{{ $data['user']->phone_no }}
+                                    @if($data['user']?->phone_no)
+                                        <p class="text-md font-bold text-black mr-2">Phone :</p>{{ $data['user']?->phone_no }}
+                                    @endif
                                 </span>
                                 <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">Due Date :</p>{{ $data['due_date'] }}</span>
+                                    @if( $data['business_address'] )
+                                        <p class="text-md font-bold text-black mr-2">Address :</p>{{ $data['business_address'] }}
+                                    @endif
+                                </span>
                             </div>
                             <div class="sm:justify-between sm:flex">
                                 <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">Email :</p>{{ $data['user']->email }}
+                                    @if( $data['customer']?->gst_no )
+                                        <p class="text-md font-bold text-black mr-2">GST Number :</p>{{ $data['customer']->gst_no }}
+                                    @endif
                                 </span>
-                                <span class="flex items-center text-md">
-                                    <span class="text-md font-bold text-black mr-2">Gateway :</span> {{ $data['paid_by'] }}
-                                </span>
+{{--                                <span class="flex items-center text-md">--}}
+{{--                                    <span class="text-md font-bold text-black mr-2">Gateway :</span> {{ $data['paid_by'] }}--}}
+{{--                                </span>--}}
                             </div>
                         </div>
                     </div>
@@ -110,29 +134,34 @@
                                     Bill To
                                 </p>
                             </div>
+
                             <div class="sm:justify-between sm:flex">
                                  <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">Name :</p>
                                     {{ $data['customer']->name }}
-                               </span>
+                                 </span>
                                 <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">Invoice Date :</p>
-                                    {{ $data['invoice_date'] }}
+                                    <p class="text-md font-bold text-black mr-2">Email :</p>
+                                    {{  $data['customer']->email }}
                                </span>
                             </div>
                             <div class="justify-between flex">
-                                <p class="text-md font-bold text-black mr-2">India</p>
                                 <span class="flex items-center text-md">
-                                    {{ ($data['status']==0?'Due':'Paid') }} Amount
-                               </span>
+                                    <p class="text-md font-bold text-black mr-2">Address :</p>
+                                    {{ $data['customer']->company_address }}
+                                 </span>
+                                <span class="flex items-center text-md">
+                                    <p class="text-md font-bold text-black mr-2">GST Number :</p>
+                                    {{ $data['customer']->gst_no }}
+                                 </span>
                             </div>
                             <div class="justify-between flex">
                                 <span class="flex items-center text-md">
                                     <p class="text-md font-bold text-black mr-2">Phone :</p>{{ $data['customer']->phone_no}}
                                 </span>
-                                <span class="flex items-center text-md">
-                                    <p class="text-xl font-bold text-black ">₹ {{ number_format($data['due'],2) }}</p>
-                                </span>
+{{--                                <span class="flex items-center text-md">--}}
+{{--                                    <p class="text-xl font-bold text-black ">₹ {{ number_format($data['due'],2) }}</p>--}}
+{{--                                </span>--}}
                             </div>
                         </div>
                     </div>

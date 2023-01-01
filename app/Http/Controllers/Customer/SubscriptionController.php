@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Income;
+use App\Models\UserDetail;
 use Illuminate\Http\Request;
 use App\Models\Invoice;
 use App\Models\RecurringInvoice;
@@ -30,6 +31,8 @@ class SubscriptionController extends Controller
         $rinvoice = RecurringInvoice::find($rinvoiceId);
         $invoice = Invoice::find($invoiceId);
         $user = User::find($id);
+        $userdetails = UserDetail::where('user_id',$user->id)->first();
+        $customer = Customer::where('user_id',$user->id)->first();
         $gateway = PaymentGateway::where('user_id',$user->id)->firstOrNew();
         // $customer = Customer::find($customerId);
 
@@ -44,6 +47,8 @@ class SubscriptionController extends Controller
              $data = [
                  'due'=>$due,
                  'tax'=>$tax,
+                 'business_address' =>$userdetails?->business_address . ', ' . $userdetails?->business_city . ', ' . $userdetails?->business_state . ', ' . $userdetails?->business_country,
+//                 'gst_number' =>$customer?->gst_no,
                  'due_date'=>Carbon::now()->format('d-m-Y'),
                  'invoice_date'=>$invoice->created_at->format('d-m-Y'),
                  'invoiceId'=>$invoice->id,
@@ -54,6 +59,7 @@ class SubscriptionController extends Controller
                  'product'=>new \stdClass(),
                  'status'=>$invoice->status,
                  'user'=>$user,
+                 'userdetails'=>$userdetails,
                  'customer'=>$invoice->customer,
                  'gateway'=>$gateway,
                  'paid_by'=>($invoice->payments->last()?->gateway)?$invoice->payments->last()->gateway:'Offline',
@@ -85,7 +91,7 @@ class SubscriptionController extends Controller
              ];
          }
 
-        return view('customer.subscriptions.invoice',compact('id','invoiceId','rinvoiceId','data'));
+        return view('customer.subscriptions.invoice',compact('id','invoiceId','rinvoiceId','data','userdetails'));
     }
 
     public function paymentPage($id,$invoiceId,$rinvoiceId,$amount)
