@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\LandingInvoiceMail;
 use App\Models\Income;
 use App\Services\Utilities\QueryStringParser;
 use App\Models\UserDetail;
@@ -19,6 +20,7 @@ use App\Models\ProductLog;
 use Instamojo\Instamojo;
 use Razorpay\Api\Api;
 use App\Services\Payment\InvoiceService;
+use Mail;
 
 class SubscriptionController extends Controller
 {
@@ -85,6 +87,7 @@ class SubscriptionController extends Controller
                 'product' => $rinvoice->product,
                 'status' => 0,
                 'user' => $user,
+                'userdetails' => $userdetails,
                 'customer' => $rinvoice->customer,
                 'gateway' => $gateway,
                 'paid_by' => 'Pending',
@@ -235,6 +238,13 @@ class SubscriptionController extends Controller
             $incomeData['income_category_id'] = 1;
             $income = Income::create($incomeData);
 
+            $userdetails = UserDetail::where('user_id',auth()->id())->first();
+            $user = User::where('id',auth()->id())->first();
+            $customer = Customer::where('user_id',auth()->id())->first();
+
+            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customer,$product,$productData));
+
+
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
         } catch (\Exception $e) {
             return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', $e->getMessage());
@@ -365,6 +375,13 @@ class SubscriptionController extends Controller
         $incomeData['description'] = 'Payment from Invoice';
         $incomeData['income_category_id'] = 1;
         $income = Income::create($incomeData);
+
+        $userdetails = UserDetail::where('user_id',auth()->id())->first();
+        $user = User::where('id',auth()->id())->first();
+        $customers = Customer::where('user_id',auth()->id())->first();
+
+        Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$product,$productData));
+
 
         return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
     }

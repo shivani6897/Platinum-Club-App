@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\InvoiceMail;
 use App\Models\Income;
+use App\Models\User;
 use App\Models\UserDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,6 +22,7 @@ use LaravelDaily\Invoices\Classes\InvoiceItem;
 use App\Models\PaymentGateway;
 use App\Services\Payment\StripeService;
 use App\Services\Payment\InvoiceService;
+use Mail;
 
 class InvoiceController extends Controller
 {
@@ -62,7 +65,6 @@ class InvoiceController extends Controller
         $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
         $invoiceData['total_amount'] = 0;
         $invoiceData['status'] = 1;
-
         $invoice = Invoice::create($invoiceData);
 
 
@@ -101,6 +103,13 @@ class InvoiceController extends Controller
         $incomeData['description'] = 'Payment from Invoice';
         $incomeData['income_category_id'] = 1;
         $income = Income::create($incomeData);
+
+
+        $userdetails = UserDetail::where('user_id',auth()->id())->first();
+        $user = User::where('id',auth()->id())->first();
+        $customer = Customer::where('user_id',auth()->id())->first();
+
+        Mail::to($user->email)->send(new InvoiceMail($invoiceData,$userdetails, $user,$customer,$products,$productData));
 
         return redirect()->route('invoices.index')->with('success','Invoice created');
     }
@@ -184,6 +193,13 @@ class InvoiceController extends Controller
             $incomeData['income_category_id'] = 1;
             $income = Income::create($incomeData);
 
+            $userdetails = UserDetail::where('user_id',auth()->id())->first();
+            $user = User::where('id',auth()->id())->first();
+            $customer = Customer::where('user_id',auth()->id())->first();
+
+            Mail::to($user->email)->send(new InvoiceMail($invoiceData,$userdetails, $user,$customer,$products,$productLog));
+
+
             return redirect()->route('invoices.index')->with('success','Invoice Paid');
         }
         catch(\Exception $e)
@@ -198,7 +214,7 @@ class InvoiceController extends Controller
             'name'          => auth()->user()->first_name.' '.auth()->user()->last_name,
             'phone'         => auth()->user()->phone_no,
             'custom_fields' => [
-                'email' => auth()->user()->email,
+                'mail' => auth()->user()->email,
                 // 'note'        => 'IDDQD',
                 // 'business id' => '365#GG',
             ],
@@ -208,7 +224,7 @@ class InvoiceController extends Controller
             'name'          => $invoice->customer?->name,
             'phone' => $invoice->customer?->phone_no,
             'custom_fields' => [
-                'email' => $invoice->customer?->email,
+                'mail' => $invoice->customer?->email,
                 'GST Number' => $invoice->customer?->gst_no,
             ],
         ]);
@@ -249,7 +265,7 @@ class InvoiceController extends Controller
             // ->save('public');
 
         $link = $invoicePDF->url();
-        // Then send email to party with link
+        // Then send mail to party with link
 
         // And return invoice itself to browser or have a different view
         return $invoicePDF->stream();

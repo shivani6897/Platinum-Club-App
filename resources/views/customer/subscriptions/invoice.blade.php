@@ -90,7 +90,7 @@
                             <div class="justify-between flex">
                                 <p class="text-md font-bold text-black">
 {{--                                    @if($data['userdetails']?->business_name)--}}
-                                        Name of Company: {{$data['userdetails']->business_name}}
+                                        Name of Company: {{$data['userdetails']?->business_name}}
 {{--                                    @endif--}}
                                 </p>
 
@@ -111,7 +111,7 @@
                                 </span>
                                 <span class="flex items-center text-md">
 {{--                                    @if( $data['business_address'] )--}}
-                                        <p class="text-md font-bold text-black mr-2">Address :</p>{{ $data['business_address'] }}
+                                        <p class="text-md font-bold text-black mr-2">Address :</p>{{ isset($userdetails->business_address) ? $userdetails?->business_address . ', ' . $userdetails?->business_city . ', ' . $userdetails?->business_state . ', ' . $userdetails?->business_country :'' }}
 {{--                                    @endif--}}
                                 </span>
                             </div>

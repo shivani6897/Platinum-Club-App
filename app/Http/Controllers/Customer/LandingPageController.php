@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Mail\InvoiceMail;
+use App\Mail\LandingInvoiceMail;
 use App\Models\Income;
+use App\Models\User;
+use App\Models\UserDetail;
 use App\Services\Payment\InstamojoService;
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -19,6 +23,7 @@ use Carbon\Carbon;
 use Instamojo\Instamojo;
 use Razorpay\Api\Api;
 use App\Models\PaymentGateway;
+use Mail;
 
 
 class LandingPageController extends Controller
@@ -185,6 +190,12 @@ class LandingPageController extends Controller
             $incomeData['income_category_id'] = 1;
             $income = Income::create($incomeData);
 
+            $userdetails = UserDetail::where('user_id',auth()->id())->first();
+            $user = User::where('id',auth()->id())->first();
+            $customers = Customer::where('user_id',auth()->id())->first();
+
+            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$product,$productData));
+
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
         } catch (\Exception $e) {
             return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', $e->getMessage());
@@ -302,6 +313,12 @@ class LandingPageController extends Controller
             $incomeData['description'] = 'Payment from Invoice';
             $incomeData['income_category_id'] = 1;
             $income = Income::create($incomeData);
+
+            $userdetails = UserDetail::where('user_id',auth()->id())->first();
+            $user = User::where('id',auth()->id())->first();
+            $customers = Customer::where('user_id',auth()->id())->first();
+
+            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$product,$productData));
 
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
         } else {
