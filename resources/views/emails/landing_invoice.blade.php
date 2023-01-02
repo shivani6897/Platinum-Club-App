@@ -3,7 +3,7 @@
 <html>
 
 <head>
-    <title>Payment Receipt</title>
+    <title>Invoice</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/html2pdf.js/0.9.1/html2pdf.bundle.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.1/html2pdf.bundle.min.js"></script>
@@ -183,7 +183,8 @@
 <div class="container container-padding card">
     <div  id="element-to-print">
         <div class="head-title">
-            <h1 class="text-center m-0 p-0">Payment Receipt</h1><hr>
+            <h1 class="text-center m-0 p-0">Paymentz.ai</h1><hr>
+            <h6 class="text-center m-0 p-0">Invoice</h6><hr>
         </div>
         <div class="add-detail mt-10">
             <div class="rounded-lg p-5 bg-white">
@@ -304,15 +305,17 @@
                         </thead>
                         <tbody>
 {{--                        @dd($products)--}}
-                        @if(!empty($product))
-                            @foreach($product as $single_product)
-                                <tr>
-                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$single_product?->name}}</td>
-                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$single_product?->qty}}</td>
-                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$single_product?->price}}</td>
-                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">{{$single_product?->price * $products?->qty}}</td>
-                                </tr>
-                            @endforeach
+                            @if(!empty($products))
+                                {{--                            @dd($products?->name)--}}
+                                @foreach($products as $product)
+                                    {{--                                @dd($product?->name)--}}
+                                    <tr>
+                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$product?->name}}</td>
+                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$product?->qty}}</td>
+                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$product?->price}}</td>
+                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">{{$product?->price * $product?->qty}}</td>
+                                    </tr>
+                                @endforeach
                             @else
                                 <tr>
                                     <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$product->name}} [ EMI {{$data['emi']}} ]</td>
@@ -320,7 +323,7 @@
                                     <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{number_format($data['subtotal'],2)}}</td>
                                     <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">{{number_format($data['subtotal'],2)}}</td>
                                 </tr>
-                        @endif
+                            @endif
                         </tbody>
                     </table>
                 </div>
@@ -381,23 +384,6 @@
         </div>
     </div>
 </div>
-
-
-<script>
-    function createPDF() {
-        var element = document.getElementById('element-to-print');
-        html2pdf(element, {
-            margin:1,
-            padding:0,
-            filename: 'Payment Receipt.pdf',
-            image: { type: 'jpeg', quality: 1 },
-            html2canvas: { scale: 2,  logging: true },
-            jsPDF: { unit: 'in', format: 'A4', orientation: 'P' },
-            class: createPDF
-        });
-    };
-
-</script>
 
 </body>
 </html>

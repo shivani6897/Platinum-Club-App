@@ -167,4 +167,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/user-authorized_contact/', [UserDetailsController::class, 'authorizeContact'])->name('user.authorizedContact');
     Route::post('/user-authorized_contact/post/', [UserDetailsController::class, 'postAuthorizeContact'])->name('user.authorizeContact.post');
+
+    Route::get('/offlinepayments/', [UserDetailsController::class, 'create'])->name('offlinepayments.create');
+    Route::post('/offlinepayments/post/', [UserDetailsController::class, 'store'])->name('user.profile.post')->name('offlinepayments.store');
+
+
 });

@@ -193,8 +193,9 @@ class LandingPageController extends Controller
             $userdetails = UserDetail::where('user_id',auth()->id())->first();
             $user = User::where('id',auth()->id())->first();
             $customers = Customer::where('user_id',auth()->id())->first();
+            $products = Product::where('id',$product)->get();
 
-            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$product,$productData));
+            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData));
 
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
         } catch (\Exception $e) {
@@ -317,8 +318,10 @@ class LandingPageController extends Controller
             $userdetails = UserDetail::where('user_id',auth()->id())->first();
             $user = User::where('id',auth()->id())->first();
             $customers = Customer::where('user_id',auth()->id())->first();
+            $products = Product::where('id',$product)->get();
+//            dd($products);
 
-            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$product,$productData));
+            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData));
 
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
         } else {

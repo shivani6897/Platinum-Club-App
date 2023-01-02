@@ -12,20 +12,20 @@ use Illuminate\Queue\SerializesModels;
 class LandingInvoiceMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $userdetails, $user,$customer,$productData, $product;
+    public $userdetails, $user,$customer,$productData, $products;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($invoiceData,$userdetails, $user,$customer,$product,$productData)
+    public function __construct($invoiceData,$userdetails, $user,$customer,$products,$productData)
     {
         $this->invoiceData = $invoiceData;
         $this->customer = $customer;
         $this->userdetails = $userdetails;
         $this->user = $user;
-        $this->product = $product;
+        $this->products = $products;
         $this->productData = $productData;
     }
 
@@ -55,7 +55,7 @@ class LandingInvoiceMail extends Mailable
                 'customer' => $this->customer,
                 'userdetails' => $this->userdetails,
                 'user' => $this->user,
-                'product' => $this->product,
+                'products' => $this->products,
                 'productData' => $this->productData,
             ],
         );

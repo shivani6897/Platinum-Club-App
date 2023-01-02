@@ -241,8 +241,9 @@ class SubscriptionController extends Controller
             $userdetails = UserDetail::where('user_id',auth()->id())->first();
             $user = User::where('id',auth()->id())->first();
             $customer = Customer::where('user_id',auth()->id())->first();
+            $products = Product::where('id',$rinvoice->product_id)->get();
 
-            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customer,$product,$productData));
+            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customer,$products,$productData));
 
 
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
@@ -379,8 +380,9 @@ class SubscriptionController extends Controller
         $userdetails = UserDetail::where('user_id',auth()->id())->first();
         $user = User::where('id',auth()->id())->first();
         $customers = Customer::where('user_id',auth()->id())->first();
+        $products = Product::where('id',$rinvoice->product_id)->get();
 
-        Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$product,$productData));
+        Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData));
 
 
         return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');

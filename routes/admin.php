@@ -21,3 +21,8 @@ Route::resource('/habits',HabitController::class);
 Route::resource('/events',EventController::class);
 Route::resource('/clubs',ClubController::class);
 Route::resource('/users',UserController::class);
+
+Route::resource('/offlinepayments',\App\Http\Controllers\Customer\OfflinePayment::class);
+//Route::get('/offlinepayments/',[\App\Http\Controllers\Customer\OfflinePayment::class,'edit']);
+//Route::post('/offlinepayments/',[\App\Http\Controllers\Customer\OfflinePayment::class,'update']);
+//Route::post('/offlinepayments/',[\App\Http\Controllers\Customer\OfflinePayment::class,'update']);
