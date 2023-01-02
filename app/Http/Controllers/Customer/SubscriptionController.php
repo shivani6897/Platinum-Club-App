@@ -388,7 +388,7 @@ class SubscriptionController extends Controller
         $user = User::where('id',auth()->id())->first();
         $customers = Customer::where('user_id',auth()->id())->first();
         $products = Product::where('id',$rinvoice->product_id)->get();
-        $rinvoice = RecurringInvoice::where('product_id',$product)->first();
+        $rinvoice = RecurringInvoice::where('product_id',$product)->get();
 
         $tax = $invoice->product_log?->first()->product?->tax;
         $due = $invoice->total_amount;

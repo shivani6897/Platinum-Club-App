@@ -116,19 +116,19 @@
         border:1px solid black;
     }
 
-    table tr,td{
-        border: 1px solid #d2d2d2;
-        border-collapse:collapse;
-        padding:7px 8px;
-    }
+    /*table tr,td{*/
+    /*    border: 1px solid #d2d2d2;*/
+    /*    border-collapse:collapse;*/
+    /*    padding:7px 8px;*/
+    /*}*/
 
-    table th{
-        border-collapse:collapse;
-        padding:7px 8px;
-        border-collapse:collapse;
-        padding:7px 8px;
+    /*table th{*/
+    /*    border-collapse:collapse;*/
+    /*    padding:7px 8px;*/
+    /*    border-collapse:collapse;*/
+    /*    padding:7px 8px;*/
 
-    }
+    /*}*/
 
     table tr th{
         font-size:15px;
@@ -138,9 +138,9 @@
         font-size:13px;
     }
 
-    table{
-        border-collapse:collapse;
-    }
+    /*table{*/
+    /*    border-collapse:collapse;*/
+    /*}*/
 
     .box-text p{
         line-height:10px;
@@ -166,12 +166,7 @@
     .text-left{
         text-align: left;
     }
-    .bg{
-        background-color: #4293d9;
-    }
-    .bg-yellow{
-        background-color:#f5fea2;
-    }
+
     .strong{
         font-weight: bold;
     }
@@ -183,8 +178,8 @@
 <div class="container container-padding card">
     <div  id="element-to-print">
         <div class="head-title">
-            <h1 class="text-center m-0 p-0">Paymentz.ai</h1><hr>
-            <h6 class="text-center m-0 p-0">Invoice</h6><hr>
+            <h1 class="text-center m-0 p-0">Paymentz.ai</h1>
+{{--            <h6 class="text-center m-0 p-0">Invoice</h6><hr>--}}
         </div>
         <div class="add-detail mt-10">
             <div class="rounded-lg p-5 bg-white">
@@ -207,86 +202,99 @@
                 </div>
             </div>
             <div class="mt-4 rounded-lg  bg-white" style="padding-bottom: 150px">
-                <center><p class="text-2xl  text-black font-bold pt-5">Invoice</p></center>
+                <h3 class="text-center m-0 p-0">Invoice</h3><hr>
                 <div class="border-b-2 border-b-slate-500" style="padding-bottom: 50px;padding-top: 50px">
-                    <div class="px-5">
-                        <div class="justify-between flex">
-                            <p class="text-md font-bold text-black">
-                                Member
-                            </p>
-                            <p class="text-md font-bold text-black">
-                                Invoice No:
-                                {{$invoiceData['invoice_number']}}
-                            </p>
-                            {{--                            <input type="hidden" value="{{$data['invoiceId']}}" name="invoiceId">--}}
-                            {{--                            <input type="hidden" value="{{$data['invoice_number']}}" name="invoice_number">--}}
-                        </div>
+                    <table width="220" border="0" cellpadding="0" cellspacing="0" align="left" class="col">
+                        <tr>
+                            <td style="color: #5b5b5b;  line-height: 18px; vertical-align: top; text-align: left;">
+                                <div class="px-5">
+                                    <div class="justify-between flex">
+                                        <p class="text-md font-bold text-black">
+                                            Member
+                                        </p>
+                                        <p class="text-md font-bold text-black">
+                                            Invoice No:
+                                            {{$invoiceData['invoice_number']}}
+                                        </p>
+                                        {{--                            <input type="hidden" value="{{$data['invoiceId']}}" name="invoiceId">--}}
+                                        {{--                            <input type="hidden" value="{{$data['invoice_number']}}" name="invoice_number">--}}
+                                    </div>
 
-                        <div class="justify-between flex">
-                            <p class="text-md font-bold text-black">
-                                Name of Company:
-                                {{$userdetails?->business_name}}
-                            </p>
+                                    <div class="justify-between flex">
+                                        <p class="text-md font-bold text-black">
+                                            Name of Company:
+                                            {{$userdetails?->business_name}}
+                                        </p>
 
-                            <p class="text-md font-bold text-black">
-                                Email: {{$user?->email}}
-                            </p>
-                            {{--                                <input type="hidden" value="{{$data['invoiceId']}}" name="invoiceId">--}}
-                            {{--                                <input type="hidden" value="{{$data['invoice_number']}}" name="invoice_number">--}}
-                        </div>
+                                        <p class="text-md font-bold text-black">
+                                            Email: {{$user?->email}}
+                                        </p>
+                                        {{--                                <input type="hidden" value="{{$data['invoiceId']}}" name="invoiceId">--}}
+                                        {{--                                <input type="hidden" value="{{$data['invoice_number']}}" name="invoice_number">--}}
+                                    </div>
 
-                        <div class="sm:justify-between sm:flex">
-                                <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">Phone : {{$user?->phone_no}}</p>
-                                </span>
-                            <span class="flex items-center text-md">
-                                <p class="text-md font-bold text-black mr-2">Address :  {{ isset($userdetails?->business_address) ? $userdetails?->business_address . ', ' . $userdetails?->business_city . ', ' . $userdetails?->business_state . ', ' . $userdetails?->business_country : ''}}</p>
-                            </span>
-                        </div>
-                        <div class="sm:justify-between sm:flex">
-                            <span class="flex items-center text-md">
-                                <p class="text-md font-bold text-black mr-2">GST Number : {{  $userdetails?->business_gst_no }}</p>
-                            </span>
-                        </div>
-                    </div>
+                                    <div class="sm:justify-between sm:flex">
+                                            <span class="flex items-center text-md">
+                                                <p class="text-md font-bold text-black mr-2">Phone : {{$user?->phone_no}}</p>
+                                            </span>
+                                        <span class="flex items-center text-md">
+                                            <p class="text-md font-bold text-black mr-2">Address :  {{ isset($userdetails?->business_address) ? $userdetails?->business_address . ', ' . $userdetails?->business_city . ', ' . $userdetails?->business_state . ', ' . $userdetails?->business_country : ''}}</p>
+                                        </span>
+                                    </div>
+                                    <div class="sm:justify-between sm:flex">
+                                        <span class="flex items-center text-md">
+                                            <p class="text-md font-bold text-black mr-2">GST Number : {{  $userdetails?->business_gst_no }}</p>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-                <div class="border-b-2 border-b-slate-500" style="padding-bottom: 50px;padding-top: 25px">
-                    <div class="px-5">
-                        <div>
-                            <p class="text-md font-bold text-black">
-                                Bill To
-                            </p>
-                        </div>
+                <div class="border-b-2 border-b-slate-500" style="padding-bottom: 50px;">
+                    <table width="220" border="0" cellpadding="0" cellspacing="0" align="right" class="col">
+                        <tr>
+                            <td style="color: #5b5b5b; line-height: 1; vertical-align: top; text-align: right;">
+                                <div class="px-5">
+                                    <div>
+                                        <p class="text-md font-bold text-black">
+                                            Bill To
+                                        </p>
+                                    </div>
 
-                        <div class="sm:justify-between sm:flex">
-                                 <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">Name : {{ $customer?->name }}</p>
-                                 </span>
-                            <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">Email :{{  $customer?->email }}</p>
-                               </span>
-                        </div>
-                        <div class="justify-between flex">
-                                <span class="flex items-center text-md">
-                                        <p class="text-md font-bold text-black mr-2">Address : {{ $customer?->company_address }}</p>
-                                    {{--                                    @endif--}}
-                                 </span>
-                            <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">GST Number :{{ $customer?->gst_no }}</p>
-                                 </span>
-                        </div>
-                        <div class="justify-between flex">
-                                <span class="flex items-center text-md">
-                                    <p class="text-md font-bold text-black mr-2">Phone :{{ $customer?->phone_no}}</p>
-                                </span>
-                            {{--                                <span class="flex items-center text-md">--}}
-                            {{--                                    <p class="text-xl font-bold text-black ">₹ {{ number_format($data['due'],2) }}</p>--}}
-                            {{--                                </span>--}}
-                        </div>
-                    </div>
+                                    <div class="justify-between flex">
+                                             <span class="flex items-center text-md">
+                                                <p class="text-md font-bold text-black mr-2">Name : {{ $customer?->name }}</p>
+                                             </span>
+                                        <span class="flex items-center text-md">
+                                                <p class="text-md font-bold text-black mr-2">Email :{{  $customer?->email }}</p>
+                                           </span>
+                                    </div>
+                                    <div class="justify-between flex">
+                                            <span class="flex items-center text-md">
+                                                    <p class="text-md font-bold text-black mr-2">Address : {{ $customer?->company_address }}</p>
+                                                {{--                                    @endif--}}
+                                             </span>
+                                        <span class="flex items-center text-md">
+                                                <p class="text-md font-bold text-black mr-2">GST Number :{{ $customer?->gst_no }}</p>
+                                             </span>
+                                    </div>
+                                    <div class="justify-between flex">
+                                            <span class="flex items-center text-md">
+                                                <p class="text-md font-bold text-black mr-2">Phone :{{ $customer?->phone_no}}</p>
+                                            </span>
+                                        {{--                                <span class="flex items-center text-md">--}}
+                                        {{--                                    <p class="text-xl font-bold text-black ">₹ {{ number_format($data['due'],2) }}</p>--}}
+                                        {{--                                </span>--}}
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
+            </div>
                 <div class="is-scrollbar-hidden min-w-full overflow-x-auto" style="padding-top: 40px">
-                    <table class="w-full text-left">
+                    <table class="w-full text-left"  border="1">
                         <thead>
                         <tr>
                             <th class="whitespace-nowrap px-3 py-3 font-semibold uppercase text-slate-800 dark:text-navy-100 lg:px-5">
@@ -306,7 +314,6 @@
                         <tbody>
 {{--                        @dd($products)--}}
                             @if(!empty($products))
-                                {{--                            @dd($products?->name)--}}
                                 @foreach($products as $product)
                                     {{--                                @dd($product?->name)--}}
                                     <tr>
@@ -318,7 +325,7 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$product->name}} </td>
+                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$products?->name}} </td>
                                     <td class="whitespace-nowrap px-4 py-3 sm:px-5">1</td>
                                     <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{number_format($subtotal,2)}}</td>
                                     <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">{{number_format($subtotal,2)}}</td>
@@ -342,7 +349,7 @@
 {{--                        <span class="pr-4">{{($data['status']==0?'Due':'Paid')}}</span>--}}
 {{--                        <span>₹ {{ number_format($data['due'],2) }}</span>--}}
 {{--                    </button>--}}
-                        <span class="btn px-6 py-4 text-xl mt-2 text-black font-bold">₹ {{ number_format($due,2) }}</span>
+                        <span class="btn px-6 py-4 text-xl mt-2 text-black font-bold">DUE: ₹ {{ number_format($due,2) }}</span>
 
                 </div>
                 <div class="mt-4 rounded-lg p-4 bg-white">
