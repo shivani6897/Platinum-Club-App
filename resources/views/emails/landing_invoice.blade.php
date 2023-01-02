@@ -318,32 +318,33 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$product->name}} [ EMI {{$data['emi']}} ]</td>
+                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$product->name}} </td>
                                     <td class="whitespace-nowrap px-4 py-3 sm:px-5">1</td>
-                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{number_format($data['subtotal'],2)}}</td>
-                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">{{number_format($data['subtotal'],2)}}</td>
+                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{number_format($subtotal,2)}}</td>
+                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">{{number_format($subtotal,2)}}</td>
                                 </tr>
                             @endif
                         </tbody>
                     </table>
                 </div>
-                {{--                <div class="float-right pr-5">--}}
-                {{--                       <span class="flex items-center flex justify-end text-md">--}}
-                {{--                           <p class="text-md text-black mr-4">Subtotal :</p> {{ number_format($data['subtotal'],2) }}--}}
-                {{--                       </span>--}}
-                {{--                    <span class="flex items-center text-md flex justify-end">--}}
-                {{--                           <p class="text-md text-black mr-4">GST {{ $data['tax']? number_format($data['due'],2): '0' }}%:</p> {{ number_format($data['due']-$data['subtotal'],2) }}--}}
-                {{--                       </span>--}}
-                {{--                    <span class="flex items-center text-md font-bold text-black justify-end">--}}
-                {{--                           <p class="text-md text-black mr-4 font-bold">Total :</p> {{ number_format($data['due'],2) }}--}}
-                {{--                       </span>--}}
-                {{--                    <button disabled class="btn px-6 py-4 text-xl mt-2 text-black font-bold"--}}
-                {{--                            style="background-color: {{($data['status']==0?'#FFD2D2':'#d2ffea')}}">--}}
-                {{--                        <span class="pr-4">{{($data['status']==0?'Due':'Paid')}}</span>--}}
-                {{--                        <span>₹ {{ number_format($data['due'],2) }}</span>--}}
-                {{--                    </button>--}}
-                {{--                </div>--}}
-                {{--            </div>--}}
+                <div class="float-right pr-5">
+                   <span class="flex items-center flex justify-end text-md">
+                       <p class="text-md text-black mr-4">Subtotal : {{ number_format($subtotal,2) }}</p>
+                   </span>
+                    <span class="flex items-center text-md flex justify-end">
+                           <p class="text-md text-black mr-4">GST {{ $tax? number_format($due,2): '0' }}%: {{ number_format($due-$subtotal,2) }}</p>
+                       </span>
+                    <span class="flex items-center text-md font-bold text-black justify-end">
+                           <p class="text-md text-black mr-4 font-bold">Total : {{ number_format($due,2) }}</p>
+                       </span>
+{{--                    <button disabled class="btn px-6 py-4 text-xl mt-2 text-black font-bold"--}}
+{{--                            style="background-color: {{($data['status']==0?'#FFD2D2':'#d2ffea')}}">--}}
+{{--                        <span class="pr-4">{{($data['status']==0?'Due':'Paid')}}</span>--}}
+{{--                        <span>₹ {{ number_format($data['due'],2) }}</span>--}}
+{{--                    </button>--}}
+                        <span class="btn px-6 py-4 text-xl mt-2 text-black font-bold">₹ {{ number_format($due,2) }}</span>
+
+                </div>
                 <div class="mt-4 rounded-lg p-4 bg-white">
                     <center><p class="text-2xl font-bold pt-5">Product Description</p></center>
                     @if(!empty($products))
@@ -362,20 +363,20 @@
                                 </div>
                             </div>
                         @endforeach
-                        {{--                    @else--}}
-                        {{--                        <div>--}}
-                        {{--                            <h2 class="text-2xl  text-black font-bold pt-5">{{$data['product']->name}}</h2>--}}
-                        {{--                            <div class="grid md:grid-cols-2 gap-4 mt-4 p-4">--}}
-                        {{--                                <div class=" flex justify-center">--}}
-                        {{--                                    @if(!empty($data['product']->image))--}}
-                        {{--                                        <img src="{{asset('images/products/'.$data['product']->image)}}" alt="{{$data['product']->name}} Image">--}}
-                        {{--                                    @endif--}}
-                        {{--                                </div>--}}
-                        {{--                                <div class="mt-3">--}}
-                        {{--                                    {!! $data['product']->description !!}--}}
-                        {{--                                </div>--}}
-                        {{--                            </div>--}}
-                        {{--                        </div>--}}
+                        @else
+                            <div>
+                                <h2 class="text-2xl  text-black font-bold pt-5">{{$products->name}}</h2>
+                                <div class="grid md:grid-cols-2 gap-4 mt-4 p-4">
+                                    <div class=" flex justify-center">
+                                        @if(!empty($products->image))
+                                            <img src="{{asset('images/products/'.$products->image)}}" alt="{{$products->name}} Image">
+                                        @endif
+                                    </div>
+                                    <div class="mt-3">
+                                        {!! $products->description !!}
+                                    </div>
+                                </div>
+                            </div>
                     @endif
                 </div>
 

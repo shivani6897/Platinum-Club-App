@@ -12,14 +12,15 @@ use Illuminate\Queue\SerializesModels;
 class LandingInvoiceMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $userdetails, $user,$customer,$productData, $products;
+    public $userdetails, $user,$customer,$productData, $products,$subtotal,$emi,$tax,$due;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($invoiceData,$userdetails, $user,$customer,$products,$productData)
+    public function __construct($invoiceData,$userdetails, $user,$customer,$products,$productData,$subtotal,$tax,$due)
+//    public function __construct($invoiceData,$userdetails, $user,$customer,$products,$productData,$subtotal,$emi,$tax,$due)
     {
         $this->invoiceData = $invoiceData;
         $this->customer = $customer;
@@ -27,6 +28,10 @@ class LandingInvoiceMail extends Mailable
         $this->user = $user;
         $this->products = $products;
         $this->productData = $productData;
+        $this->subtotal = $subtotal;
+//        $this->emi = $emi;
+        $this->tax = $tax;
+        $this->due = $due;
     }
 
     /**
@@ -37,7 +42,7 @@ class LandingInvoiceMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Landing Invoice Mail',
+            subject: 'Invoice Mail',
         );
     }
 
@@ -57,6 +62,10 @@ class LandingInvoiceMail extends Mailable
                 'user' => $this->user,
                 'products' => $this->products,
                 'productData' => $this->productData,
+                'subtotal' => $this->subtotal,
+//                'emi' => $this->emi,
+                'tax' => $this->tax,
+                'due' => $this->due,
             ],
         );
     }

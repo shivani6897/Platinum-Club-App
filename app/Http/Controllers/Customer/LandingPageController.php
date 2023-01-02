@@ -190,12 +190,19 @@ class LandingPageController extends Controller
             $incomeData['income_category_id'] = 1;
             $income = Income::create($incomeData);
 
+
             $userdetails = UserDetail::where('user_id',auth()->id())->first();
             $user = User::where('id',auth()->id())->first();
             $customers = Customer::where('user_id',auth()->id())->first();
             $products = Product::where('id',$product)->get();
+            $rinvoice = RecurringInvoice::where('product_id',$product)->first();
 
-            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData));
+            $tax = $invoice->product_log?->first()->product?->tax;
+            $due = $invoice->total_amount;
+            $subtotal = $due * 100 / (100 + $tax);
+//            $emi = $rinvoice->paid_emis + 1;
+
+            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData,$subtotal,$tax,$due));
 
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
         } catch (\Exception $e) {
@@ -319,9 +326,16 @@ class LandingPageController extends Controller
             $user = User::where('id',auth()->id())->first();
             $customers = Customer::where('user_id',auth()->id())->first();
             $products = Product::where('id',$product)->get();
-//            dd($products);
+//            $rinvoice = RecurringInvoice::where('product_id',$product)->first();
 
-            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData));
+            $tax = $invoice->product_log?->first()->product?->tax;
+//            dd($tax);
+            $due = $invoice->total_amount;
+            $subtotal = $due * 100 / (100 + $tax);
+//            $emi = $rinvoice->paid_emis + 1;
+
+
+            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData,$subtotal,$tax,$due));
 
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
         } else {
