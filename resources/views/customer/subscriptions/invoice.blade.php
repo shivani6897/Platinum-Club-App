@@ -63,7 +63,7 @@
                                 ₹ {{number_format($data['due'],2)}}
                             </p>
                         </div>
-                        @if($data['status']==0)
+                        @if($data['status']==0 && $data['emi']<$data['total_emis'])
                         <a href="{{route('invoices.payment.page',['id'=>$id,'invoiceId'=>$invoiceId,'rinvoiceId'=>$rinvoiceId,'amount'=>$data['due']])}}" class="btn bg-green-400 font-medium text-white py-2 px-5 rounded-lg text-md">
                             Pay Now
                         </a>
