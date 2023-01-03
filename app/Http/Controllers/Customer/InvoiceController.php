@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Customer;
 use App\Http\Controllers\Controller;
 use App\Mail\InvoiceMail;
 use App\Models\Income;
+use App\Models\RecurringInvoice;
 use App\Models\User;
 use App\Models\UserDetail;
 use Carbon\Carbon;
@@ -270,4 +271,34 @@ class InvoiceController extends Controller
         // And return invoice itself to browser or have a different view
         return $invoicePDF->stream();
     }
+
+
+    public function userDetails(Request $request,$customers){
+        $input = $request->all();
+        $customer = Customer::where('user_id',auth()->id())->get(['id'])->pluck('id')->toArray();
+        $invoices = Invoice::with('customer')
+            ->whereIn('customer_id',$customer)
+            ->where(function ($query) use ($input) {
+                if(isset($input['search'])){
+                    $query->where(function ($q) use ($input) {
+//                        $q->orWhere('name', 'Like', '%' . $input['search'] . '%')
+                        $q->orWhere('invoice_number', 'Like', '%' . $input['search'] . '%')
+                            ->orWhere('total_amount', 'Like', '%' . $input['search'] . '%');
+//                            ->orWhere('sales.paid_amount', 'Like', '%' . $input['search'] . '%')
+                    });
+                }
+            })
+            ->latest()
+            ->paginate(10);
+
+        $rinvoices = RecurringInvoice::with(['invoices', 'customer'])
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->paginate(10);
+
+        $customer_data = Customer::where('user_id', auth()->id())->first();
+
+        return view('customer.invoice.user_detail',compact('invoices','rinvoices','customer_data'));
+    }
+
 }

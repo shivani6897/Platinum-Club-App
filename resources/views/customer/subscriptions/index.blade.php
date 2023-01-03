@@ -115,7 +115,11 @@
                              <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $rinvoice->invoices->last()?->invoice_number }} </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $rinvoice->customer?->name }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">
+                                    <a href="{{ route('customer.subscription.details',$rinvoice->customer->id) }}">
+                                        {{ $rinvoice->customer?->name }}
+                                    </a>
+                                </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->downpayment}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->product->price}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->pending}} </td>

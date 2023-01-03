@@ -237,6 +237,7 @@
                                             <span class="flex items-center text-md">
                                                 <p class="text-md font-bold text-black mr-2">Phone : {{$user?->phone_no}}</p>
                                             </span>
+                                            </span>
                                         <span class="flex items-center text-md">
                                             <p class="text-md font-bold text-black mr-2">Address :  {{ isset($userdetails?->business_address) ? $userdetails?->business_address . ', ' . $userdetails?->business_city . ', ' . $userdetails?->business_state . ', ' . $userdetails?->business_country : ''}}</p>
                                         </span>
@@ -263,26 +264,15 @@
                                     </div>
 
                                     <div class="justify-between flex">
-                                             <span class="flex items-center text-md">
-                                                <p class="text-md font-bold text-black mr-2">Name : {{ $customer?->name }}</p>
-                                             </span>
-                                        <span class="flex items-center text-md">
-                                                <p class="text-md font-bold text-black mr-2">Email :{{  $customer?->email }}</p>
-                                           </span>
+                                        <p class="text-md font-bold text-black mr-2">Name : {{ $customer?->name }}</p>
+                                        <p class="text-md font-bold text-black mr-2">Email :{{  $customer?->email }}</p>
                                     </div>
                                     <div class="justify-between flex">
-                                            <span class="flex items-center text-md">
-                                                    <p class="text-md font-bold text-black mr-2">Address : {{ $customer?->company_address }}</p>
-                                                {{--                                    @endif--}}
-                                             </span>
-                                        <span class="flex items-center text-md">
-                                                <p class="text-md font-bold text-black mr-2">GST Number :{{ $customer?->gst_no }}</p>
-                                             </span>
+                                        <p class="text-md font-bold text-black mr-2">Address : {{ $customer?->company_address }}</p>
+                                        <p class="text-md font-bold text-black mr-2">GST Number :{{ $customer?->gst_no }}</p>
                                     </div>
                                     <div class="justify-between flex">
-                                            <span class="flex items-center text-md">
-                                                <p class="text-md font-bold text-black mr-2">Phone :{{ $customer?->phone_no}}</p>
-                                            </span>
+                                        <p class="text-md font-bold text-black mr-2">Phone :{{ $customer?->phone_no}}</p>
                                         {{--                                <span class="flex items-center text-md">--}}
                                         {{--                                    <p class="text-xl font-bold text-black ">₹ {{ number_format($data['due'],2) }}</p>--}}
                                         {{--                                </span>--}}

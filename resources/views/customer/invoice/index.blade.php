@@ -100,7 +100,11 @@
                              <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->invoice_number }} </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->customer->name }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">
+                                    <a href="{{ route('customer.invoice.details',$invoice->customer->id) }}">
+                                        {{ $invoice->customer->name }}
+                                    </a>
+                                </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $invoice->total_amount}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ isset($invoice->customer->gst_no) ? $invoice->customer->gst_no : '-' }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >

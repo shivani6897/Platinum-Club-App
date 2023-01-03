@@ -563,4 +563,35 @@ class SubscriptionController extends Controller
 
         return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
     }
+
+    public function userDetails(Request $request,$customers){
+        $input = $request->all();
+        $customer = Customer::where('user_id',auth()->id())->get(['id'])->pluck('id')->toArray();
+        $invoices = Invoice::with('customer')
+            ->whereIn('customer_id',$customer)
+            ->where(function ($query) use ($input) {
+                if(isset($input['search'])){
+                    $query->where(function ($q) use ($input) {
+//                        $q->orWhere('name', 'Like', '%' . $input['search'] . '%')
+                        $q->orWhere('invoice_number', 'Like', '%' . $input['search'] . '%')
+                            ->orWhere('total_amount', 'Like', '%' . $input['search'] . '%');
+//                            ->orWhere('sales.paid_amount', 'Like', '%' . $input['search'] . '%')
+                    });
+                }
+            })
+            ->latest()
+            ->paginate(10);
+
+        $rinvoices = RecurringInvoice::with(['invoices', 'customer'])
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->paginate(10);
+
+        $customer_data = Customer::where('user_id', auth()->id())->first();
+
+        return view('customer.subscriptions.user_detail',compact('invoices','rinvoices','customer_data'));
+    }
+
 }
+
+

@@ -22,7 +22,8 @@ Route::resource('/events',EventController::class);
 Route::resource('/clubs',ClubController::class);
 Route::resource('/users',UserController::class);
 
-Route::resource('/offlinepayments',\App\Http\Controllers\Customer\OfflinePayment::class);
-//Route::get('/offlinepayments/',[\App\Http\Controllers\Customer\OfflinePayment::class,'edit']);
-//Route::post('/offlinepayments/',[\App\Http\Controllers\Customer\OfflinePayment::class,'update']);
-//Route::post('/offlinepayments/',[\App\Http\Controllers\Customer\OfflinePayment::class,'update']);
+//Route::resource('/offlinepayments',\App\Http\Controllers\Customer\OfflinePaymentController::class);
+Route::get('/offlinepayments',[\App\Http\Controllers\Customer\OfflinePaymentController::class,'index'])->name('offlinepayments.index');
+Route::get('/offlinepayments/{invoices}/edit',[\App\Http\Controllers\Customer\OfflinePaymentController::class,'edit'])->name('offlinepayments.edit');
+Route::match(['put', 'patch'],'/offlinepayments/{invoices}/',[\App\Http\Controllers\Customer\OfflinePaymentController::class,'update'])->name('offlinepayments.update');
+Route::delete('/offlinepayments/{invoices}/destroy',[\App\Http\Controllers\Customer\OfflinePaymentController::class,'destroy'])->name('offlinepayments.destroy');
