@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('heading', 'Invoices')
+@section('heading', 'Offline Collection')
 @section('breadcrums')
     <div class="hidden h-full py-1 sm:flex">
         <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
@@ -28,7 +28,7 @@
                 />
             </svg>
         </li>
-        <li>Offline Payment</li>
+        <li>Offline Collection</li>
     </ul>
 @endsection
 
@@ -40,7 +40,7 @@
                 <h2
                     class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"
                 >
-                    Offline Payment Table
+                    Offline Collection Table
                 </h2>
                 <div class="flex">
                     <div class="flex items-center" x-data="{isInputActive:false}">

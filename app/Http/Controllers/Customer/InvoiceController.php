@@ -274,25 +274,31 @@ class InvoiceController extends Controller
 
 
     public function userDetails(Request $request,$customers){
-        $input = $request->all();
-        $customer = Customer::where('user_id',auth()->id())->get(['id'])->pluck('id')->toArray();
         $invoices = Invoice::with('customer')
-            ->whereIn('customer_id',$customer)
-            ->where(function ($query) use ($input) {
-                if(isset($input['search'])){
-                    $query->where(function ($q) use ($input) {
-//                        $q->orWhere('name', 'Like', '%' . $input['search'] . '%')
-                        $q->orWhere('invoice_number', 'Like', '%' . $input['search'] . '%')
-                            ->orWhere('total_amount', 'Like', '%' . $input['search'] . '%');
-//                            ->orWhere('sales.paid_amount', 'Like', '%' . $input['search'] . '%')
-                    });
-                }
+            ->where('customer_id',$customers)
+            ->when(request('search'),function($q) use($customers){
+                $q->where(function($q2){
+                    $q2->where('invoice_number', 'LIKE', '%' . request('search').'%')
+                        ->orWhereHas('customer',function($q3){
+                            $q3->where('gst_no','LIKE','%'.request('search').'%');
+                        })
+                        ->orWhere('total_amount','LIKE','%'.request('search').'%');
+                });
             })
             ->latest()
             ->paginate(10);
 
         $rinvoices = RecurringInvoice::with(['invoices', 'customer'])
-            ->where('user_id', auth()->id())
+            ->where('customer_id',$customers)
+            ->when(request('search'),function($q) use($customers){
+                    $q->orWhereHas('invoices',function($q2){
+                        $q2->where('invoice_number','LIKE','%'.request('search').'%')
+                            ->orWhere('total_amount','LIKE','%'.request('search').'%');
+                    })
+                    ->orWhereHas('customer',function($q3){
+                        $q3->where('gst_no','LIKE','%'.request('search').'%');
+                    });
+            })
             ->latest()
             ->paginate(10);
 

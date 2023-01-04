@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('heading', 'My Business')
+@section('heading', 'Invoices')
 
 @section('breadcrums')
     <div class="hidden h-full py-1 sm:flex">

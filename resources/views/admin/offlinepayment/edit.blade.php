@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('heading', 'Invoice Edit')
+@section('heading', 'Offline Collection Edit')
 
 @section('breadcrums')
 
@@ -32,7 +32,7 @@
             <a
                 class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
                 href="{{ route('admin.offlinepayments.index') }}"
-            >Offline Payment</a
+            >Offline Collection</a
             >
             <svg
                 x-ignore
