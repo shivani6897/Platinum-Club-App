@@ -43,14 +43,109 @@ class LandingPageController extends Controller
 
     public function payInstamojo(Request $request, $id)
     {
-        $gateway = PaymentGateway::where('user_id', $id)->firstOrFail();
-        $product = Product::findOrFail($request->product_id);
-        try {
-            $redirectUrl = InstamojoService::process($request, $id, $gateway, $product);
-            return redirect($redirectUrl);
-        } catch (\Exception $e) {
-            return back();
+        if($request->gateway){
+            $gateway = PaymentGateway::where('user_id', $id)->firstOrFail();
+            $product = Product::findOrFail($request->product_id);
+            try {
+                $redirectUrl = InstamojoService::process($request, $id, $gateway, $product);
+                return redirect($redirectUrl);
+            } catch (\Exception $e) {
+                return back();
+            }
+        }else{
+            try{
+                $customer = Customer::updateOrCreate([
+                    'email' => $request->email,
+                ], [
+                    'name' => $request->first_name . ' ' . $request->last_name,
+                    'phone_no' => $request->phone_no,
+                    'state' => '',
+                ]);
+
+                // Store Details after payment success
+                $invoiceData = $request->only([
+                    'customer_id',
+                    'description',
+                    'payment_method'
+                ]);
+                $invoiceData['customer_id'] = $customer->id;
+                $invoiceData['invoice_number'] = date('Ymd') . rand(10000, 99999);
+                $invoiceData['total_amount'] = 0;
+                $invoiceData['payment_method'] = 0;
+                $invoiceData['status'] = 1;
+                $invoice = Invoice::create($invoiceData);
+
+                //Create Product Log and calculate total amount
+                $productData = [];
+                $total = 0;
+
+                $product = Product::find($request->product_id);
+                $productData[] = [
+                    'product_id' => $product->id,
+                    'invoice_id' => $invoice->id,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'qty' => 1,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+                $productLog = ProductLog::insert($productData);
+
+                $defaultData = [
+                    'user_id' => $id,
+                    'customer_id' => $customer->id,
+                    'product_id' => $product->id,
+                    'downpayment' => $request->downpayment,
+                ];
+
+                $freeTrialData = $this->freeTrialData($product);
+
+                if ($request->payment_type == 1) { 
+                    $emi = round(($product->price - $request->downpayment) / $request->emi, 2);
+                    $rData = [
+                        'pending' => $product->price - $request->downpayment,
+                        'emi_amount' => $emi,
+                        'total_emis' => $request->emi
+                    ];
+                }else{
+                    $rData = [
+                        'pending' => $product->price,
+                        'emi_amount' => $product->price,
+                        'total_emis' => 1
+                    ];
+                }
+                $rinvoiceData = array_merge($defaultData,$freeTrialData,$rData);
+                $rinvoice = RecurringInvoice::create($rinvoiceData);
+                $rinvoice->invoices()->attach($invoice->id);
+                
+                $incomeData = $request->only([
+                    'date', 'income'
+                ]);
+                $incomeData['user_id'] = auth()->id();
+                $incomeData['invoice_id'] = $invoice->id;
+                $incomeData['date'] = Carbon::now()->format('Y-m-d');
+                $incomeData['income'] = $invoice->total_amount;
+                $incomeData['description'] = 'Payment from Invoice';
+                $incomeData['income_category_id'] = 1;
+                $income = Income::create($incomeData);
+
+                $userdetails = UserDetail::where('user_id',auth()->id())->first();
+                $user = User::where('id',auth()->id())->first();
+                $customers = Customer::where('user_id',auth()->id())->first();
+                $products = Product::where('id',$product)->get();
+
+                $tax = $invoice->product_log?->first()->product?->tax;
+                $due = $invoice->total_amount;
+                $subtotal = $due * 100 / (100 + $tax);
+
+                Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData,$subtotal,$tax,$due));
+
+                return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
+            }catch(Exception $e){
+                return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', $e->getMessage());
+            }
         }
+        
     }
 
     public function instamojoSuccess(Request $request, $id, $product_id)
@@ -68,15 +163,30 @@ class LandingPageController extends Controller
 
     public function getProduct($id, Product $product)
     {
+        if ($product->is_free_trial == 1){
+            if ($product->trial_price != 0){
+                $trial_msg = 'Rs '.$product->trial_price." will be charge for trial period.";
+            }else{
+                $trial_msg = "You will not be charged until your trial ends.";
+            }
+            $trial_msg = $trial_msg.' Your trial period ends after <b>'.$product->trial_duration.' '.$product->trial_duration_type.'</b>';
+        }else{
+            $trial_msg = '';
+        }
         $json = [
-            'id' => $product->id,
-            'name' => $product->name,
-            'price' => $product->price,
-            'image' => $product->image,
-            'description' => $product->description,
-            'downpayment' => $product->downpayment,
-            'emi' => $product->emi,
-            'tax' => $product->tax
+            'id'=>$product->id,
+            'name'=>$product->name,
+            'price'=>$product->price,
+            'image'=>$product->image,
+            'description'=>$product->description,
+            'downpayment'=>$product->downpayment,
+            'emi'=>$product->emi,
+            'tax'=>$product->tax,
+            'is_free_trial'=>$product->is_free_trial,
+            'trial_duration_type'=>$product->trial_duration_type,
+            'trial_duration'=>$product->trial_duration,
+            'trial_price'=>$product->trial_price,
+            'trial_msg'=>$trial_msg
         ];
 
         return response()->json(['status' => 1, 'message' => 'Data retrived', 'data' => $json]);
@@ -102,11 +212,11 @@ class LandingPageController extends Controller
             );
 
             $alreadyPaid = Payment::where('transaction_id', $paymentIntent->id)->first();
-            if (!empty($alreadyPaid))
+            if (!empty($alreadyPaid)){
                 return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', 'Cannot reload, please try again');
+            }
 
             $customer = Customer::updateOrCreate([
-                'user_id' => $id,
                 'email' => $request->email,
             ], [
                 'name' => $request->first_name . ' ' . $request->last_name,
@@ -158,26 +268,51 @@ class LandingPageController extends Controller
                 'gateway' => 'stripe'
             ]);
 
-            if ($request->payment_type == 1) {
-                $product = Product::find($request->product_id);
-                $emi = round(($product->price - $request->downpayment) / $request->emi, 2);
-                $rinvoiceData = [
-                    'user_id' => $id,
-                    'customer_id' => $customer->id,
-                    'product_id' => $product->id,
-                    'downpayment' => $request->downpayment,
-                    'paid' => $request->downpayment,
-                    'pending' => $product->price - $request->downpayment,
-                    'emi_amount' => $emi,
-                    'paid_date' => Carbon::now()->format('Y-m-d'),
-                    'next_emi_date' => Carbon::now()->addDays(28)->format('Y-m-d'),
-                    'total_emis' => $request->emi
-                ];
+            $defaultData = [
+                'user_id' => $id,
+                'customer_id' => $customer->id,
+                'product_id' => $product->id,
+                'downpayment' => $request->downpayment,
+            ];
+
+            // If Is Free Trial
+            if($request->is_free_trial){
+                $freeTrialData = $this->freeTrialData($product,$request);
+                if ($request->payment_type == 1){
+                    $emi = round(($product->price - $request->downpayment) / $request->emi, 2);
+                    $rData = [
+                        'pending' => $product->price - $request->downpayment,
+                        'emi_amount' => $emi,
+                        'total_emis' => $request->emi
+                    ];
+                }else{
+                    $rData = [
+                        'pending' => $product->price,
+                        'emi_amount' => $product->price,
+                        'total_emis' => 1
+                    ];
+                }
+                $rinvoiceData = array_merge($defaultData,$freeTrialData,$rData);
                 $rinvoice = RecurringInvoice::create($rinvoiceData);
-
                 $rinvoice->invoices()->attach($invoice->id);
-            }
+            }else{
+                if ($request->payment_type == 1) {
+                    $product = Product::find($request->product_id);
+                    $emi = round(($product->price - $request->downpayment) / $request->emi, 2);
+                    $rinvoiceData = array_merge($defaultData,[
+                        'paid' => $request->downpayment,
+                        'pending' => $product->price - $request->downpayment,
+                        'emi_amount' => $emi,
+                        'paid_date' => Carbon::now()->format('Y-m-d'),
+                        'next_emi_date' => Carbon::now()->addDays(28)->format('Y-m-d'),
+                        'total_emis' => $request->emi
+                    ]);
+                    $rinvoice = RecurringInvoice::create($rinvoiceData);
 
+                    $rinvoice->invoices()->attach($invoice->id);
+                }
+            }
+            
             $incomeData = $request->only([
                 'date', 'income'
             ]);
@@ -341,5 +476,17 @@ class LandingPageController extends Controller
         } else {
             return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', 'Error while paying with razorpay, signature did not matched.');
         }
+    }
+
+    public function freeTrialData($product,$request)
+    {
+        $freeTrialData = [
+            'is_free_trial' => 1,
+            'trial_price' => $product->trial_price,
+            'paid' => ($product->trial_price + $request->downpayment),
+            'paid_date' => Carbon::now()->format('Y-m-d'),
+            'next_emi_date' => Carbon::now()->add($product->trial_duration,$product->trial_duration_type)
+        ];
+        return $freeTrialData;
     }
 }

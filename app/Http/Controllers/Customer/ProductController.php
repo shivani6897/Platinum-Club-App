@@ -53,10 +53,14 @@ class ProductController extends Controller
             'downpayment',
 //            'emi',
             'tax',
-            'description'
+            'description',
+            'trial_duration_type',
+            'trial_duration',
+            'trial_price',
         ]);
         $array['user_id'] = auth()->id();
         $array['emi'] = $request->emi ? 1 : 0;
+        $array['is_free_trial'] = $request->is_free_trial ? 1 : 0;
         $array['image'] = $imageService->store($request->image, '/images/products', $request->name);
         $product = Product::create($array);
         return redirect()->route('products.index')->with('success','Product Created');
@@ -88,11 +92,23 @@ class ProductController extends Controller
             'downpayment',
             'tax',
 //            'emi',
-            'description'
+            'description',
+            'trial_duration_type',
+            'trial_duration',
+            'trial_price',
         ]);
         $array['user_id'] = auth()->id();
         $array['image'] = $product->image;
         $array['emi'] = $request->emi ? 1 : 0;
+
+        if(!$request->is_free_trial){
+            $array['is_free_trial'] = 0;
+            $array['trial_duration_type'] = NULL;
+            $array['trial_duration'] = NULL;
+            $array['trial_price'] = 0.00;
+        }else{
+            $array['is_free_trial'] = 1;
+        }
 
 
         if(!empty($request->image))
