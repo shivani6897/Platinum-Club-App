@@ -31,6 +31,7 @@ class InvoiceController extends Controller
     {
         $customers = Customer::where('user_id',auth()->id())->get(['id'])->pluck('id')->toArray();
         $invoices = Invoice::with('customer')
+            ->where('payment_method','>',0)
             ->whereIn('customer_id',$customers)
             ->when(request('search'),function($q){
                 $q->where('invoice_number','LIKE','%'.request('search').'%')
@@ -274,13 +275,17 @@ class InvoiceController extends Controller
 
 
     public function userDetails(Request $request,$customers){
-        $invoices = Invoice::with('customer')
+        $invoices = Invoice::with(['customer', 'payments'])
             ->where('customer_id',$customers)
+            ->where('payment_method','>',0)
             ->when(request('search'),function($q) use($customers){
                 $q->where(function($q2){
                     $q2->where('invoice_number', 'LIKE', '%' . request('search').'%')
                         ->orWhereHas('customer',function($q3){
                             $q3->where('gst_no','LIKE','%'.request('search').'%');
+                        })
+                        ->orWhereHas('payments',function($q4){
+                            $q4->where('gateway','LIKE','%'.request('search').'%');
                         })
                         ->orWhere('total_amount','LIKE','%'.request('search').'%');
                 });
@@ -291,13 +296,15 @@ class InvoiceController extends Controller
         $rinvoices = RecurringInvoice::with(['invoices', 'customer'])
             ->where('customer_id',$customers)
             ->when(request('search'),function($q) use($customers){
-                    $q->orWhereHas('invoices',function($q2){
-                        $q2->where('invoice_number','LIKE','%'.request('search').'%')
-                            ->orWhere('total_amount','LIKE','%'.request('search').'%');
+                $q->where(function($q2) {
+                    $q2->orWhereHas('invoices', function ($q3) {
+                        $q3->where('invoice_number', 'LIKE', '%' . request('search') . '%')
+                            ->orWhere('total_amount', 'LIKE', '%' . request('search') . '%');
                     })
-                    ->orWhereHas('customer',function($q3){
-                        $q3->where('gst_no','LIKE','%'.request('search').'%');
-                    });
+                        ->orWhereHas('customer', function ($q4) {
+                            $q4->where('gst_no', 'LIKE', '%' . request('search') . '%');
+                        });
+                });
             })
             ->latest()
             ->paginate(10);

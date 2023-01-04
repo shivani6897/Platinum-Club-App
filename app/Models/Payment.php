@@ -10,4 +10,9 @@ class Payment extends Model
 {
     use HasFactory, SoftDeletes;
     protected $guarded = ['id'];
+
+    public function invoice()
+    {
+        return $this->belongsTo('App\Models\Invoice');
+    }
 }
