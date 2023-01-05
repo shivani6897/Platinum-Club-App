@@ -411,24 +411,24 @@
     function payAttempt(obj) {
         document.getElementById('paymentForm').reportValidity()
         if (document.getElementById('paymentForm').checkValidity()) {
+
+            var payingAmount = 0;
+            if($('input[name="is_free_trial"]').is(':checked')){
+                payingAmount = $('input[name="is_free_trial"]').data('trial_fee');
+            }else{
+                if ($('input[name="payment_type"]:checked').val() == 0)
+                    payingAmount = $('select[name="product_id"]').find(':selected').data('price');
+                else
+                    payingAmount = $('input[name="downpayment"]').val()
+            }
             if ($('#payment-gateway').val() == 'stripe') {
                 newUrl = backURL + "?" + $('#paymentForm').serialize();
-                if($('input[name="is_free_trial"]').is(':checked')){
-                    stripeUpdatePaymentIntent($('input[name="is_free_trial"]').data('trial_fee'));
-                }else{
-                    if ($('input[name="payment_type"]:checked').val() == 0)
-                        stripeUpdatePaymentIntent($('select[name="product_id"]').find(':selected').data('price'));
-                    else
-                        stripeUpdatePaymentIntent($('input[name="downpayment"]').val());
-                }
+                stripeUpdatePaymentIntent(payingAmount);
                 setLoading(false);
                 $('#stripeModal').show();
             } else if ($('#payment-gateway').val() == 'razorpay') {
                 razorpayNewUrl = razorpayBackURL + "?" + $('#paymentForm').serialize();
-                if ($('input[name="payment_type"]:checked').val() == 0)
-                    razorpayCreateOrder($('select[name="product_id"]').find(':selected').data('price'));
-                else
-                    razorpayCreateOrder($('input[name="downpayment"]').val());
+                razorpayCreateOrder(payingAmount);
             } else if ($('#payment-gateway').val() == 'instamojo') {
                 document.getElementById('paymentForm').submit();
             }
@@ -640,7 +640,6 @@
     }
 
     function stripeUpdatePaymentIntent(amount) {
-        alert(amount);
         $.ajax({
             url: "{{url('/landing/'.$id.'/stripe/payment-intent')}}/" + amount,
             method: "post",
