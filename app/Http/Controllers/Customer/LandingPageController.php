@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Services\Payment\StripeService;
 use App\Services\Payment\RazorpayService;
+use App\Services\Payment\InvoiceService;
 use App\Models\RecurringInvoice;
 use App\Models\Invoice;
 use App\Models\RecurringInvoiceInvoice;
@@ -41,7 +42,7 @@ class LandingPageController extends Controller
         return view('customer.landing.index', compact('products', 'id', 'selectedProduct', 'gateway'));
     }
 
-    public function payInstamojo(Request $request, $id)
+    public function payInstamojo(Request $request, $id, InvoiceService $invoiceService)
     {
         if($request->gateway){
             $gateway = PaymentGateway::where('user_id', $id)->firstOrFail();
@@ -70,7 +71,7 @@ class LandingPageController extends Controller
                     'payment_method'
                 ]);
                 $invoiceData['customer_id'] = $customer->id;
-                $invoiceData['invoice_number'] = date('Ymd') . rand(10000, 99999);
+                $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
                 $invoiceData['total_amount'] = 0;
                 $invoiceData['payment_method'] = 0;
                 $invoiceData['status'] = 1;
@@ -200,7 +201,7 @@ class LandingPageController extends Controller
         return $stripe->paymentIntent($amount, explode('_secret_', request('paymentIntent', ''))[0]);
     }
 
-    public function stripeSuccess($id, Request $request)
+    public function stripeSuccess($id, Request $request, InvoiceService $invoiceService)
     {
         $gateway = PaymentGateway::where('user_id', $id)->first();
         \Stripe\Stripe::setApiKey($gateway->stripe_secret);
@@ -232,7 +233,7 @@ class LandingPageController extends Controller
                 'payment_method'
             ]);
             $invoiceData['customer_id'] = $customer->id;
-            $invoiceData['invoice_number'] = date('Ymd') . rand(10000, 99999);
+            $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
             $invoiceData['total_amount'] = $paymentIntent->amount / 100;
             $invoiceData['payment_method'] = 3;
             $invoiceData['status'] = ($paymentIntent->status == "succeeded" ? 1 : 2);
@@ -354,7 +355,7 @@ class LandingPageController extends Controller
         return response()->json(['status' => 1, 'message' => 'success', 'order_id' => $order->id]);
     }
 
-    public function razorpaySuccess($id, Request $request)
+    public function razorpaySuccess($id, Request $request, InvoiceService $invoiceService)
     {
         $gateway = PaymentGateway::where('user_id', $id)->first();
         $generated_signature = hash_hmac('sha256', $request->razorpay_order_id . "|" . $request->razorpay_payment_id, $gateway->razorpay_secret);
@@ -385,7 +386,7 @@ class LandingPageController extends Controller
                 'payment_method'
             ]);
             $invoiceData['customer_id'] = $customer->id;
-            $invoiceData['invoice_number'] = date('Ymd') . rand(10000, 99999);
+            $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
             $invoiceData['total_amount'] = $razorpayment->amount / 100;
             $invoiceData['payment_method'] = 3;
             $invoiceData['status'] = ($razorpayment->status == "captured" ? 1 : 2);
