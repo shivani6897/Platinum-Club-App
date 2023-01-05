@@ -85,7 +85,7 @@
                 required
               >
               @foreach($customers as $customer)
-                <option value="{{$customer->id}}" @selected(old('customer_id',0)==$customer->id)>{{$customer->name}}</option>
+                <option value="{{$customer->id}}" @selected(old('customer_id',$invoices->customer_id)==$customer->id)>{{$customer->name}}</option>
               @endforeach
               </select>
               @error('customer_id')
@@ -112,238 +112,91 @@
           </div>
 
           <div id="products_div">
-              @forelse(old('product_name',[]) as $data)
-{{--                @dd($data->name)--}}
-{{--            @if($loop->first)--}}
-                  <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
-                      <label class="block sm:col-span-6">
-                          <span>Product Name</span>
-                          <span class="relative mt-1.5 flex">
-                          <select
-                              class="select2 form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
-                                @error('product_id')
-                                  border-error
-                                @enderror"
-                              name="product_id[]"
-                              onchange="getProduct(this)"
-                              required
-                          >
-                            <option value="">Select Product</option>
-                            @foreach($products as $key => $product)
-                                  <option value="{{$product->id}}" @selected($productLog->product_id==$product->id)>{{$product->name}}</option>
-                                  {{--                                  <option value="{{$key}}">{{$product->name}}</option>--}}
-                              @endforeach
-                          </select>
-                              @error('product_id')
-                          <span class="text-tiny+ text-error">{{$message}}</span>
-                          @enderror
+            @foreach($productLogs as $productLog)
+              <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
 
-                          </span>
-                      </label>
-                      <label class="block sm:col-span-2">
-                          <span>Product Qty</span>
-                          <span class="relative mt-1.5 flex">
-                              <input
-                                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                                  @error('product_qty')
-                                      border-error
-                                  @enderror"
-                                  placeholder="Product Qty"
-                                  name="product_qty[]"
-                                  type="number"
-                                  step="1"
-                                  min="1"
-                                  value="{{old('product_qty')[0]}}"
-                                  required
-                              />
-                            </span>
-                          @error('product_qty')
-                          <span class="text-tiny+ text-error">{{$message}}</span>
-                          @enderror
-                      </label>
-                      <label class="block sm:col-span-4">
-                          <span>Product Price</span>
-                          <span class="relative mt-1.5 flex">
-                              <input
-                                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                                @error('product_price')
-                                      border-error
-                                @enderror"
-                                  placeholder="Product Price"
-                                  name="product_price[]"
-                                  type="number"
-                                  step="0.01"
-                                  min="1"
-                                  value="{{old('product_price', )[0]}}"
-                                  required
-                              />
-                            </span>
-                          @error('product_price')
-                          <span class="text-tiny+ text-error">{{$message}}</span>
-                          @enderror
-                      </label>
-                  </div>
-{{--            @else--}}
-{{--            <div class="product_div grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">--}}
-{{--              <label class="block sm:col-span-6">--}}
-{{--                <span>Product Name</span>--}}
-{{--                <span class="relative mt-1.5 flex">--}}
-{{--                  <input--}}
-{{--                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"--}}
-{{--                    placeholder="Product Name"--}}
-{{--                    name="product_name[]"--}}
-{{--                    type="text"--}}
-{{--                    value="{{$data['product_name'][$loop->index]}}"--}}
-{{--                    required--}}
-{{--                  />--}}
-{{--                </span>--}}
-{{--              </label>--}}
-{{--              <label class="block sm:col-span-2">--}}
-{{--                <span>Product Qty</span>--}}
-{{--                <span class="relative mt-1.5 flex">--}}
-{{--                  <input--}}
-{{--                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"--}}
-{{--                    placeholder="Product Qty"--}}
-{{--                    name="product_qty[]"--}}
-{{--                    type="number"--}}
-{{--                    step="1"--}}
-{{--                    min="1"--}}
-{{--                    value="{{$product->qty[$loop->index]}}"--}}
-{{--                    required--}}
-{{--                  />--}}
-{{--                </span>--}}
-{{--              </label>--}}
-{{--              <label class="block sm:col-span-2">--}}
-{{--                <span>Product Price</span>--}}
-{{--                <span class="relative mt-1.5 flex">--}}
-{{--                  <input--}}
-{{--                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"--}}
-{{--                    placeholder="Product Price"--}}
-{{--                    name="product_price[]"--}}
-{{--                    type="number"--}}
-{{--                    step="0.01"--}}
-{{--                    min="1"--}}
-{{--                    value="{{$data['price'][$loop->index]}}"--}}
-{{--                    required--}}
-{{--                  />--}}
-{{--                </span>--}}
-{{--              </label>--}}
-{{--              <div class="sm:col-span-2 flex justify-end items-end">--}}
-{{--                <button--}}
-{{--                  class="btn space-x-2 bg-error font-medium text-white hover:bg-error-focus focus:bg-error-focus active:bg-error-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90 text-end"--}}
-{{--                  type="button"--}}
-{{--                  onclick="deleteProduct(this)"--}}
-{{--                >--}}
-{{--                  <span>Delete</span>--}}
-{{--                </button>--}}
-{{--            </div>--}}
-{{--            @endif--}}
-            @empty
-                @foreach($productLogs as $productLog)
-{{--                    @dd($productLog->product)--}}
-                    <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
-
-                      <label class="block sm:col-span-6 product-label">
-                        <span>Product</span>
-                        <span class="relative mt-1.5 flex">
-                          <select
-                              class="select2 form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
-                                @error('product_id')
-                                    border-error
-                                @enderror"
-                            name="product_id[]"
-                            onchange="getProduct(this)"
-                            required
-                          >
-                            <option value="">Select Product</option>
-                            @foreach($products as $key => $product)
-                                  <option value="{{$product->id}}" @selected($productLog->product_id==$product->id)>{{$product->name}}</option>
+                <label class="block sm:col-span-6 product-label">
+                  <span>Product</span>
+                  <span class="relative mt-1.5 flex">
+                    <select
+                        class="select2 form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
+                          @error('product_id')
+                              border-error
+                          @enderror"
+                      name="product_id[]"
+                      onchange="getProduct(this)"
+                      required
+                    >
+                      <option value="">Select Product</option>
+                      @foreach($products as $key => $product)
+                            <option value="{{$product->id}}" @selected($productLog->product_id==$product->id)>{{$product->name}}</option>
 {{--                                  <option value="{{$key}}">{{$product->name}}</option>--}}
-                            @endforeach
-                          </select>
-                        </span>
-                      </label>
-                      <label class="block sm:col-span-2">
-                        <span>Product Qty</span>
-                        <span class="relative mt-1.5 flex">
-                          <input
-                            class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                            @error('product_qty')
-                            border-error
-                            @enderror"
-                            placeholder="Product Qty"
-                            name="product_qty[]"
-                            type="number"
-                            step="1"
-                            min="1"
-                            value="{{$productLog->qty}}"
-                            required
-                          />
-                        </span>
-                        @error('product_qty')
-                          <span class="text-tiny+ text-error">{{$message}}</span>
-                        @enderror
-                      </label>
-                      <label class="block sm:col-span-4 product-price-label">
-                        <span>Product Price</span>
-                        <span class="relative mt-1.5 flex">
-                          <input
-                            readonly
-                            class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                            product_price"
-                            placeholder="Product Price"
-                            name="product_price[]"
-                            type="text"
-                            value="{{ $productLog->price }}"
-                          />
-                        </span>
-                        @error('product_price')
-                          <span class="text-tiny+ text-error">{{$message}}</span>
-                        @enderror
-                      </label>
-                    </div>
-                @endforeach
-            @endforelse
+                      @endforeach
+                    </select>
+                  </span>
+                </label>
+                <label class="block sm:col-span-2">
+                  <span>Product Qty</span>
+                  <span class="relative mt-1.5 flex">
+                    <input
+                      class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                      @error('product_qty')
+                      border-error
+                      @enderror"
+                      placeholder="Product Qty"
+                      name="product_qty[]"
+                      type="number"
+                      step="1"
+                      min="1"
+                      value="{{$productLog->qty}}"
+                      required
+                    />
+                  </span>
+                  @error('product_qty')
+                    <span class="text-tiny+ text-error">{{$message}}</span>
+                  @enderror
+                </label>
+                <label class="block sm:col-span-4 product-price-label">
+                  <span>Product Price</span>
+                  <span class="relative mt-1.5 flex">
+                    <input
+                      readonly
+                      class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                      product_price"
+                      placeholder="Product Price"
+                      name="product_price[]"
+                      type="text"
+                      value="{{ $productLog->price }}"
+                    />
+                  </span>
+                  @error('product_price')
+                    <span class="text-tiny+ text-error">{{$message}}</span>
+                  @enderror
+                </label>
+              </div>
+            @endforeach
           </div>
 
           <p class="text-base font-medium text-slate-700 dark:text-navy-100">
             Payment Details
           </p>
-          @foreach($productLogs as $productLog)
+          <label class="block mt-2 sm:col-span-4">
+            <span>Invoice Description</span>
+            <span class="relative mt-1.5 flex">
+              <textarea
+                rows="4"
+                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                @error('product_description')
+                border-error
+                @enderror"
+                placeholder="Invoice Description"
+                name="description"
 
-              <label class="block mt-2 sm:col-span-4">
-                <span>Invoice Description</span>
-                <span class="relative mt-1.5 flex">
-                  <textarea
-                    rows="4"
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                    @error('product_description')
-                    border-error
-                    @enderror"
-                    placeholder="Invoice Description"
-                    name="description"
-
-                  >{{$productLog->product->description}}</textarea>
-                </span>
-                @error('product_name')
-                  <span class="text-tiny+ text-error">{{$message}}</span>
-                @enderror
-              </label>
-          @endforeach
-
-          <label class="block mt-2">
-            <span>Payment Method</span><br>
-            <label class="inline-flex items-center space-x-2 pt-2">
-              <input
-                checked
-                class="form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
-                name="payment_method"
-                value="0"
-                @checked(old('payment_method',0)==0)
-                type="radio"
-              />
-              <span>Offline</span>
-            </label>
+              >{{$invoices->description}}</textarea>
+            </span>
+            @error('description')
+              <span class="text-tiny+ text-error">{{$message}}</span>
+            @enderror
           </label>
 
           <div class="flex justify-end mt-2 space-x-2">
@@ -351,7 +204,7 @@
               class="btn bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90 pay-btn"
               type="submit"
               >
-              <span>Submit</span>
+              <span>Update</span>
             </button>
           </div>
         </div>

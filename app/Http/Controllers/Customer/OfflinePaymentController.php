@@ -133,7 +133,7 @@ class OfflinePaymentController extends Controller
     public function edit(Invoice $invoices)
     {
 //        dd($invoices);
-        $products = Product::where('user_id',auth()->id())->get();
+        $products = Product::all();
         $productLogs = ProductLog::where('invoice_id',$invoices->id)->get();
         $customers = Customer::all(['id','name']);
         return view('admin.offlinepayment.edit',compact('customers', 'products','invoices','productLogs'));
@@ -141,25 +141,11 @@ class OfflinePaymentController extends Controller
 
     public function update(UpdateRequest $request, InvoiceService $invoiceService,Invoice $invoices)
     {
-        // Create Invoice
-        $invoiceData = $request->only([
-            'customer_id',
-            'description',
-//            'payment_method'
-        ]);
-        $user_deatils = UserDetail::where('user_id',auth()->id())->first('business_name');
-
-//        $invoicecount = Invoice::whereYear('created_at', date('Y'))->count();
-//        $invoicecount = strlen($invoicecount) == 1 ?  '0'.$invoicecount+1 : $invoicecount+1;
-//        $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
-        $invoiceData['total_amount'] = 0;
-        $invoices->update([$invoiceData]);
-
         //Create Product Log and calculate total amount
         $productData = [];
         $total = 0;
 
-        $products = Product::where('user_id',auth()->id())->whereIn('id',$request->product_id)->get()->keyBy('id');
+        $products = Product::whereIn('id',$request->product_id)->get()->keyBy('id');
         $productLog = ProductLog::where('product_id', $request->product_id)->where('invoice_id',$invoices->id)->first();
 
         for($i= 0; $i<count($request->product_id); $i++)
@@ -181,14 +167,12 @@ class OfflinePaymentController extends Controller
         }
 
         ProductLog::where('invoice_id',$invoices->id)->whereNotIn('product_id',$request->product_id)->delete();
-//        }
 
         $invoices->update([
-            'total_amount'=>$total
+            'total_amount'=>$total,
+            'description'=>$request->description,
         ]);
-        $incomeData = $request->only([
-            'date', 'income'
-        ]);
+
         if(!empty($invoices->income)){
             $invoices->income->update(['income'=>$total]);
         }
@@ -207,7 +191,6 @@ class OfflinePaymentController extends Controller
     }
 
     public function destroy(Invoice $invoices){
-//        dd($invoices);
         $invoices->delete();
         return redirect()->route('admin.offlinepayments.index')->with('success','Invoice Deleted Successfully');
     }
