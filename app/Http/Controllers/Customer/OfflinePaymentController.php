@@ -120,9 +120,10 @@ class OfflinePaymentController extends Controller
         $total = 0;
 
         $products = Product::get()->keyBy('id');
-
+//dd($request->product_id);
         foreach($request->product_id as $key => $product_id)
         {
+//            dd($product_id);
             $productData[] = [
                 'product_id' => $product_id,
                 'invoice_id' => $invoice->id,
@@ -150,13 +151,6 @@ class OfflinePaymentController extends Controller
         $incomeData['description'] = 'Payment from Invoice';
         $incomeData['income_category_id'] = 1;
         $income = Income::create($incomeData);
-
-
-//        $userdetails = UserDetail::where('user_id',auth()->id())->first();
-//        $user = User::where('id',auth()->id())->first();
-//        $customer = Customer::where('user_id',auth()->id())->first();
-//
-//        Mail::to($user->email)->send(new InvoiceMail($invoiceData,$userdetails, $user,$customer,$products,$productData));
 
         return redirect()->route('offlinepayments.create')->with('success','Offline invoice created');
     }
@@ -186,50 +180,53 @@ class OfflinePaymentController extends Controller
         $invoiceData['total_amount'] = 0;
         $invoices->update([$invoiceData]);
 
-
         //Create Product Log and calculate total amount
         $productData = [];
         $total = 0;
 
-        $products = Product::get()->keyBy('id');
-//        dd($products);
+        $products = Product::where('user_id',auth()->id())->whereIn('id',$request->product_id)->get()->keyBy('id');
         $productLog = ProductLog::where('product_id', $request->product_id)->where('invoice_id',$invoices->id)->first();
-//        dd($productLog);
 
-//        foreach($productLog as $product_id)
-//        {
-//            @dd($productLog->qty);
-        $productLog = [
-                'product_id' => $productLog->id,
-                'invoice_id' => $invoices->id,
-                'name' => $productLog->name,
-                'price' => $productLog->price,
-                'qty' => $request->product_qty,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        dd($productLog);
+        for($i= 0; $i<count($request->product_id); $i++)
+        {
+            if(!empty($products[$request->product_id[$i]])) {
+                $productLog= ProductLog::updateOrCreate([
+                    'product_id' => $request->product_id[$i],
+                    'invoice_id' => $invoices->id,
+                    ],
+                    ['name' => $products[$request->product_id[$i]]->name,
+                    'price' => $products[$request->product_id[$i]]->price,
+                    'qty' => $request->product_qty[$i],
+                    'created_at' => now(),
+                    'updated_at' => now()
+                    ]);
+            }
 
-//            $total += ($productLog->price*$productLog->qty);
-            $productLog->update([$productLog]);
-            dd($productLog);
+            $total += ($products[$request->product_id[$i]]->price*$request->product_qty[$i]);
+        }
+
+        ProductLog::where('invoice_id',$invoices->id)->whereNotIn('product_id',$request->product_id)->delete();
 //        }
 
         $invoices->update([
             'total_amount'=>$total
         ]);
-//        $productLog = ProductLog::insert($productData);
         $incomeData = $request->only([
             'date', 'income'
         ]);
-//        $incomeData['invoice_id'] = $customer->id;
-        $incomeData['user_id'] = auth()->id();
-        $incomeData['invoice_id'] = $invoices->id;
-        $incomeData['date'] = Carbon::now()->format('Y-m-d');
-        $incomeData['income'] = $invoices->total_amount;
-        $incomeData['description'] = 'Payment from Invoice';
-        $incomeData['income_category_id'] = 1;
-        $income = Income::create($incomeData);
+        if(!empty($invoices->income)){
+            $invoices->income->update(['income'=>$total]);
+        }
+        else{
+            $incomeData = [];
+            $incomeData['user_id'] = auth()->id();
+            $incomeData['invoice_id'] = $invoices->id;
+            $incomeData['date'] = Carbon::now()->format('Y-m-d');
+            $incomeData['income'] = $invoices->total_amount;
+            $incomeData['description'] = 'Payment from Invoice';
+            $incomeData['income_category_id'] = 1;
+            $invoice = Income::create([$incomeData]);
+        }
 
         return redirect()->route('admin.offlinepayments.index')->with('success','Offline invoice updated');
     }

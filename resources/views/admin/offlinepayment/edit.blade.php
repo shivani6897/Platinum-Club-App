@@ -119,21 +119,26 @@
                       <label class="block sm:col-span-6">
                           <span>Product Name</span>
                           <span class="relative mt-1.5 flex">
-                              <input
-                                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                                  @error('product_name')
-                                      border-error
-                                  @enderror"
-                                  placeholder="Product Name"
-                                  name="product_name[]"
-                                  type="text"
-                                  value="{{old('product_name')[0]}}"
-                                  required
-                              />
-                            </span>
-                          @error('product_name')
+                          <select
+                              class="select2 form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
+                                @error('product_id')
+                                  border-error
+                                @enderror"
+                              name="product_id[]"
+                              onchange="getProduct(this)"
+                              required
+                          >
+                            <option value="">Select Product</option>
+                            @foreach($products as $key => $product)
+                                  <option value="{{$product->id}}" @selected($productLog->product_id==$product->id)>{{$product->name}}</option>
+                                  {{--                                  <option value="{{$key}}">{{$product->name}}</option>--}}
+                              @endforeach
+                          </select>
+                              @error('product_id')
                           <span class="text-tiny+ text-error">{{$message}}</span>
                           @enderror
+
+                          </span>
                       </label>
                       <label class="block sm:col-span-2">
                           <span>Product Qty</span>
@@ -246,7 +251,7 @@
                                 @error('product_id')
                                     border-error
                                 @enderror"
-                            name="product_id"
+                            name="product_id[]"
                             onchange="getProduct(this)"
                             required
                           >

@@ -173,4 +173,6 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
     Route::get('/invoice/user/{customers}/details', [\App\Http\Controllers\Customer\InvoiceController::class, 'userDetails'])->name('customer.invoice.details');
     Route::get('/subscription/user/{customers}/details', [\App\Http\Controllers\Customer\SubscriptionController::class, 'userDetails'])->name('customer.subscription.details');
+
+    Route::resource('/promocodes', \App\Http\Controllers\Customer\PromocodeController::class);
 });
