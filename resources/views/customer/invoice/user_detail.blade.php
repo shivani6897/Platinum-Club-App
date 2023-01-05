@@ -239,16 +239,18 @@
                                                 #
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                Invoice Number
+                                                @sortablelink('invoice_number','Invoice Number')
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+{{--                                                @sortablelink('name','Customer Name')--}}
                                                 Customer Name
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                Total Amount
+                                                @sortablelink('total_amount','Total Amount')
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                GST Number
+                                                @sortablelink('gst_no','GST Number')
+{{--                                                GST Number--}}
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                                 Payment Method
@@ -300,7 +302,8 @@
                                 <div
                                     class="flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5"
                                 >
-                                    {{$invoices->links()}}
+                                    {!! $invoices->appends(\Request::except('page'))->render() !!}
+{{--                                    {{$invoices->links()}}--}}
                                 </div>
                             </div>
                         </div>
@@ -360,31 +363,33 @@
                                                 #
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+{{--                                                @sortablelink('invoice_number','Invoice Number')--}}
                                                 Invoice Number
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                                 Customer Name
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                Downpayment
+                                                @sortablelink('downpayment','Downpayment')
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                                 Product Cost
+{{--                                                @sortablelink('invoice_number','Product Cost')--}}
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                Pending Amount
+                                                @sortablelink('pending','Pending Amount')
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                No of Emi’s Approved
+                                                @sortablelink('total_emis','No of Emi’s Approved')
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                Monthly EMI
+                                                @sortablelink('emi_amount','Monthly EMI')
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                Next EMI Date
+                                                @sortablelink('next_emi_date','Next EMI Date')
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                No of Paid EMI’s
+                                                @sortablelink('paid_emis','No of Paid EMI’s')
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                                 No of Due EMI's
@@ -436,7 +441,9 @@
                                 <div
                                     class="flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5"
                                 >
-                                    {{$rinvoices->links()}}
+                                    {!! $rinvoices->appends(\Request::except('page'))->render() !!}
+
+{{--                                    {{$rinvoices->links()}}--}}
                                 </div>
                             </div>
                         </div>
@@ -487,4 +494,19 @@
                 })
             </script>
 
+    @endpush
+
+    @push('styles')
+        <style>
+            .fa-arrow-down-a-z::before, .fa-sort-alpha-asc::before, .fa-sort-alpha-down::before,
+            .fa-arrow-down-1-9::before, .fa-sort-numeric-asc::before, .fa-sort-numeric-down::before{
+                content: "\f0de";
+            }
+
+            .fa-arrow-down-z-a::before, .fa-sort-alpha-desc::before, .fa-sort-alpha-down-alt::before,
+            .fa-arrow-down-1-9::before, .fa-sort-numeric-desc::before, .fa-sort-numeric-down-alt::before{
+                content: "\f0dd";
+
+            }
+        </style>
     @endpush
