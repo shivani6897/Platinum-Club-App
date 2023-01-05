@@ -22,7 +22,7 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $customer = Customer::where('user_id', auth()->id())
+        $customer = Customer::sortable()->where('user_id', auth()->id())
             ->whereNull('deleted_at')
             ->when(request('search'), function ($q) {
                 $q->where('name', 'LIKE', '%' . request('search') . '%')

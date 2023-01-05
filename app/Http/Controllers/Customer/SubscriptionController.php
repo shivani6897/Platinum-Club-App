@@ -568,7 +568,8 @@ class SubscriptionController extends Controller
         $input = $request->all();
         $customer = Customer::where('user_id',auth()->id())->get(['id'])->pluck('id')->toArray();
         $invoices = Invoice::with(['customer','payments'])
-            ->where('payment_method','>',0)
+            ->sortable()
+//            ->where('payment_method','>',0)
             ->where('customer_id',$customers)
             ->when(request('search'),function($q) use($customers){
                 $q->where(function($q2){
@@ -582,27 +583,17 @@ class SubscriptionController extends Controller
                         });
                 });
             })
-//            ->where(function ($query) use ($input,$customers) {
-//                if(isset($input['search'])){
-//                    $query->where(function ($q) use ($input, $customers) {
-//                        ->orWhere('invoice_number', 'Like', '%' . $input['search'] . '%')
-//                            ->orWhere('total_amount', 'Like', '%' . $input['search'] . '%')
-//                            ->orWhereHas('customer',function($q2){
-//    //                        $q2->where('name','LIKE','%'.request('search').'%')
-//                                $q2->where('gst_no','LIKE','%'.request('search').'%');
-//                            });
-//                    });
-//                }
-//            })
             ->latest()
             ->paginate(10);
 
         $rinvoices = RecurringInvoice::with(['invoices', 'customer'])
+            ->sortable()
             ->where('customer_id',$customers)
             ->when(request('search'),function($q) use($customers){
                 $q->where(function($q2) {
                     $q2->orWhereHas('invoices', function ($q3) {
-                        $q3->where('invoice_number', 'LIKE', '%' . request('search') . '%')
+                        $q3->sortable(['invoice_number','total_amount'])
+                        ->where('invoice_number', 'LIKE', '%' . request('search') . '%')
                             ->orWhere('total_amount', 'LIKE', '%' . request('search') . '%');
                     })
                         ->orWhereHas('customer', function ($q4) {

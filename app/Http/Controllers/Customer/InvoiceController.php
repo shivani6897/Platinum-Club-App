@@ -31,7 +31,7 @@ class InvoiceController extends Controller
     {
         $customers = Customer::where('user_id',auth()->id())->get(['id'])->pluck('id')->toArray();
         $invoices = Invoice::with('customer')
-            ->where('payment_method','>',0)
+//            ->where('payment_method','>',0)
             ->whereIn('customer_id',$customers)
             ->when(request('search'),function($q){
                 $q->where('invoice_number','LIKE','%'.request('search').'%')
@@ -276,8 +276,9 @@ class InvoiceController extends Controller
 
     public function userDetails(Request $request,$customers){
         $invoices = Invoice::with(['customer', 'payments'])
+            ->sortable()
             ->where('customer_id',$customers)
-            ->where('payment_method','>',0)
+//            ->where('payment_method','>',0)
             ->when(request('search'),function($q) use($customers){
                 $q->where(function($q2){
                     $q2->where('invoice_number', 'LIKE', '%' . request('search').'%')
@@ -294,11 +295,13 @@ class InvoiceController extends Controller
             ->paginate(10);
 
         $rinvoices = RecurringInvoice::with(['invoices', 'customer'])
+            ->sortable()
             ->where('customer_id',$customers)
             ->when(request('search'),function($q) use($customers){
                 $q->where(function($q2) {
                     $q2->orWhereHas('invoices', function ($q3) {
-                        $q3->where('invoice_number', 'LIKE', '%' . request('search') . '%')
+                        $q3->sortable(['invoice_number','total_amount'])
+                        ->where('invoice_number', 'LIKE', '%' . request('search') . '%')
                             ->orWhere('total_amount', 'LIKE', '%' . request('search') . '%');
                     })
                         ->orWhereHas('customer', function ($q4) {

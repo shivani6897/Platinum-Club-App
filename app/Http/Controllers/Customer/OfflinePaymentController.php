@@ -43,12 +43,17 @@ class OfflinePaymentController extends Controller
     {
         $input = $request->all();
 //        dd(request('created_at'));
-        if(!empty(request('created_at'))){
-            $created_at = explode('-', request('created_at'));
+        if(!empty($input['created_at'])){
+            $created_at = explode('to', request('created_at'));
+//            dd($created_at);
         }
         else
-            $created_at = request('created_at');
-//        dd($created_at[0]);
+            $created_at = '';
+
+//        $created_at1 = ($created_at[0]);
+//        $created_at2 = isset($created_at[1]);
+//        dd($created_at2, $created_at1);
+
         $products = Product::where('user_id',auth()->id())->pluck('name', 'id')->all();
         $customers = Customer::where('user_id',auth()->id())->get(['id','name']);
         $customerids = $customers->pluck('id')->toArray();
@@ -62,14 +67,20 @@ class OfflinePaymentController extends Controller
                             ->orWhere('total_amount', 'Like', '%' . $input['search'] . '%');
                     });
                 }
-                if (!empty(request('created_at'))) {
-//                    $query->where(function ($q2) use ($input,$created_at) {
-                    $query->WhereDate('created_at', '>=', $created_at[0])
-                            ->WhereDate('created_at', '<=', $created_at[1]);
-//                    });
+                if(!empty($created_at[0]) && isset($created_at[1]) && !empty($created_at[1])) {
+//                    dd($created_at1 || $created_at2);
+                    $query->WhereBetween('created_at', [$created_at[0] ,$created_at[1]]);
+//                    $query->where('created_at', '>=', $created_at1)
+//                            ->where('created_at', '<=', $created_at2);
+
                 }
-            })
+                elseif(!empty($created_at[0])){
+                    $query->WhereDate('created_at', $created_at[0]);
+                }
+
+           })
             ->latest();
+//            ->toSql();
                 if(!empty(request('transactions'))){
                     $invoices = $invoices->limit(request('transactions'))->get();
                 }
@@ -99,6 +110,7 @@ class OfflinePaymentController extends Controller
         $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
         $invoiceData['total_amount'] = 0;
         $invoiceData['status'] = 1;
+        $invoiceData['is_offline_collection'] = 1;
         $invoice = Invoice::create($invoiceData);
 
 

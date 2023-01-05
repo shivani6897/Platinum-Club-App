@@ -68,6 +68,9 @@
                                 #
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Created At
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Invoice Number
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
@@ -94,6 +97,7 @@
                         @forelse($invoices as $invoice)
                              <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->created_at->format('d/m/Y') }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->invoice_number }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->customer->name }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $invoice->total_amount}} </td>

@@ -381,26 +381,26 @@
                                     </div>
                                 </div>
 
-                                {{--                                <label class="block mt-4">--}}
-                                {{--                                    <span>Select dates</span><br>--}}
-                                {{--                                    <input--}}
-                                {{--                                        type="text"--}}
-                                {{--                                       class="search form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"--}}
-                                {{--                                       name="created_at"--}}
-                                {{--                                       value="{{request('created_at','')}}"--}}
-                                {{--                                    />--}}
-                                {{--                                        <input--}}
-                                {{--                                            x-init="$el._x_flatpickr = flatpickr($el,{mode: 'range',altFormat: 'd-m-Y',dateFormat: 'Y-m-d'})"--}}
-                                {{--                                            class="search form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent--}}
-                                {{--                                            @error('created_at')--}}
-                                {{--                                                border-error--}}
-                                {{--                                            @enderror"--}}
-                                {{--                                            placeholder="Choose date range..."--}}
-                                {{--                                            type="text"--}}
-                                {{--                                            name="created_at"--}}
-                                {{--                                            value="{{request('created_at','')}}"--}}
-                                {{--                                        />--}}
-                                {{--                                </label>--}}
+                                                                <label class="block mt-4">
+                                                                    <span>Select dates</span><br>
+{{--                                                                    <input--}}
+{{--                                                                        type="text"--}}
+{{--                                                                       class="search form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"--}}
+{{--                                                                       name="created_at"--}}
+{{--                                                                       value="{{request('created_at','')}}"--}}
+{{--                                                                    />--}}
+                                                                        <input
+                                                                            x-init="$el._x_flatpickr = flatpickr($el,{mode: 'range',altFormat: 'd-m-Y',dateFormat: 'Y-m-d'})"
+                                                                            class="search form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                                                                            @error('created_at')
+                                                                                border-error
+                                                                            @enderror"
+                                                                            placeholder="Choose date range..."
+                                                                            type="text"
+                                                                            name="created_at"
+                                                                            value="{{request('created_at','')}}"
+                                                                        />
+                                                                </label>
                             </form>
 
                             {{--                            </div>--}}
@@ -439,6 +439,7 @@
                                         @forelse($invoices as $invoice)
                                             <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
                                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
+                                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->created_at->format('Y-m-d') }} </td>
                                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->invoice_number }} </td>
                                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->customer->name }} </td>
                                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $invoice->total_amount}} </td>
@@ -634,12 +635,12 @@
             $(this).closest("form").submit();
         });
 
-        $(function() {
-            $('input[name="created_at"]').daterangepicker({
-                // }, function(start, end, label) {
-                //     console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-            });
-        });
+        // $(function() {
+        //     $('input[name="created_at"]').daterangepicker({
+        //         // }, function(start, end, label) {
+        //         //     console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        //     });
+        // });
     </script>
 @endpush
 @push('scripts')
