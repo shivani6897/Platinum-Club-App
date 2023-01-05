@@ -381,26 +381,21 @@
                                     </div>
                                 </div>
 
-                                                                <label class="block mt-4">
-                                                                    <span>Select dates</span><br>
-{{--                                                                    <input--}}
-{{--                                                                        type="text"--}}
-{{--                                                                       class="search form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"--}}
-{{--                                                                       name="created_at"--}}
-{{--                                                                       value="{{request('created_at','')}}"--}}
-{{--                                                                    />--}}
-                                                                        <input
-                                                                            x-init="$el._x_flatpickr = flatpickr($el,{mode: 'range',altFormat: 'd-m-Y',dateFormat: 'Y-m-d'})"
-                                                                            class="search form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                                                                            @error('created_at')
-                                                                                border-error
-                                                                            @enderror"
-                                                                            placeholder="Choose date range..."
-                                                                            type="text"
-                                                                            name="created_at"
-                                                                            value="{{request('created_at','')}}"
-                                                                        />
-                                                                </label>
+                                <label class="block mt-4">
+                                    <span>Select dates</span><br>
+                                        <input
+                                            x-init="$el._x_flatpickr = flatpickr($el,{mode: 'range',maxDate: 'today',altFormat: 'd-m-Y',dateFormat: 'Y-m-d'})"
+                                            class="search form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                                            @error('created_at')
+                                                border-error
+                                            @enderror"
+                                            placeholder="Choose date range..."
+                                            type="text"
+                                            id="created_at"
+                                            name="created_at"
+                                            value="{{request('created_at','')}}"
+                                        />
+                                </label>
                             </form>
 
                             {{--                            </div>--}}
@@ -413,16 +408,19 @@
                                                 #
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                Invoice Number
+                                                @sortablelink('created_at','Created At')
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                Customer Name
+                                                @sortablelink('invoice_number','Invoice Number')
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                Total Amount
+                                                @sortablelink('customer.name','Customer Name')
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                GST Number
+                                                @sortablelink('total_amount','Total Amount')
+                                            </th>
+                                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                @sortablelink('customer.gst_no','GST Number')
                                             </th>
                                             {{--                                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">--}}
                                             {{--                                                Payment Method--}}
@@ -503,7 +501,9 @@
                                 </div>
                                 @if(empty(request('transactions')))
                                     <div class="flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5">
-                                        {{$invoices->links()}}
+                                        {!! $invoices->appends(\Request::except('page'))->render() !!}
+
+{{--                                        {{$invoices->links()}}--}}
                                     </div>
                                 @endif
                             </div>
@@ -635,11 +635,8 @@
             $(this).closest("form").submit();
         });
 
-        // $(function() {
-        //     $('input[name="created_at"]').daterangepicker({
-        //         // }, function(start, end, label) {
-        //         //     console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-        //     });
+        // document.getElementById("created_at").flatpickr({
+        //     maxDate: "today",
         // });
     </script>
 @endpush

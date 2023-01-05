@@ -59,6 +59,7 @@ class OfflinePaymentController extends Controller
         $customerids = $customers->pluck('id')->toArray();
 
         $invoices = Invoice::with('customer')
+            ->sortable()
             ->where('customer_id',$customerids)
             ->where(function ($query) use ($input,$created_at) {
                 if(isset($input['search'])){
