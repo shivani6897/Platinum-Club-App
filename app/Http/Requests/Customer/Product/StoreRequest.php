@@ -31,6 +31,19 @@ class StoreRequest extends FormRequest
             'emi'=>'nullable',
             'image'=>'nullable|mimes:jpg,jpeg,png',
             'description'=>'nullable',
+            'is_free_trial'=>'nullable|boolean',
+            'trial_duration_type'=>'required_if:is_free_trial,1',
+            'trial_duration'=>'required_if:is_free_trial,1',
+            'trial_price'=>'required_if:is_free_trial,1',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'trial_duration_type.required_if' => 'The trial duration type field is required when is free trial is checked.',
+            'trial_duration.required_if' => 'The trial duration field is required when is free trial is checked.',
+            'trial_price.required_if' => 'The trial price field is required when is free trial is checked.'
         ];
     }
 }

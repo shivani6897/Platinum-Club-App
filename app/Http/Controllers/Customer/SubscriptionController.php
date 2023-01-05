@@ -563,4 +563,61 @@ class SubscriptionController extends Controller
 
         return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
     }
+
+    public function userDetails(Request $request,$customers){
+        $input = $request->all();
+        $customer = Customer::where('user_id',auth()->id())->get(['id'])->pluck('id')->toArray();
+        $invoices = Invoice::with(['customer','payments'])
+            ->where('payment_method','>',0)
+            ->where('customer_id',$customers)
+            ->when(request('search'),function($q) use($customers){
+                $q->where(function($q2){
+                    $q2->where('invoice_number', 'LIKE', '%' . request('search').'%')
+                        ->orWhere('total_amount','LIKE','%'.request('search').'%')
+                         ->orWhereHas('customer',function($q3){
+                            $q3->where('gst_no','LIKE','%'.request('search').'%');
+                        })
+                        ->orWhereHas('payments',function($q4){
+                            $q4->where('gateway','LIKE','%'.request('search').'%');
+                        });
+                });
+            })
+//            ->where(function ($query) use ($input,$customers) {
+//                if(isset($input['search'])){
+//                    $query->where(function ($q) use ($input, $customers) {
+//                        ->orWhere('invoice_number', 'Like', '%' . $input['search'] . '%')
+//                            ->orWhere('total_amount', 'Like', '%' . $input['search'] . '%')
+//                            ->orWhereHas('customer',function($q2){
+//    //                        $q2->where('name','LIKE','%'.request('search').'%')
+//                                $q2->where('gst_no','LIKE','%'.request('search').'%');
+//                            });
+//                    });
+//                }
+//            })
+            ->latest()
+            ->paginate(10);
+
+        $rinvoices = RecurringInvoice::with(['invoices', 'customer'])
+            ->where('customer_id',$customers)
+            ->when(request('search'),function($q) use($customers){
+                $q->where(function($q2) {
+                    $q2->orWhereHas('invoices', function ($q3) {
+                        $q3->where('invoice_number', 'LIKE', '%' . request('search') . '%')
+                            ->orWhere('total_amount', 'LIKE', '%' . request('search') . '%');
+                    })
+                        ->orWhereHas('customer', function ($q4) {
+                            $q4->where('gst_no', 'LIKE', '%' . request('search') . '%');
+                        });
+                });
+            })
+            ->latest()
+            ->paginate(10);
+
+        $customer_data = Customer::where('user_id', auth()->id())->first();
+
+        return view('customer.subscriptions.user_detail',compact('invoices','rinvoices','customer_data'));
+    }
+
 }
+
+

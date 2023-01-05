@@ -85,42 +85,113 @@
                             @enderror
                         </label>
 
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+                            <label class="block">
+                                <label class="inline-flex items-center space-x-2 mt-8">
+                                <p>Is Free Trial?</p>
+                                <input
+                                    class="form-checkbox is-outline h-5 w-5 rounded-full border-slate-400/70 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
+                                    type="checkbox"
+                                    name="is_free_trial"
+                                    id="is_free_trial"
+                                    value="1"
+                                    @if(old('is_free_trial')) checked @endif
+                                    {{($product->is_free_trial?'checked':'')}}
+                                />
+                              </label>
+                            </label>
+                            <label class="block free_trial_fields" style="{{($product->is_free_trial ? '' : 'display:none;')}}">
+                                <span>Trial Duration Type</span> <span>*</span>
+                                <span class="relative mt-1.5 flex">
+                                    <select
+                                        class="form-select w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        name="trial_duration_type"
+                                        id="trial_duration_type"
+                                    >
+                                      <option value="">Select</option>
+                                      @foreach(App\Models\Product::DURATION_TYPE as $key => $type)
+                                      <option value="{{$key}}" {{ $product->trial_duration_type == $key ? 'selected' : ''}}>{{$type}}</option>
+                                      @endforeach
+                                    </select>
+                                </span>
+                                @error('trial_duration_type')
+                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                @enderror
+                            </label>
+                            <label class="block free_trial_fields" style="{{($product->is_free_trial ? '' : 'display:none;')}}">
+                                <span>Trial Duration</span> <span>*</span>
+                                <span class="relative mt-1.5 flex">
+                                    <input
+                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        placeholder="Trial Duration"
+                                        type="number"
+                                        name="trial_duration"
+                                        min="1"
+                                        step="1"
+                                        value="{{ $product->trial_duration }}"
+                                        id="trial_duration"
+                                    />
+                                </span>
+                                @error('trial_duration')
+                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                @enderror
+                            </label>
+                            <label class="block free_trial_fields" style="{{($product->is_free_trial ? '' : 'display:none;')}}">
+                                <span>Trial Price</span> <span>*</span>
+                                <span class="relative mt-1.5 flex">
+                                    <input
+                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        placeholder="Trial Price"
+                                        type="number"
+                                        name="trial_price"
+                                        min="0"
+                                        step="0.01"
+                                        id="trial_price"
+                                        value="{{ $product->trial_price }}"
+                                    />
+                                </span>
+                                @error('trial_price')
+                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                @enderror
+                            </label>
+                        </div>
+
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <label class="block">
-                            <span>Price</span> <span>*</span>
-                            <span class="relative mt-1.5 flex">
-                                <input
-                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                    placeholder="Product Price"
-                                    type="number"
-                                    name="price"
-                                    min="1"
-                                    step="0.01"
-                                    value="{{ $product->price }}"
-                                    required
-                                />
-                            </span>
-                            @error('price')
-                            <span class="text-tiny+ text-error">{{$message}}</span>
-                            @enderror
-                        </label>
-                        <label class="block">
-                            <span>Downpayment</span>
-                            <span class="relative mt-1.5 flex">
-                                <input
-                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                    placeholder="Product Downpayment"
-                                    type="number"
-                                    name="downpayment"
-                                    min="0"
-                                    step="0.01"
-                                    value="{{ $product->downpayment }}"
-                                />
-                            </span>
-                            @error('downpayment')
-                            <span class="text-tiny+ text-error">{{$message}}</span>
-                            @enderror
-                        </label>
+                            <label class="block">
+                                <span>Price</span> <span>*</span>
+                                <span class="relative mt-1.5 flex">
+                                    <input
+                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        placeholder="Product Price"
+                                        type="number"
+                                        name="price"
+                                        min="1"
+                                        step="0.01"
+                                        value="{{ $product->price }}"
+                                        required
+                                    />
+                                </span>
+                                @error('price')
+                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                @enderror
+                            </label>
+                            <label class="block">
+                                <span>Downpayment</span>
+                                <span class="relative mt-1.5 flex">
+                                    <input
+                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        placeholder="Product Downpayment"
+                                        type="number"
+                                        name="downpayment"
+                                        min="0"
+                                        step="0.01"
+                                        value="{{ $product->downpayment }}"
+                                    />
+                                </span>
+                                @error('downpayment')
+                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                @enderror
+                            </label>
                         </div>
 
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -148,7 +219,7 @@
                                     type="checkbox"
                                     class="form-checkbox is-outline h-5 w-5 rounded-full border-slate-400/70 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
                                     name="emi"
-                                   id="emi" {{($product->emi?'checked':'')}}>
+                                    id="emi" {{($product->emi?'checked':'')}}>
                                 <p class="" for="emi">Emi</p>
                             </label>
                                 @error('emi')
@@ -238,10 +309,25 @@
 @push('scripts')
 <script type="text/javascript">
 $(document).ready(function(){
-  $("#productForm").on("submit", function (e) {
-    var hvalue = $('.ql-editor').html();
-    $(this).append("<textarea name='description' style='display:none'>"+hvalue+"</textarea>");
-   });
+    $("#productForm").on("submit", function (e) {
+        var hvalue = $('.ql-editor').html();
+        $(this).append("<textarea name='description' style='display:none'>"+hvalue+"</textarea>");
+    });
+
+    @if($errors->any('trial_duration_type','trial_duration','trial_price'))
+        $('.free_trial_fields').show();
+    @endif
+
+    $('#is_free_trial').on('change', function(){
+        if($(this).is(':checked'))
+        {
+            $('.free_trial_fields').show();
+        }
+        else
+        {
+            $('.free_trial_fields').hide();
+        }
+    });
 });
 </script>
 @endpush

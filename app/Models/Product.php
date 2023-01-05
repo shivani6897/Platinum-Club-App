@@ -10,4 +10,10 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
     protected $guarded = ['id'];
+
+    const DURATION_TYPE = [
+        'day' => 'DAY',
+        'month' => 'MONTH',
+        'year' => 'YEAR'
+    ];
 }

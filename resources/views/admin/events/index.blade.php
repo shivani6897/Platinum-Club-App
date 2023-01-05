@@ -215,7 +215,7 @@
                 if (result.isConfirmed) {
                     Swal.fire(
                         'Warning!',
-                        'Deleting User',
+                        'Deleting Event',
                         'warning'
                     );
                     $(obj).closest('form').submit();

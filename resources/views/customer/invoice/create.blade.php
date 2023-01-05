@@ -111,7 +111,7 @@
                 <span>Product Name</span>
                 <span class="relative mt-1.5 flex">
                   <input
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
                     @error('product_name')
                     border-error
                     @enderror"
@@ -130,7 +130,7 @@
                 <span>Product Qty</span>
                 <span class="relative mt-1.5 flex">
                   <input
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
                     @error('product_qty')
                     border-error
                     @enderror"
@@ -151,7 +151,7 @@
                 <span>Product Price</span>
                 <span class="relative mt-1.5 flex">
                   <input
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
                     @error('product_price')
                     border-error
                     @enderror"
@@ -160,7 +160,7 @@
                     type="number"
                     step="0.01"
                     min="1"
-                    value="{{old('product_price')[0]}}"
+                    value="{{old('product_price', )[0]}}"
                     required
                   />
                 </span>
@@ -246,7 +246,7 @@
                 <span>Product Qty</span>
                 <span class="relative mt-1.5 flex">
                   <input
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
                     @error('product_qty')
                     border-error
                     @enderror"
@@ -268,7 +268,7 @@
                 <span class="relative mt-1.5 flex">
                   <input
                     readonly
-                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
                     product_price"
                     placeholder="Product Price"
                     name="product_price[]"
@@ -293,13 +293,13 @@
             <span class="relative mt-1.5 flex">
               <textarea
                 rows="4"
-                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent 
+                class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
                 @error('product_price')
                 border-error
                 @enderror"
                 placeholder="Invoice Description"
                 name="description"
-                
+
               >{{old('description')}}</textarea>
             </span>
             @error('product_name')
@@ -459,7 +459,7 @@
       $('input[name="product_price[]"]').each(function(i,v){
         total += (parseInt($('input[name="product_price[]"]').get(i).value)*parseInt($('input[name="product_qty[]"]').get(i).value));
       });
-      
+
       backURL = backURL + "?" + $(this).serialize();
       $.ajax({
         url: "{{url('/customer/invoices/test')}}/"+total,

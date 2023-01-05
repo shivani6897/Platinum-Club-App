@@ -7,62 +7,62 @@
         <div class="h-full w-px bg-slate-300 dark:bg-navy-600"></div>
     </div>
     <div class="row flex justify-between w-full">
-        <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
-            <li class="flex items-center space-x-2">
-                <a
-                    class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
-                    href="{{ route('admin.dashboard') }}"
-                >Dashboard</a
-                >
-                <svg
-                    x-ignore
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 5l7 7-7 7"
-                    />
-                </svg>
-            </li>
-            <li>Offline Collection</li>
-        </ul>
-
-        <div class="flex justify-end mt-1 space-x-2">
-            <button
-                style="background-color: #38bdf8; color: white!important;"
-                class="btn p-2 rounded-full border border-slate-300 px-2.5 pr-9 pl-9 text-xs+ hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
-                type="button"
-                disabled
+    <ul class="hidden flex-wrap items-center space-x-2 sm:flex">
+        <li class="flex items-center space-x-2">
+            <a
+                class="text-primary transition-colors hover:text-primary-focus dark:text-accent-light dark:hover:text-accent"
+                href="{{ route('admin.dashboard') }}"
+            >Dashboard</a
             >
-                <span>Total Collection:<br> {{$invoices->sum('total_amount')}}/-</span>
-            </button>
-        </div>
+            <svg
+                x-ignore
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 5l7 7-7 7"
+                />
+            </svg>
+        </li>
+        <li>Offline Collection</li>
+    </ul>
+
+    <div class="flex justify-end mt-1 space-x-2">
+        <button
+            style="background-color: #38bdf8; color: white!important;"
+            class="btn p-2 rounded-full border border-slate-300 px-2.5 pr-9 pl-9 text-xs+ hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+            type="button"
+            disabled
+        >
+            <span>Total Collection:<br> {{$invoices->sum('total_amount')}}/-</span>
+        </button>
+    </div>
     </div>
 @endsection
 
 
 @section('content')
 
-    <div>
-        <div class="grid md:grid-cols-2 md:gap-6 mt-7">
-            <div>
-                <div class="col-span-12">
-                    <div class="card p-4 sm:p-5">
-                        <p
-                            class="text-base font-medium text-slate-700 dark:text-navy-100"
-                        >
-                            Customer Details
-                        </p>
-                        <form id="createInvoiceForm" method="post" action="{{route('offlinepayments.store')}}">
-                            @csrf
-                            <input type="hidden" value="" name="paymentIntent">
-                            {{--                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">--}}
+<div>
+    <div class="grid md:grid-cols-2 md:gap-6 mt-7">
+        <div>
+            <div class="col-span-12">
+                <div class="card p-4 sm:p-5">
+                    <p
+                        class="text-base font-medium text-slate-700 dark:text-navy-100"
+                    >
+                        Customer Details
+                    </p>
+                    <form id="createInvoiceForm" method="post" action="{{route('offlinepayments.store')}}">
+                        @csrf
+                        <input type="hidden" value="" name="paymentIntent">
+{{--                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">--}}
                             <label class="block">
                                 <span>Customer</span>
                                 <select
@@ -81,31 +81,30 @@
                                 <span class="text-tiny+ text-error">{{$message}}</span>
                                 @enderror
                             </label>
-                            {{--                        </div>--}}
+{{--                        </div>--}}
 
-                            <div class="grid mt-2 grid-cols-1 mt-5 gap-4 sm:grid-cols-12">
-                                <div class="sm:col-span-8">
-                                    <p class="text-base font-medium text-slate-700 dark:text-navy-100">
-                                        Product Details
-                                    </p>
-                                </div>
-                                <div class="sm:col-span-4 justify-end flex">
-                                    <button
-                                        class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90 text-end"
-                                        type="button"
-                                        onclick="addProduct()"
-                                    >
-                                        <i class="fa fa-plus" aria-hidden="true"></i>
-{{--                                        <span>Add</span>--}}
-                                    </button>
-                                </div>
+                        <div class="grid mt-2 grid-cols-1 mt-5 gap-4 sm:grid-cols-12">
+                            <div class="sm:col-span-8">
+                                <p class="text-base font-medium text-slate-700 dark:text-navy-100">
+                                    Product Details
+                                </p>
                             </div>
+                            <div class="sm:col-span-4 justify-end flex">
+                                <button
+                                    class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90 text-end"
+                                    type="button"
+                                    onclick="addProduct()"
+                                >
+                                    <span>Add</span>
+                                </button>
+                            </div>
+                        </div>
 
-                            <div id="products_div">
-                                @forelse(old('product_name',[]) as $data)
-                                    @if($loop->first)
-                                        {{--                                    <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">--}}
-                                        <label class="block mt-2">
+                        <div id="products_div">
+                            @forelse(old('product_name',[]) as $data)
+                                @if($loop->first)
+{{--                                    <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">--}}
+                                        <label class="block sm:col-span-6">
                                             <span>Product Name</span>
                                             <span class="relative mt-1.5 flex">
                                               <input
@@ -124,7 +123,7 @@
                                             <span class="text-tiny+ text-error">{{$message}}</span>
                                             @enderror
                                         </label>
-                                        <label class="block mt-2">
+                                        <label class="block sm:col-span-2">
                                             <span>Product Qty</span>
                                             <span class="relative mt-1.5 flex">
                                           <input
@@ -145,7 +144,7 @@
                                             <span class="text-tiny+ text-error">{{$message}}</span>
                                             @enderror
                                         </label>
-                                        <label class="block mt-2">
+                                        <label class="block sm:col-span-4">
                                             <span>Product Price</span>
                                             <span class="relative mt-1.5 flex">
                                               <input
@@ -166,9 +165,9 @@
                                             <span class="text-tiny+ text-error">{{$message}}</span>
                                             @enderror
                                         </label>
-                                        {{--                                    </div>--}}
-                                    @else
-                                        {{--                                    <div class="product_div grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">--}}
+{{--                                    </div>--}}
+                                @else
+{{--                                    <div class="product_div grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">--}}
                                         <label class="block mt-2 ">
                                             <span>Product Name</span>
                                             <span class="relative mt-1.5 flex">
@@ -218,17 +217,15 @@
                                                 type="button"
                                                 onclick="deleteProduct(this)"
                                             >
-{{--                                                <i class="fa fa-plus" aria-hidden="true"></i>--}}
-
                                                 <span>Delete</span>
                                             </button>
                                         </div>
-                                    @endif
-                                @empty
-                                    {{--                                            <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">--}}
-                                    <label class="block mt-2  product-label">
-                                        <span>Product</span>
-                                        <span class="relative mt-1.5 flex">
+                                        @endif
+                                        @empty
+{{--                                            <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">--}}
+                                                <label class="block mt-2  product-label">
+                                                    <span>Product</span>
+                                                    <span class="relative mt-1.5 flex">
                                                   <select
                                                       class="form-select w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent product_id"
                                                       name="product_id[]"
@@ -241,10 +238,10 @@
                                                       @endforeach
                                                   </select>
                                                 </span>
-                                    </label>
-                                    <label class="block mt-2">
-                                        <span>Product Qty</span>
-                                        <span class="relative mt-1.5 flex">
+                                                </label>
+                                                <label class="block mt-2">
+                                                    <span>Product Qty</span>
+                                                    <span class="relative mt-1.5 flex">
                                                   <input
                                                       class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
                                                       @error('product_qty')
@@ -259,13 +256,13 @@
                                                       required
                                                   />
                                                 </span>
-                                        @error('product_qty')
-                                        <span class="text-tiny+ text-error">{{$message}}</span>
-                                        @enderror
-                                    </label>
-                                    <label class="block mt-2 product-price-label">
-                                        <span>Product Price</span>
-                                        <span class="relative mt-1.5 flex">
+                                                    @error('product_qty')
+                                                    <span class="text-tiny+ text-error">{{$message}}</span>
+                                                    @enderror
+                                                </label>
+                                                <label class="block mt-2 product-price-label">
+                                                    <span>Product Price</span>
+                                                    <span class="relative mt-1.5 flex">
                                                   <input
                                                       readonly
                                                       class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
@@ -276,21 +273,21 @@
                                                       value=""
                                                   />
                                                 </span>
-                                        @error('product_price')
-                                        <span class="text-tiny+ text-error">{{$message}}</span>
-                                        @enderror
-                                    </label>
-                                    {{--                                            </div>--}}
-                                @endforelse
-                            </div>
+                                                    @error('product_price')
+                                                    <span class="text-tiny+ text-error">{{$message}}</span>
+                                                    @enderror
+                                                </label>
+{{--                                            </div>--}}
+                                        @endforelse
+                                    </div>
 
-                            <p class="text-base font-medium mt-6 mb-4 text-slate-700 dark:text-navy-100">
-                                Payment Details
-                            </p>
+                                    <p class="text-base font-medium mt-6 mb-4 text-slate-700 dark:text-navy-100">
+                                        Payment Details
+                                    </p>
 
-                            <label class="block mt-2 sm:col-span-4">
-                                <span>Invoice Description</span>
-                                <span class="relative mt-1.5 flex">
+                                    <label class="block mt-2 sm:col-span-4">
+                                        <span>Invoice Description</span>
+                                        <span class="relative mt-1.5 flex">
                                           <textarea
                                               rows="4"
                                               class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
@@ -302,36 +299,36 @@
                                           >
                                           {{old('description')}}</textarea>
                                     </span>
-                                @error('product_name')
-                                <span class="text-tiny+ text-error">{{$message}}</span>
-                                @enderror
-                            </label>
+                                        @error('product_name')
+                                        <span class="text-tiny+ text-error">{{$message}}</span>
+                                        @enderror
+                                    </label>
 
-                            <label class="inline-flex items-center space-x-2 mt-6">
-                                <input
-                                    class="check form-checkbox is-basic h-5 w-5 rounded border-slate-400/70 checked:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
-                                    type="checkbox"
-                                    name="declaration"
-                                    required
-                                />
-                                <p  id="agree-label" class="text-black"
-                                    {{--                                           onClick="myFunction()"--}}
-                                >
-                                    I hereby declare that I’m collecting the cash on the behalf of the organisation.                                       </p>
-                                <p id="tax-detail"></p>
-                                {{-- <p class="text-black">I hereby agree to make the monthly Emi of Rs <span id="emi-amount">13,333.00</span>/-</p> --}}
-                            </label>
+                                    <label class="inline-flex items-center space-x-2 mt-6">
+                                        <input
+                                            class="check form-checkbox is-basic h-5 w-5 rounded border-slate-400/70 checked:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
+                                            type="checkbox"
+                                            name="declaration"
+                                            required
+                                        />
+                                        <p  id="agree-label" class="text-black"
+{{--                                           onClick="myFunction()"--}}
+                                        >
+                                            I hereby declare that I’m collecting the cash on the behalf of the organisation                                        </p>
+                                        <p id="tax-detail"></p>
+                                        {{-- <p class="text-black">I hereby agree to make the monthly Emi of Rs <span id="emi-amount">13,333.00</span>/-</p> --}}
+                                    </label>
 
 
-                            <div class="flex justify-end mt-2 space-x-2">
-                                <button
-                                    class="collect-cash-btn btn bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
-                                    type="submit"
-                                >
-                                    Collect Cash
-                                </button>
-                            </div>
-                    </div>
+                                    <div class="flex justify-end mt-2 space-x-2">
+                                        <button
+                                            class="collect-cash-btn btn bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                                            type="submit"
+                                        >
+                                            Collect Cash
+                                        </button>
+                                    </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -381,29 +378,29 @@
                                     </div>
                                 </div>
 
-                                {{--                                <label class="block mt-4">--}}
-                                {{--                                    <span>Select dates</span><br>--}}
-                                {{--                                    <input--}}
-                                {{--                                        type="text"--}}
-                                {{--                                       class="search form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"--}}
-                                {{--                                       name="created_at"--}}
-                                {{--                                       value="{{request('created_at','')}}"--}}
-                                {{--                                    />--}}
-                                {{--                                        <input--}}
-                                {{--                                            x-init="$el._x_flatpickr = flatpickr($el,{mode: 'range',altFormat: 'd-m-Y',dateFormat: 'Y-m-d'})"--}}
-                                {{--                                            class="search form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent--}}
-                                {{--                                            @error('created_at')--}}
-                                {{--                                                border-error--}}
-                                {{--                                            @enderror"--}}
-                                {{--                                            placeholder="Choose date range..."--}}
-                                {{--                                            type="text"--}}
-                                {{--                                            name="created_at"--}}
-                                {{--                                            value="{{request('created_at','')}}"--}}
-                                {{--                                        />--}}
-                                {{--                                </label>--}}
+{{--                                <label class="block mt-4">--}}
+{{--                                    <span>Select dates</span><br>--}}
+{{--                                    <input--}}
+{{--                                        type="text"--}}
+{{--                                       class="search form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"--}}
+{{--                                       name="created_at"--}}
+{{--                                       value="{{request('created_at','')}}"--}}
+{{--                                    />--}}
+{{--                                        <input--}}
+{{--                                            x-init="$el._x_flatpickr = flatpickr($el,{mode: 'range',altFormat: 'd-m-Y',dateFormat: 'Y-m-d'})"--}}
+{{--                                            class="search form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent--}}
+{{--                                            @error('created_at')--}}
+{{--                                                border-error--}}
+{{--                                            @enderror"--}}
+{{--                                            placeholder="Choose date range..."--}}
+{{--                                            type="text"--}}
+{{--                                            name="created_at"--}}
+{{--                                            value="{{request('created_at','')}}"--}}
+{{--                                        />--}}
+{{--                                </label>--}}
                             </form>
 
-                            {{--                            </div>--}}
+{{--                            </div>--}}
                             <div class=" mt-3">
                                 <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
                                     <table class="is-hoverable w-full text-left">
@@ -424,12 +421,12 @@
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                                 GST Number
                                             </th>
-                                            {{--                                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">--}}
-                                            {{--                                                Payment Method--}}
-                                            {{--                                            </th>--}}
-                                            {{--                                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">--}}
-                                            {{--                                                Status--}}
-                                            {{--                                            </th>--}}
+{{--                                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">--}}
+{{--                                                Payment Method--}}
+{{--                                            </th>--}}
+{{--                                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">--}}
+{{--                                                Status--}}
+{{--                                            </th>--}}
                                             <th class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                                 Action
                                             </th>
@@ -443,14 +440,36 @@
                                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->customer->name }} </td>
                                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $invoice->total_amount}} </td>
                                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ isset($invoice->customer->gst_no) ? $invoice->customer->gst_no : '-' }} </td>
-
+{{--                                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >--}}
+{{--                                                    @if($invoice->payment_method==0)--}}
+{{--                                                        Offline--}}
+{{--                                                    @elseif($invoice->payment_method==1)--}}
+{{--                                                        Credit Card--}}
+{{--                                                    @elseif($invoice->payment_method==2)--}}
+{{--                                                        Debit Card--}}
+{{--                                                    @elseif($invoice->payment_method==3)--}}
+{{--                                                        Gateway ({{$invoice->payments?->last()?->gateway}})--}}
+{{--                                                    @else--}}
+{{--                                                        Unknown--}}
+{{--                                                    @endif--}}
+{{--                                                </td>--}}
+{{--                                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >--}}
+{{--                                                    @if($invoice->status==0)--}}
+{{--                                                        Pending--}}
+{{--                                                    @elseif($invoice->status==1)--}}
+{{--                                                        Paid--}}
+{{--                                                    @elseif($invoice->status==2)--}}
+{{--                                                        Pending--}}
+{{--                                                    @else--}}
+{{--                                                        Unknown--}}
+{{--                                                    @endif--}}
+{{--                                                </td>--}}
                                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                                                     <div
                                                         x-data="usePopper({placement:'bottom-end',offset:4})"
                                                         @click.outside="if(isShowPopper) isShowPopper = false"
                                                         class="inline-flex"
                                                     >
-                                                        <a href="{{route('invoices.payment',['id'=>auth()->id(),'invoiceId'=>$invoice->id,'rinvoiceId'=>0])}}" target="_blank" title="Share invoice now"><i class="fa-solid fa-share-from-square"></i></a>
                                                         <button
                                                             x-ref="popperRef"
                                                             @click="isShowPopper = !isShowPopper"
@@ -481,16 +500,42 @@
                                                                 <ul>
                                                                     <li>
                                                                         <a
-                                                                            href="{{ route('invoices.pdf', $invoice->id) }}"
+                                                                            href="{{ route('admin.offlinepayments.edit',$invoice->id) }}"
                                                                             class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
-                                                                            PDF
+                                                                            Edit
                                                                         </a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <form
+                                                                            class="d-inline"
+                                                                            action="{{ route('admin.offlinepayments.destroy',$invoice->id) }}"
+                                                                            method="POST">
+                                                                            @csrf
+                                                                            <input name="_method" type="hidden" value="DELETE">
+                                                                            <button
+                                                                                type="submit"
+                                                                                onclick="offlinepaymentsDelete(this)"
+                                                                                class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
+                                                                            >Delete
+                                                                            </button>
+                                                                        </form>
+                                                                        {{--                                                         <form--}}
+                                                                        {{--                                                             class="d-inline"--}}
+                                                                        {{--                                                             action="{{ route('admin.offlinepayments.destroy',$invoice->id) }}"--}}
+                                                                        {{--                                                             method="POST">--}}
+                                                                        {{--                                                             @csrf--}}
+                                                                        {{--                                                             <input name="_method" type="hidden" value="DELETE">--}}
+                                                                        {{--                                                             <button--}}
+                                                                        {{--                                                                 type="button"--}}
+                                                                        {{--                                                                 onclick="offlinepaymentsDelete(this)"--}}
+                                                                        {{--                                                                 class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"--}}
+                                                                        {{--                                                             >Delete</button>--}}
+                                                                        {{--                                                         </form>--}}
                                                                     </li>
                                                                 </ul>
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                 </td>
 
                                             </tr>
@@ -512,7 +557,7 @@
             </div>
         </div>
     </div>
-    </div>
+</div>
 
 @endsection
 
@@ -529,7 +574,7 @@
         function addProduct()
         {
             $('#products_div').append(`<div class="product_div grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">
-              <label class="block sm:col-span-12 product-label">
+              <label class="block sm:col-span-6 product-label">
                 <span>Product Name</span>
                 <span class="relative mt-1.5 flex">
                   <select
@@ -545,7 +590,7 @@
             </select>
           </span>
         </label>
-        <label class="block sm:col-span-12 product-qty-label">
+        <label class="block sm:col-span-2 product-qty-label">
           <span>Product Qty</span>
           <span class="relative mt-1.5 flex">
             <input
@@ -559,7 +604,7 @@
             />
           </span>
         </label>
-        <label class="block sm:col-span-12 product-price-label">
+        <label class="block sm:col-span-2 product-price-label">
           <span>Product Price</span>
           <span class="relative mt-1.5 flex">
             <input
@@ -634,7 +679,7 @@
             $(this).closest("form").submit();
         });
 
-        $(function() {
+            $(function() {
             $('input[name="created_at"]').daterangepicker({
                 // }, function(start, end, label) {
                 //     console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));

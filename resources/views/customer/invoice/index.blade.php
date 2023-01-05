@@ -100,7 +100,11 @@
                              <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->invoice_number }} </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->customer->name }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">
+                                    <a class="customer-name" href="{{ route('customer.invoice.details',$invoice->customer->id) }}">
+                                        {{ $invoice->customer->name }}
+                                    </a>
+                                </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $invoice->total_amount}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ isset($invoice->customer->gst_no) ? $invoice->customer->gst_no : '-' }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >
@@ -197,4 +201,18 @@
             }
 
         </script>
+    @endpush
+
+    @push('styles')
+        <style>
+            .customer-name {
+                color:#3B71CA ;
+                border-bottom: 1px solid #3B71CA;
+            }
+
+            .customer-name:hover {
+                color:#64748b ;
+                border-bottom: 1px solid #64748b;
+            }
+        </style>
     @endpush

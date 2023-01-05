@@ -162,7 +162,7 @@
                             </label>
                         </div>
                         <div class="mt-6">
-                            <label class="inline-flex items-center space-x-2">
+                            <label class="inline-flex items-center space-x-2 one_time-field">
                                 <input
                                     class="rb-one-time form-radio is-basic h-5 w-5 rounded-full border-slate-400/70 checked:border-primary checked:bg-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:checked:border-accent dark:checked:bg-accent dark:hover:border-accent dark:focus:border-accent"
                                     name="payment_type" checked
@@ -229,7 +229,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-7">
+                        <div class="mt-7 payment-options">
                             <input type="hidden" name="gateway" id="payment-gateway"
                                    value="{{($gateway->stripe_active==1?'stripe':'razorpay')}}">
                             <div class="grid grid-cols-3 gap-4 mt-4">
@@ -255,6 +255,32 @@
                                 @endif
                             </div>
                         </div>
+                        <!-- Free Trial -->
+                        <div class="is_free_trial" style="{{$selectedProduct->is_free_trial ? '' : 'display:none;'}}">   
+                            <label class="inline-flex items-center space-x-2 mt-5">
+                                <input
+                                  class="form-switch h-7 w-14 rounded-full bg-slate-300 before:rounded-full before:bg-slate-50 checked:bg-primary checked:before:bg-white dark:bg-navy-900 dark:before:bg-navy-300 dark:checked:bg-accent dark:checked:before:bg-white"
+                                  type="radio"
+                                  name="is_free_trial"
+                                  data-trial_fee="{{$selectedProduct->trial_price}}"
+                                  {{$selectedProduct->is_free_trial ? 'checked' : ''}}
+                                />
+                                <span class="text-base">Free Trial</span>
+                            </label>
+                            <div
+                                class="alert flex rounded-lg bg-info/10 py-4 px-4 text-info dark:bg-info/15 sm:px-5 mt-2"
+                            >   
+                                <i class="fa-sharp fa-solid fa-circle-info" style="margin-top:3px;"></i> 
+                                <p class="free_trial_msg">&nbsp;
+                                    @if($selectedProduct->trial_price != 0)
+                                        Rs {{$selectedProduct->trial_price}} will be charge for trial period.
+                                    @else
+                                        You will not be charged until your trial ends.
+                                    @endif
+                                    Your trial period ends after <b>{{$selectedProduct->trial_duration}} {{$selectedProduct->trial_duration_type}}</b>
+                                </p>
+                            </div>
+                        </div>
                         <div class="mt-5">
                             <label class="inline-flex items-center space-x-2">
                                 <input
@@ -269,7 +295,7 @@
                             </label>
                             <div class="mt-5">
                                 <button type="button" onclick="payAttempt(this)"
-                                        class="btn bg-green-400 font-medium text-white py-4 px-7 rounded-xl text-lg">
+                                        class="btn bg-green-400 font-medium text-white py-4 px-7 rounded-xl text-lg payNowBtn">
                                     Pay Now
                                 </button>
                             </div>
@@ -371,25 +397,44 @@
         $(id).hide();
     }
 
+    function setPayNowBtnLoading(isLoading) {
+        if (isLoading) {
+            // Disable the button and show a spinner
+            document.querySelector(".payNowBtn").disabled = true;
+            document.querySelector(".payNowBtn").innerHTML = "Loading...";
+        } else {
+            document.querySelector(".payNowBtn").disabled = false;
+            document.querySelector(".payNowBtn").innerHTML = "Pay Now";
+        }
+    }
+
     function payAttempt(obj) {
         document.getElementById('paymentForm').reportValidity()
         if (document.getElementById('paymentForm').checkValidity()) {
+
+            var payingAmount = 0;
+            if($('input[name="is_free_trial"]').is(':checked')){
+                payingAmount = $('input[name="is_free_trial"]').data('trial_fee');
+            }else{
+                if ($('input[name="payment_type"]:checked').val() == 0)
+                    payingAmount = $('select[name="product_id"]').find(':selected').data('price');
+                else
+                    payingAmount = $('input[name="downpayment"]').val()
+            }
             if ($('#payment-gateway').val() == 'stripe') {
                 newUrl = backURL + "?" + $('#paymentForm').serialize();
-                if ($('input[name="payment_type"]:checked').val() == 0)
-                    stripeUpdatePaymentIntent($('select[name="product_id"]').find(':selected').data('price'));
-                else
-                    stripeUpdatePaymentIntent($('input[name="downpayment"]').val());
+                stripeUpdatePaymentIntent(payingAmount);
                 setLoading(false);
                 $('#stripeModal').show();
             } else if ($('#payment-gateway').val() == 'razorpay') {
                 razorpayNewUrl = razorpayBackURL + "?" + $('#paymentForm').serialize();
-                if ($('input[name="payment_type"]:checked').val() == 0)
-                    razorpayCreateOrder($('select[name="product_id"]').find(':selected').data('price'));
-                else
-                    razorpayCreateOrder($('input[name="downpayment"]').val());
+                razorpayCreateOrder(payingAmount);
             } else if ($('#payment-gateway').val() == 'instamojo') {
                 document.getElementById('paymentForm').submit();
+            }
+            else{
+                document.getElementById('paymentForm').submit();
+                setPayNowBtnLoading(true);
             }
         }
     }
@@ -415,6 +460,9 @@
         $('#product').change(function () {
             $.ajax({
                 url: '{{url('/landing/'.$id.'/product')}}/' + $(this).val(),
+                beforeSend: function(){
+                    setPayNowBtnLoading(true);
+                },
                 success: function (result) {
                     if (result.status) {
                         if (result.data.emi == 1) {
@@ -422,6 +470,9 @@
                         } else {
                             $('.emi-field').slideUp('slow');
                         }
+
+                        freeTrialChanges(result);
+                        
                         pending = parseInt(result.data.price) - parseInt(result.data.downpayment);
                         if (result.data.image != '' && result.data.image != null && result.data.image != undefined)
                             $('#product-img').attr('src', '{{url('/images/products/')}}/' + result.data.image);
@@ -451,6 +502,9 @@
                 },
                 error: function (error) {
                     console.error(error);
+                },
+                complete: function(){
+                    setPayNowBtnLoading(false);
                 }
             })
         });
@@ -579,7 +633,6 @@
     }
 
     function payUsingStripe(obj) {
-        console.log(obj)
         $('#paymentForm').submit(function (e) {
             handleSubmit(e);
         })
@@ -613,6 +666,29 @@
     }
 
     initialize();
+
+    function freeTrialChanges(response) {
+        if (response.data.is_free_trial == 1){
+            $('.is_free_trial').slideDown('slow');
+            $('input[name="is_free_trial"]').prop('checked', true);
+            $('input[name="is_free_trial"]').attr('data-trial_fee', response.data.trial_price);
+            $('.free_trial_msg').html(response.data.trial_msg);
+
+            if (response.data.trial_price != 0){
+                $('.payment-options').slideDown('slow');
+                $('#payment-gateway').val('stripe');
+            }else{
+                $('.payment-options').slideUp('slow');
+                $('#payment-gateway').val('');
+            }
+
+        }else{
+            $('input[name="is_free_trial"]').prop('checked', false);
+            $('.is_free_trial').slideUp('slow');
+            $('.payment-options').slideDown('slow');
+            $('#payment-gateway').val('stripe');
+        }
+    }
 
 </script>
 
