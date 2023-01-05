@@ -22,62 +22,84 @@ class DashboardController extends Controller
         // Numbers In Boxes
         $revenue = Income::where('user_id',auth()->id())
             ->when(request('filter_from'),function($q) {
-                $q->whereDate('date','>=',request('filter_from'));
+                if(request('filter_from')!='0000-00-00')
+                    $q->whereDate('date','>=',request('filter_from'));
             }, function($q) {
                 $q->whereDate('date','>=',Carbon::now()->subDays(30)->format('Y-m-d'));
             })
             ->when(request('filter_to'),function($q) {
-                $q->whereDate('date','<=',request('filter_to'));
+                if(request('filter_to')!='0000-00-00')
+                    $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
                 $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->sum('income');
         $ad_spends = Expense::where('user_id',auth()->id())
             ->when(request('filter_from'),function($q) {
-                $q->whereDate('date','>=',request('filter_from'));
+                if(request('filter_from')!='0000-00-00')
+                    $q->whereDate('date','>=',request('filter_from'));
             }, function($q) {
                 $q->whereDate('date','>=',Carbon::now()->subDays(30)->format('Y-m-d'));
             })
             ->when(request('filter_to'),function($q) {
-                $q->whereDate('date','<=',request('filter_to'));
+                if(request('filter_to')!='0000-00-00')
+                    $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
                 $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->where('expense_category_id',1)->sum('expense');
         $overheads = Expense::where('user_id',auth()->id())
             ->when(request('filter_from'),function($q) {
-                $q->whereDate('date','>=',request('filter_from'));
+                if(request('filter_from')!='0000-00-00')
+                    $q->whereDate('date','>=',request('filter_from'));
             }, function($q) {
                 $q->whereDate('date','>=',Carbon::now()->subDays(30)->format('Y-m-d'));
             })
             ->when(request('filter_to'),function($q) {
-                $q->whereDate('date','<=',request('filter_to'));
+                if(request('filter_to')!='0000-00-00')
+                    $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
                 $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->whereNot('expense_category_id',1)->sum('expense');
         $net_profit = $revenue-$ad_spends-$overheads;
         $leads = Lead::where('user_id',auth()->id())
             ->when(request('filter_from'),function($q) {
-                $q->whereDate('date','>=',request('filter_from'));
+                if(request('filter_from')!='0000-00-00')
+                    $q->whereDate('date','>=',request('filter_from'));
             }, function($q) {
                 $q->whereDate('date','>=',Carbon::now()->subDays(30)->format('Y-m-d'));
             })
             ->when(request('filter_to'),function($q) {
-                $q->whereDate('date','<=',request('filter_to'));
+                if(request('filter_to')!='0000-00-00')
+                    $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
                 $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->sum('lead_generated');
         $cost_per_lead = $ad_spends/($leads>0?$leads:1);
         $converted_customers = Lead::where('user_id',auth()->id())
             ->when(request('filter_from'),function($q) {
-                $q->whereDate('date','>=',request('filter_from'));
+                if(request('filter_from')!='0000-00-00')
+                    $q->whereDate('date','>=',request('filter_from'));
             }, function($q) {
                 $q->whereDate('date','>=',Carbon::now()->subDays(30)->format('Y-m-d'));
             })
             ->when(request('filter_to'),function($q) {
-                $q->whereDate('date','<=',request('filter_to'));
+                if(request('filter_to')!='0000-00-00')
+                    $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
                 $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->sum('converted_customer');
-        $customers = Customer::where('user_id',auth()->id())->count();
+        $customers = Customer::where('user_id',auth()->id())
+            ->when(request('filter_from'),function($q) {
+                if(request('filter_from')!='0000-00-00')
+                    $q->whereDate('created_at','>=',request('filter_from'));
+            }, function($q) {
+                $q->whereDate('created_at','>=',Carbon::now()->subDays(30)->format('Y-m-d'));
+            })
+            ->when(request('filter_to'),function($q) {
+                if(request('filter_to')!='0000-00-00')
+                    $q->whereDate('created_at','<=',request('filter_to'));
+            }, function ($q) {
+                $q->whereDate('created_at','<=',Carbon::now()->format('Y-m-d'));
+            })->count();
         $profitability = ($revenue>0?$net_profit*100/$revenue:-100);
         if($revenue==0 && $net_profit==0)
             $profitability=0;
@@ -174,10 +196,10 @@ class DashboardController extends Controller
                           FROM
                           `incomes`
                           WHERE `incomes`.`deleted_at` IS NULL
-                          ".(request('filter_from')?
+                          ".(request('filter_from') && request('filter_from')!='0000-00-00'?
                         " AND DATE(`incomes`.`date`)>='".request('filter_from')."'":
                         " AND DATE(`incomes`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
-                        (request('filter_to')?
+                        (request('filter_to') && request('filter_to')!='0000-00-00'?
                         " AND DATE(`incomes`.`date`)<='".request('filter_to')."'":
                         " AND DATE(`incomes`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
                           AND `incomes`.user_id=".auth()->id()."
@@ -191,10 +213,10 @@ class DashboardController extends Controller
                           FROM
                           `expenses`
                           WHERE `expenses`.`deleted_at` IS NULL
-                          ".(request('filter_from')?
+                          ".(request('filter_from') && request('filter_from')!='0000-00-00'?
                         " AND DATE(`expenses`.`date`)>='".request('filter_from')."'":
                         " AND DATE(`expenses`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
-                        (request('filter_to')?
+                        (request('filter_to') && request('filter_to')!='0000-00-00'?
                         " AND DATE(`expenses`.`date`)<='".request('filter_to')."'":
                         " AND DATE(`expenses`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
                           AND `expenses`.user_id=".auth()->id()."
@@ -213,23 +235,27 @@ class DashboardController extends Controller
         // Revenue
         $revenueArray['x'] = Income::where('user_id',auth()->id())
             ->when(request('filter_from'),function($q) {
-                $q->whereDate('date','>=',request('filter_from'));
+                if(request('filter_from')!='0000-00-00')
+                    $q->whereDate('date','>=',request('filter_from'));
             }, function($q) {
                 $q->whereDate('date','>=',Carbon::now()->subDays(30)->format('Y-m-d'));
             })
             ->when(request('filter_to'),function($q) {
-                $q->whereDate('date','<=',request('filter_to'));
+                if(request('filter_to')!='0000-00-00')
+                    $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
                 $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->orderBy('date')->pluck('date')->all();
         $revenueArray['y'] = Income::where('user_id',auth()->id())
             ->when(request('filter_from'),function($q) {
-                $q->whereDate('date','>=',request('filter_from'));
+                if(request('filter_from')!='0000-00-00')
+                    $q->whereDate('date','>=',request('filter_from'));
             }, function($q) {
                 $q->whereDate('date','>=',Carbon::now()->subDays(30)->format('Y-m-d'));
             })
             ->when(request('filter_to'),function($q) {
-                $q->whereDate('date','<=',request('filter_to'));
+                if(request('filter_to')!='0000-00-00')
+                    $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
                 $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->select((DB::raw('sum(income) as revenue')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->orderBy('date')->pluck('revenue')->all();
@@ -239,23 +265,27 @@ class DashboardController extends Controller
         // Ad Spends
         $ad_spendsArray['x'] = Expense::where('user_id',auth()->id())
             ->when(request('filter_from'),function($q) {
-                $q->whereDate('date','>=',request('filter_from'));
+                if(request('filter_from')!='0000-00-00')
+                    $q->whereDate('date','>=',request('filter_from'));
             }, function($q) {
                 $q->whereDate('date','>=',Carbon::now()->subDays(30)->format('Y-m-d'));
             })
             ->when(request('filter_to'),function($q) {
-                $q->whereDate('date','<=',request('filter_to'));
+                if(request('filter_to')!='0000-00-00')
+                    $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
                 $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->where('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->pluck('date')->all();
         $ad_spendsArray['y'] = Expense::where('user_id',auth()->id())
             ->when(request('filter_from'),function($q) {
-                $q->whereDate('date','>=',request('filter_from'));
+                if(request('filter_from')!='0000-00-00')
+                    $q->whereDate('date','>=',request('filter_from'));
             }, function($q) {
                 $q->whereDate('date','>=',Carbon::now()->subDays(30)->format('Y-m-d'));
             })
             ->when(request('filter_to'),function($q) {
-                $q->whereDate('date','<=',request('filter_to'));
+                if(request('filter_to')!='0000-00-00')
+                    $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
                 $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->where('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->pluck('expense')->all();
@@ -263,23 +293,27 @@ class DashboardController extends Controller
         // Ad Spends
         $overheadsArray['x'] = Expense::where('user_id',auth()->id())
             ->when(request('filter_from'),function($q) {
-                $q->whereDate('date','>=',request('filter_from'));
+                if(request('filter_from')!='0000-00-00')
+                    $q->whereDate('date','>=',request('filter_from'));
             }, function($q) {
                 $q->whereDate('date','>=',Carbon::now()->subDays(30)->format('Y-m-d'));
             })
             ->when(request('filter_to'),function($q) {
-                $q->whereDate('date','<=',request('filter_to'));
+                if(request('filter_to')!='0000-00-00')
+                    $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
                 $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->whereNot('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->pluck('date')->all();
         $overheadsArray['y'] = Expense::where('user_id',auth()->id())
             ->when(request('filter_from'),function($q) {
-                $q->whereDate('date','>=',request('filter_from'));
+                if(request('filter_from')!='0000-00-00')
+                    $q->whereDate('date','>=',request('filter_from'));
             }, function($q) {
                 $q->whereDate('date','>=',Carbon::now()->subDays(30)->format('Y-m-d'));
             })
             ->when(request('filter_to'),function($q) {
-                $q->whereDate('date','<=',request('filter_to'));
+                if(request('filter_to')!='0000-00-00')
+                    $q->whereDate('date','<=',request('filter_to'));
             }, function ($q) {
                 $q->whereDate('date','<=',Carbon::now()->format('Y-m-d'));
             })->whereNot('expense_category_id',1)->select((DB::raw('sum(expense) as expense')),DB::raw("DATE_FORMAT(date, '%b-%Y') as month"),'date')->groupBy('date')->pluck('expense')->all();

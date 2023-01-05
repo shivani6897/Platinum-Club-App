@@ -373,6 +373,17 @@
                 $('#reportrange #date-duration').html(start.format('MMMM D, YYYY') + ' - ' + end.format(
                     'MMMM D, YYYY'));
 
+                if(start._isValid==false || end._isValid==false)
+                {
+                    $('#reportrange #date-duration').html('All Time');
+                    if(flg==1)
+                    {
+                        $('input[name="filter_from"]').val('0000-00-00');
+                        $('input[name="filter_to"]').val('0000-00-00').closest('form').submit();
+                        return;
+                    }
+                }
+
                 if(flg==1)
                 {
                     $('input[name="filter_from"]').val(start.format("YYYY-MM-DD"));
@@ -396,8 +407,8 @@
                     ],
                     'This Year': [moment().startOf('year'), moment().endOf('year')],
                     'Last Year': [moment().subtract(1, 'year').startOf('year'), moment()
-                        .subtract(1, 'year').endOf('year')
-                    ]
+                        .subtract(1, 'year').endOf('year')],
+                    'All Time': ['','']
                 }
             }, cb);
 
