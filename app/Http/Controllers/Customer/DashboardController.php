@@ -196,11 +196,13 @@ class DashboardController extends Controller
                           FROM
                           `incomes`
                           WHERE `incomes`.`deleted_at` IS NULL
-                          ".(request('filter_from') && request('filter_from')!='0000-00-00'?
-                        " AND DATE(`incomes`.`date`)>='".request('filter_from')."'":
+                          ".(request('filter_from')?
+                            (request('filter_from')!='0000-00-00'?
+                        " AND DATE(`incomes`.`date`)>='".request('filter_from')."'":""):
                         " AND DATE(`incomes`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
-                        (request('filter_to') && request('filter_to')!='0000-00-00'?
-                        " AND DATE(`incomes`.`date`)<='".request('filter_to')."'":
+                        (request('filter_to')?
+                            (request('filter_to')!='0000-00-00'?
+                        " AND DATE(`incomes`.`date`)<='".request('filter_to')."'":""):
                         " AND DATE(`incomes`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
                           AND `incomes`.user_id=".auth()->id()."
                           GROUP BY `date`
@@ -213,11 +215,13 @@ class DashboardController extends Controller
                           FROM
                           `expenses`
                           WHERE `expenses`.`deleted_at` IS NULL
-                          ".(request('filter_from') && request('filter_from')!='0000-00-00'?
-                        " AND DATE(`expenses`.`date`)>='".request('filter_from')."'":
+                          ".(request('filter_from')?
+                            (request('filter_from')!='0000-00-00'?
+                        " AND DATE(`expenses`.`date`)>='".request('filter_from')."'":""):
                         " AND DATE(`expenses`.`date`)>='".Carbon::now()->subDays(30)->format('Y-m-d')."'").
-                        (request('filter_to') && request('filter_to')!='0000-00-00'?
-                        " AND DATE(`expenses`.`date`)<='".request('filter_to')."'":
+                        (request('filter_to')?
+                            (request('filter_from')!='0000-00-00'?
+                        " AND DATE(`expenses`.`date`)<='".request('filter_to')."'":""):
                         " AND DATE(`expenses`.`date`)<='".Carbon::now()->format('Y-m-d')."'")."
                           AND `expenses`.user_id=".auth()->id()."
                           GROUP BY `date`

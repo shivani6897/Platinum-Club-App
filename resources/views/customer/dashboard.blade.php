@@ -356,6 +356,7 @@
         var chart = new ApexCharts(document.querySelector("#statisticChart"), options);
         chart.render();
 
+        // Date range filter
         $(document).ready(function() {
             @if(request('filter_from'))
             var start = moment('{{request('filter_from')}}','YYYY-MM-DD');
@@ -370,8 +371,6 @@
 
             var flg = 0;
             function cb(start, end) {
-                $('#reportrange #date-duration').html(start.format('MMMM D, YYYY') + ' - ' + end.format(
-                    'MMMM D, YYYY'));
 
                 if(start._isValid==false || end._isValid==false)
                 {
@@ -383,6 +382,9 @@
                         return;
                     }
                 }
+                else
+                    $('#reportrange #date-duration').html(start.format('MMMM D, YYYY') + ' - ' + end.format(
+                    'MMMM D, YYYY'));
 
                 if(flg==1)
                 {
