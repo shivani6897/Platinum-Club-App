@@ -20,19 +20,19 @@ class OfflinePaymentController extends Controller
 {
     public function index()
     {
-        $customers = Customer::where('user_id',auth()->id())->get(['id'])->pluck('id')->toArray();
         $invoices = Invoice::with('customer')
-            ->whereIn('customer_id',$customers)
-            ->when(request('search'),function($q){
-                $q->where('invoice_number','LIKE','%'.request('search').'%')
-                    ->orWhereHas('customer',function($q2){
-                        $q2->where('name','LIKE','%'.request('search').'%')
-                            ->where('gst_no','LIKE','%'.request('search').'%');
-                    })
-                    ->orWhere('total_amount','LIKE','%'.request('search').'%');
-            })
             ->where('is_offline_collection',1)
             ->where('payment_method',0)
+            ->when(request('search'),function($q){
+                $q->where(function($q2){
+                    $q2->where('invoice_number','LIKE','%'.request('search').'%')
+                        ->orWhereHas('customer',function($q2){
+                            $q2->where('name','LIKE','%'.request('search').'%')
+                                ->orWhere('gst_no','LIKE','%'.request('search').'%');
+                        })
+                        ->orWhere('total_amount','LIKE','%'.request('search').'%');
+                });
+            })
             ->latest()->paginate(10);
 
         return view('admin.offlinepayment.index',compact('invoices'));
@@ -135,7 +135,7 @@ class OfflinePaymentController extends Controller
 //        dd($invoices);
         $products = Product::where('user_id',auth()->id())->get();
         $productLogs = ProductLog::where('invoice_id',$invoices->id)->get();
-        $customers = Customer::where('user_id',auth()->id())->get(['id','name']);
+        $customers = Customer::all(['id','name']);
         return view('admin.offlinepayment.edit',compact('customers', 'products','invoices','productLogs'));
     }
 
