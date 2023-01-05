@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('invoices', function (Blueprint $table) {
-            $table->string('is_offline_collection')->default(1)->after('payment_method');
+            $table->boolean('is_offline_collection')->default(0)->after('payment_method');
         });
     }
 

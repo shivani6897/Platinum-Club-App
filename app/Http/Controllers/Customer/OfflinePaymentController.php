@@ -14,7 +14,6 @@ use App\Models\UserDetail;
 use App\Services\Payment\InvoiceService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 
 class OfflinePaymentController extends Controller
@@ -42,17 +41,6 @@ class OfflinePaymentController extends Controller
     public function create(Request $request)
     {
         $input = $request->all();
-//        dd(request('created_at'));
-        if(!empty($input['created_at'])){
-            $created_at = explode('to', request('created_at'));
-//            dd($created_at);
-        }
-        else
-            $created_at = '';
-
-//        $created_at1 = ($created_at[0]);
-//        $created_at2 = isset($created_at[1]);
-//        dd($created_at2, $created_at1);
 
         $products = Product::where('user_id',auth()->id())->pluck('name', 'id')->all();
         $customers = Customer::where('user_id',auth()->id())->get(['id','name']);
@@ -60,39 +48,26 @@ class OfflinePaymentController extends Controller
 
         $invoices = Invoice::with('customer')
             ->sortable()
-            ->where('customer_id',$customerids)
-            ->where(function ($query) use ($input,$created_at) {
+            ->whereIn('customer_id',$customerids)
+            ->where('is_offline_collection',1)
+            ->where(function ($query) use ($input) {
                 if(isset($input['search'])){
                     $query->where(function ($q) use ($input) {
                         $q->orWhere('invoice_number', 'Like', '%' . $input['search'] . '%')
                             ->orWhere('total_amount', 'Like', '%' . $input['search'] . '%');
                     });
                 }
-                if(!empty($created_at[0]) && isset($created_at[1]) && !empty($created_at[1])) {
-//                    dd($created_at1 || $created_at2);
-                    $query->WhereBetween('created_at', [$created_at[0] ,$created_at[1]]);
-//                    $query->where('created_at', '>=', $created_at1)
-//                            ->where('created_at', '<=', $created_at2);
-
+                if(!empty(request('start_date')) && !empty(request('end_date'))) {
+                    $query->WhereBetween('created_at', [request('start_date') ,request('end_date')]);
                 }
-                elseif(!empty($created_at[0])){
-                    $query->WhereDate('created_at', $created_at[0]);
-                }
-
-           })
+            })
             ->latest();
-//            ->toSql();
-                if(!empty(request('transactions'))){
-                    $invoices = $invoices->limit(request('transactions'))->get();
-                }
-                else{
-                    $invoices = $invoices->paginate(10);
-                }
-//                $invoices = $invoices->paginate(10);
-//            ->toSql();
-//            ->take($transactions)
-//            ->paginate(10);
-//        dd($invoices);
+            if(!empty(request('transactions'))){
+                $invoices = $invoices->limit(request('transactions'))->get();
+            }
+            else{
+                $invoices = $invoices->paginate(10);
+            }
 
         return view('customer.offlinepayments.create',compact('customers', 'products','invoices'));
     }

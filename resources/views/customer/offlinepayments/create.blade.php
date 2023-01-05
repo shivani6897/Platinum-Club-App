@@ -380,8 +380,14 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <label class="block mt-4">
+                                <div id="reportrange" name="duration"
+                                    class="form-input mt-3 peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
+                                    <i class="fa fa-calendar"></i>&nbsp;
+                                    <span id="date-duration"></span>
+                                </div>
+                                <input type="hidden" name="start_date">
+                                <input type="hidden" name="end_date">
+                                {{-- <label class="block mt-4">
                                     <span>Select dates</span><br>
                                         <input
                                             x-init="$el._x_flatpickr = flatpickr($el,{mode: 'range',maxDate: 'today',altFormat: 'd-m-Y',dateFormat: 'Y-m-d'})"
@@ -395,7 +401,7 @@
                                             name="created_at"
                                             value="{{request('created_at','')}}"
                                         />
-                                </label>
+                                </label> --}}
                             </form>
 
                             {{--                            </div>--}}
@@ -519,8 +525,6 @@
 
 
 @push('scripts')
-
-    <script src="https://js.stripe.com/v3/"></script>
     <script>
         function tableSearch(obj)
         {
@@ -626,6 +630,27 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script>
+        @if(!empty(request('start_date')) && !empty(request('end_date')))
+        var start = moment('{{request('start_date')}}','YYYY-MM-DD');
+        var end = moment('{{request('end_date')}}','YYYY-MM-DD');
+        var flg = 0;
+        @else
+        var flg = 1;
+        @endif
+
+        
+        function cb(start, end) {
+            $('#reportrange #date-duration').html(start.format('MMMM D, YYYY') + ' - ' + end.format(
+            'MMMM D, YYYY'));
+
+            if(flg==1)
+            {
+                $('input[name="start_date"]').val(start.format("YYYY-MM-DD"));
+                $('input[name="end_date"]').val(end.format("YYYY-MM-DD")).closest('form').submit();
+            }
+            else
+                flg=1;
+        }
         $('.collect-cash-btn').hide();
         $('.check').on('click',function(){
             $('.collect-cash-btn').toggle();
@@ -633,6 +658,20 @@
 
         $('.search').change(function() {
             $(this).closest("form").submit();
+        });
+
+        $('#reportrange').daterangepicker({
+            locale: { cancelLabel: 'Clear' } 
+        }, cb);
+
+        @if(!empty(request('start_date')) && !empty(request('end_date')))
+            cb(start, end);
+        @endif
+
+        $('#reportrange').on('cancel.daterangepicker', function(ev, picker) {
+            $('#reportrange #date-duration').html('');
+            $('input[name="start_date"]').val('');
+            $('input[name="end_date"]').val('').closest("form").submit();
         });
 
         // document.getElementById("created_at").flatpickr({
