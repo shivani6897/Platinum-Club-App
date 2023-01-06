@@ -18,25 +18,6 @@ use Illuminate\Http\Request;
 
 class OfflinePaymentController extends Controller
 {
-    public function index()
-    {
-        $invoices = Invoice::with('customer')
-            ->where('is_offline_collection',1)
-            ->where('payment_method',0)
-            ->when(request('search'),function($q){
-                $q->where(function($q2){
-                    $q2->where('invoice_number','LIKE','%'.request('search').'%')
-                        ->orWhereHas('customer',function($q2){
-                            $q2->where('name','LIKE','%'.request('search').'%')
-                                ->orWhere('gst_no','LIKE','%'.request('search').'%');
-                        })
-                        ->orWhere('total_amount','LIKE','%'.request('search').'%');
-                });
-            })
-            ->latest()->paginate(10);
-
-        return view('admin.offlinepayment.index',compact('invoices'));
-    }
 
     public function create(Request $request)
     {
@@ -129,73 +110,5 @@ class OfflinePaymentController extends Controller
 
         return redirect()->route('offlinepayments.create')->with('success','Offline invoice created');
     }
-
-    public function edit(Invoice $invoices)
-    {
-//        dd($invoices);
-        $products = Product::all();
-        $productLogs = ProductLog::where('invoice_id',$invoices->id)->get();
-        $customers = Customer::all(['id','name']);
-        return view('admin.offlinepayment.edit',compact('customers', 'products','invoices','productLogs'));
-    }
-
-    public function update(UpdateRequest $request, InvoiceService $invoiceService,Invoice $invoices)
-    {
-        //Create Product Log and calculate total amount
-        $productData = [];
-        $total = 0;
-
-        $products = Product::whereIn('id',$request->product_id)->get()->keyBy('id');
-        $productLog = ProductLog::where('product_id', $request->product_id)->where('invoice_id',$invoices->id)->first();
-
-        for($i= 0; $i<count($request->product_id); $i++)
-        {
-            if(!empty($products[$request->product_id[$i]])) {
-                $productLog= ProductLog::updateOrCreate([
-                    'product_id' => $request->product_id[$i],
-                    'invoice_id' => $invoices->id,
-                    ],
-                    ['name' => $products[$request->product_id[$i]]->name,
-                    'price' => $products[$request->product_id[$i]]->price,
-                    'qty' => $request->product_qty[$i],
-                    'created_at' => now(),
-                    'updated_at' => now()
-                    ]);
-            }
-
-            $total += ($products[$request->product_id[$i]]->price*$request->product_qty[$i]);
-        }
-
-        ProductLog::where('invoice_id',$invoices->id)->whereNotIn('product_id',$request->product_id)->delete();
-
-        $invoices->update([
-            'total_amount'=>$total,
-            'description'=>$request->description,
-        ]);
-
-        if(!empty($invoices->income)){
-            $invoices->income->update(['income'=>$total]);
-        }
-        else{
-            $incomeData = [];
-            $incomeData['user_id'] = auth()->id();
-            $incomeData['invoice_id'] = $invoices->id;
-            $incomeData['date'] = Carbon::now()->format('Y-m-d');
-            $incomeData['income'] = $invoices->total_amount;
-            $incomeData['description'] = 'Payment from Invoice';
-            $incomeData['income_category_id'] = 1;
-            $invoice = Income::create([$incomeData]);
-        }
-
-        return redirect()->route('admin.offlinepayments.index')->with('success','Offline invoice updated');
-    }
-
-    public function destroy(Invoice $invoices){
-        $invoices->delete();
-        return redirect()->route('admin.offlinepayments.index')->with('success','Invoice Deleted Successfully');
-    }
-
-
-
 
 }

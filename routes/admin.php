@@ -23,7 +23,7 @@ Route::resource('/clubs',ClubController::class);
 Route::resource('/users',UserController::class);
 
 //Route::resource('/offlinepayments',\App\Http\Controllers\Customer\OfflinePaymentController::class);
-Route::get('/offlinepayments',[\App\Http\Controllers\Customer\OfflinePaymentController::class,'index'])->name('offlinepayments.index');
-Route::get('/offlinepayments/{invoices}/edit',[\App\Http\Controllers\Customer\OfflinePaymentController::class,'edit'])->name('offlinepayments.edit');
-Route::match(['put', 'patch'],'/offlinepayments/{invoices}/',[\App\Http\Controllers\Customer\OfflinePaymentController::class,'update'])->name('offlinepayments.update');
-Route::delete('/offlinepayments/{invoices}/destroy',[\App\Http\Controllers\Customer\OfflinePaymentController::class,'destroy'])->name('offlinepayments.destroy');
+Route::get('/offlinepayments',[\App\Http\Controllers\Admin\OfflinePaymentController::class,'index'])->name('offlinepayments.index');
+Route::get('/offlinepayments/{invoices}/edit',[\App\Http\Controllers\Admin\OfflinePaymentController::class,'edit'])->name('offlinepayments.edit');
+Route::match(['put', 'patch'],'/offlinepayments/{invoices}/',[\App\Http\Controllers\Admin\OfflinePaymentController::class,'update'])->name('offlinepayments.update');
+Route::delete('/offlinepayments/{invoices}/destroy',[\App\Http\Controllers\Admin\OfflinePaymentController::class,'destroy'])->name('offlinepayments.destroy');

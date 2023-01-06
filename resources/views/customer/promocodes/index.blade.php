@@ -1,6 +1,6 @@
-@extends('admin.layouts.app')
+@extends('layouts.app')
 
-@section('heading', 'Habits')
+@section('heading', 'Promocode')
 
 @section('breadcrums')
     <div class="hidden h-full py-1 sm:flex">
@@ -36,7 +36,7 @@
 
 @section('content')
     <div class="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6">
-        <!-- Habits Table -->
+        <!-- Promocode Table -->
         <div>
             <div class="flex items-center justify-between">
                 <h2
@@ -58,41 +58,11 @@
                               />
                             </span>
                         </label>
-                        {{-- <label class="block">
-                          <input
-                            x-effect="isInputActive === true && $nextTick(() => { $el.focus()});"
-                            :class="isInputActive ? 'w-32 lg:w-48' : 'w-0'"
-                            class="form-input bg-transparent px-1 text-right transition-all duration-100 placeholder:text-slate-500 dark:placeholder:text-navy-200"
-                            placeholder="Search here..."
-                            onchange="tableSearch(this)"
-                            value="{{request('search','')}}"
-                            type="text"
-                          />
-                        </label>--}}
-                        <button
-                          @click="isInputActive = !isInputActive"
-                          class="btn h-8 w-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-4.5 w-4.5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="1.5"
-                              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                            />
-                          </svg>
-                        </button>
                     </div>
                     <div
                         class="inline-flex"
                     >
-{{--                        <a href="{{route('admin.habits.create')}}" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Task</a>--}}
+                        <a href="{{route('promocodes.create')}}" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Promocode</a>
                     </div>
                 </div>
             </div>
@@ -108,7 +78,16 @@
                                 #
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                Name
+                                Code
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Start`s From
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                End`s at
+                            </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Value
                             </th>
                             <th class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Action
@@ -116,74 +95,78 @@
                         </tr>
                         </thead>
                         <tbody>
-{{--                        @forelse($habit as $key=>$single_habit)--}}
-{{--                            <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">--}}
-{{--                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>--}}
-{{--                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_habit->name }} </td>--}}
+                        @forelse($promocode as $key=>$single_promocode)
+                            <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_promocode->code }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_promocode->start_date }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_promocode->end_date }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_promocode->value }} </td>
 
-{{--                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">--}}
-{{--                                    <div--}}
-{{--                                        x-data="usePopper({placement:'bottom-end',offset:4})"--}}
-{{--                                        @click.outside="if(isShowPopper) isShowPopper = false"--}}
-{{--                                        class="inline-flex"--}}
-{{--                                    >--}}
-{{--                                        <button--}}
-{{--                                            x-ref="popperRef"--}}
-{{--                                            @click="isShowPopper = !isShowPopper"--}}
-{{--                                            class="btn h-8 w-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"--}}
-{{--                                        >--}}
-{{--                                            <svg--}}
-{{--                                                xmlns="http://www.w3.org/2000/svg"--}}
-{{--                                                class="h-5 w-5"--}}
-{{--                                                fill="none"--}}
-{{--                                                viewBox="0 0 24 24"--}}
-{{--                                                stroke="currentColor"--}}
-{{--                                                stroke-width="2"--}}
-{{--                                            >--}}
-{{--                                                <path--}}
-{{--                                                    stroke-linecap="round"--}}
-{{--                                                    stroke-linejoin="round"--}}
-{{--                                                    d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"--}}
-{{--                                                />--}}
-{{--                                            </svg>--}}
-{{--                                        </button>--}}
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">
+                                    <div
+                                        x-data="usePopper({placement:'bottom-end',offset:4})"
+                                        @click.outside="if(isShowPopper) isShowPopper = false"
+                                        class="inline-flex"
+                                    >
+                                        <button
+                                            x-ref="popperRef"
+                                            @click="isShowPopper = !isShowPopper"
+                                            class="btn h-8 w-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
+                                        >
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                class="h-5 w-5"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                            >
+                                                <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                                                />
+                                            </svg>
+                                        </button>
 
-{{--                                        <div--}}
-{{--                                            x-ref="popperRoot"--}}
-{{--                                            class="popper-root"--}}
-{{--                                            :class="isShowPopper && 'show'"--}}
-{{--                                        >--}}
-{{--                                            <div class="popper-box rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">--}}
-{{--                                                <ul>--}}
-{{--                                                    <li>--}}
-{{--                                                        <a--}}
-{{--                                                            href="{{ route('admin.habits.edit', $single_habit->id) }}"--}}
-{{--                                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">--}}
-{{--                                                            Edit--}}
-{{--                                                        </a>--}}
-{{--                                                    </li>--}}
-{{--                                                    <li>--}}
-{{--                                                        <form--}}
-{{--                                                            class="d-inline"--}}
-{{--                                                            action="{{ route('admin.habits.destroy',$single_habit->id) }}"--}}
-{{--                                                            method="POST">--}}
-{{--                                                            @csrf--}}
-{{--                                                            <input name="_method" type="hidden" value="DELETE">--}}
-{{--                                                            <button--}}
-{{--                                                                type="button"--}}
-{{--                                                                onclick="habitDelete(this)"--}}
-{{--                                                                class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"--}}
-{{--                                                            >Delete</button>                                                                        </form>--}}
-{{--                                                    </li>--}}
-{{--                                                </ul>--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                </td>--}}
-{{--                            </tr>--}}
-{{--                        @empty--}}
-{{--                            <td colspan="5" class="text-center">No record found</td>--}}
-{{--                        @endforelse--}}
+                                        <div
+                                            x-ref="popperRoot"
+                                            class="popper-root"
+                                            :class="isShowPopper && 'show'"
+                                        >
+                                            <div class="popper-box rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
+                                                <ul>
+                                                    <li>
+                                                        <a
+                                                            href="{{ route('promocodes.edit', $single_promocode->id) }}"
+                                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
+                                                            Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <form
+                                                            class="d-inline"
+                                                            action="{{ route('promocodes.destroy',$single_promocode->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <input name="_method" type="hidden" value="DELETE">
+                                                            <button
+                                                                type="button"
+                                                                onclick="habitDelete(this)"
+                                                                class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100"
+                                                            >Delete</button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <td colspan="5" class="text-center">No record found</td>
+                        @endforelse
                         </tbody>
                     </table>
                 </div>
