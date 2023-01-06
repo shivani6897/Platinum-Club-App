@@ -447,9 +447,11 @@
         if (flg) {
             $('.emi-payment').slideDown('slow');
             $('#agree-label').html('I hereby agree to make the monthly Emi of Rs <span id="emi-amount">' + $('select[name="emi"]').find(':selected').data('emi') + '</span>');
+            freeTrialAgreeMsg();
         } else {
             $('.emi-payment').slideUp('slow');
             $('#agree-label').html('I hereby agree to make payment of Rs ' + $('select[name="product_id"]').find(':selected').data('price'));
+            freeTrialAgreeMsg();
         }
     }
 
@@ -474,8 +476,6 @@
                         } else {
                             $('.emi-field').slideUp('slow');
                         }
-
-                        freeTrialChanges(result);
                         
                         pending = parseInt(result.data.price) - parseInt(result.data.downpayment);
                         if (result.data.image != '' && result.data.image != null && result.data.image != undefined)
@@ -497,6 +497,10 @@
                             $('.emi-payment').slideUp('slow');
                             $('#agree-label').html('I hereby agree to make payment of Rs ' + $('select[name="product_id"]').find(':selected').data('price'));
                         }
+
+                        freeTrialChanges(result);
+                        freeTrialAgreeMsg();
+
                         if (result.data.tax !== null && result.data.tax !== undefined)
                             $('#tax-detail').html('(' + result.data.tax + ' % GST inclusive)');
                         else
@@ -691,6 +695,19 @@
             $('.is_free_trial').slideUp('slow');
             $('.payment-options').slideDown('slow');
             $('#payment-gateway').val('stripe');
+        }
+    }
+
+    function freeTrialAgreeMsg() {
+        if ($('input[name="is_free_trial"]').is(':checked')){
+            if ($('input[name="payment_type"]:checked').val() == 1) {
+                if($('input[name="is_free_trial"]').data('trial_fee') > 0)
+                    $('#agree-label').html('I hereby agree to make payment of Rs.'+ $('input[name="is_free_trial"]').data('trial_fee') +' for <b>Trial Period</b> and the monthly Emi of Rs <span id="emi-amount">' + $('select[name="emi"]').find(':selected').data('emi') + ' <b>After trial ends.</b></span>');
+                else
+                    $('#agree-label').html('I hereby agree to make the monthly Emi of Rs <span id="emi-amount">' + $('select[name="emi"]').find(':selected').data('emi') + ' <b>After trial ends.</b></span>');
+            }else{
+                $('#agree-label').html('I hereby agree to make payment of Rs.'+ $('select[name="product_id"]').find(':selected').data('price') +' <b>After trial ends.</b></span>');
+            }
         }
     }
 
