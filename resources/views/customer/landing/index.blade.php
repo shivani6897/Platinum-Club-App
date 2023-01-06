@@ -229,32 +229,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-7 payment-options">
-                            <input type="hidden" name="gateway" id="payment-gateway"
-                                   value="{{($gateway->stripe_active==1?'stripe':'razorpay')}}">
-                            <div class="grid grid-cols-3 gap-4 mt-4">
-                                @if($gateway->stripe_active==1)
-                                    <div onclick="selectGateway(this,'stripe')"
-                                         class="gateway-button selected border border-b-slate-200 rounded-md  flex justify-center">
-                                        <img src="{{asset('images/payment/stripe_logo.png')}}" alt="">
-                                    </div>
-                                @endif
-                                @if($gateway->razorpay_active==1)
-                                    <div onclick="selectGateway(this,'razorpay')"
-                                         class="gateway-button {{ ($gateway->stripe_active==0?'selected':'') }} border border-b-slate-200 rounded-md  flex justify-center items-center">
-                                        <img src="{{asset('images/payment/razorpay_logo.png')}}" alt=""
-                                             style="width: 70%;height: 40px"/>
-                                    </div>
-                                @endif
-                                @if(@$gateway->instamojo_active==1)
-                                    <div onclick="selectGateway(this,'instamojo')"
-                                         class="gateway-button border border-b-slate-200 rounded-md flex justify-center items-center">
-                                        <img src="{{asset('images/payment/instamojo.png')}}" alt=""
-                                             style="width: 70%;height: 40px"/>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
                         <!-- Free Trial -->
                         <div class="is_free_trial" style="{{$selectedProduct->is_free_trial ? '' : 'display:none;'}}">   
                             <label class="inline-flex items-center space-x-2 mt-5">
@@ -279,6 +253,33 @@
                                     @endif
                                     Your trial period ends after <b>{{$selectedProduct->trial_duration}} {{$selectedProduct->trial_duration_type}}</b>
                                 </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-7 payment-options">
+                            <input type="hidden" name="gateway" id="payment-gateway"
+                                   value="{{($gateway->stripe_active==1?'stripe':'razorpay')}}">
+                            <div class="grid grid-cols-3 gap-4 mt-4">
+                                @if($gateway->stripe_active==1)
+                                    <div onclick="selectGateway(this,'stripe')"
+                                         class="gateway-button selected border border-b-slate-200 rounded-md  flex justify-center">
+                                        <img src="{{asset('images/payment/stripe_logo.png')}}" alt="">
+                                    </div>
+                                @endif
+                                @if($gateway->razorpay_active==1)
+                                    <div onclick="selectGateway(this,'razorpay')"
+                                         class="gateway-button {{ ($gateway->stripe_active==0?'selected':'') }} border border-b-slate-200 rounded-md  flex justify-center items-center">
+                                        <img src="{{asset('images/payment/razorpay_logo.png')}}" alt=""
+                                             style="width: 70%;height: 40px"/>
+                                    </div>
+                                @endif
+                                @if(@$gateway->instamojo_active==1)
+                                    <div onclick="selectGateway(this,'instamojo')"
+                                         class="gateway-button border border-b-slate-200 rounded-md flex justify-center items-center">
+                                        <img src="{{asset('images/payment/instamojo.png')}}" alt=""
+                                             style="width: 70%;height: 40px"/>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                         <div class="mt-5">
@@ -415,6 +416,9 @@
             var payingAmount = 0;
             if($('input[name="is_free_trial"]').is(':checked')){
                 payingAmount = $('input[name="is_free_trial"]').data('trial_fee');
+                if ($('input[name="payment_type"]:checked').val() == 1){
+                    payingAmount = parseFloat(payingAmount) + parseFloat($('input[name="downpayment"]').val());
+                }
             }else{
                 if ($('input[name="payment_type"]:checked').val() == 0)
                     payingAmount = $('select[name="product_id"]').find(':selected').data('price');

@@ -24,14 +24,20 @@ final class InstamojoService
         $url = url("landing/{$id}/{$product->id}/instamojo/success");
 
         try {
+            if($request->payment_type == '0'){
+                $payingAmount = $request->is_free_trial ? $product->trial_price : $product->price;
+            }else{
+                $payingAmount = $request->is_free_trial ? ($product->trial_price + $request->downpayment) : $request->downpayment;
+            }
+
             $response = $api->createGatewayOrder(array(
                 "name" => $request->first_name . " " . $request->last_name,
                 "email" => $request->email,
                 "phone" => $request->phone_no,
-                "amount" => $request->payment_type == '0' ? $product->price : $request->downpayment,
+                "amount" => $payingAmount,
                 "transaction_id" => md5(rand(000000, 11111111) + time()), /**transaction_id is unique Id**/
                 "currency" => "INR",
-                'redirect_url' => $url . "?downpayment={$request->downpayment}&payment_type={$request->payment_type}&emi={$request->emi}"
+                'redirect_url' => $url . "?downpayment={$request->downpayment}&payment_type={$request->payment_type}&emi={$request->emi}&is_free_trial={$request->is_free_trial}"
             ));
             if ($response) {
                 return $response['payment_options']['payment_url'];
@@ -97,25 +103,54 @@ final class InstamojoService
             'gateway' => 'instamojo'
         ]);
 
-        if ($requestQuery['payment_type'] == 1) {
-            $emi = round(($product->price - ((float)$requestQuery['downpayment'])) / (int)$requestQuery['emi'], 2);
-            $rinvoiceData = [
-                'user_id' => $id,
-                'customer_id' => $customer->id,
-                'product_id' => $product->id,
-                'downpayment' => ((float)$requestQuery['downpayment']),
-                'paid' => ((float)$requestQuery['downpayment']),
-                'pending' => $product->price - ((float)$requestQuery['downpayment']),
-                'emi_amount' => $emi,
-                'paid_date' => Carbon::now()->format('Y-m-d'),
-                'next_emi_date' => Carbon::now()->addDays(28)->format('Y-m-d'),
-                'total_emis' => (int)$requestQuery['emi']
-            ];
+        $defaultData = [
+            'user_id' => $id,
+            'customer_id' => $customer->id,
+            'product_id' => $product->id,
+            'downpayment' => ((float)$requestQuery['downpayment']),
+        ];
+
+        // If Is Free Trial
+        if($request->is_free_trial){
+            $freeTrialData = self::freeTrialData($product,$requestQuery);
+            if ($request->payment_type == 1){
+                $emi = round(($product->price - ((float)$requestQuery['downpayment'])) / (int)$requestQuery['emi'], 2);
+                $rData = [
+                    'pending' => $product->price - ((float)$requestQuery['downpayment']),
+                    'emi_amount' => $emi,
+                    'total_emis' => (int)$requestQuery['emi']
+                ];
+            }else{
+                $rData = [
+                    'pending' => $product->price,
+                    'emi_amount' => $product->price,
+                    'total_emis' => 1
+                ];
+            }
+            $rinvoiceData = array_merge($defaultData,$freeTrialData,$rData);
             $rinvoice = RecurringInvoice::create($rinvoiceData);
-
             $rinvoice->invoices()->attach($invoice->id);
-        }
+        }else{
+            if ($requestQuery['payment_type'] == 1) {
+                $emi = round(($product->price - ((float)$requestQuery['downpayment'])) / (int)$requestQuery['emi'], 2);
+                $rinvoiceData = [
+                    'user_id' => $id,
+                    'customer_id' => $customer->id,
+                    'product_id' => $product->id,
+                    'downpayment' => ((float)$requestQuery['downpayment']),
+                    'paid' => ((float)$requestQuery['downpayment']),
+                    'pending' => $product->price - ((float)$requestQuery['downpayment']),
+                    'emi_amount' => $emi,
+                    'paid_date' => Carbon::now()->format('Y-m-d'),
+                    'next_emi_date' => Carbon::now()->addDays(28)->format('Y-m-d'),
+                    'total_emis' => (int)$requestQuery['emi']
+                ];
+                $rinvoice = RecurringInvoice::create($rinvoiceData);
 
+                $rinvoice->invoices()->attach($invoice->id);
+            }
+        }
+        
         $incomeData['user_id'] = auth()->id();
         $incomeData['invoice_id'] = $invoice->id;
         $incomeData['date'] = Carbon::now()->format('Y-m-d');
@@ -136,5 +171,17 @@ final class InstamojoService
             "client_id" => $gateway->instamojo_key,
             "client_secret" => $gateway->instamojo_token,
         ], config('instamojo.sandbox'));
+    }
+
+    private static function freeTrialData($product,$request)
+    {
+        $freeTrialData = [
+            'is_free_trial' => 1,
+            'trial_price' => $product->trial_price,
+            'paid' => ($product->trial_price + ((float)$request['downpayment'])),
+            'paid_date' => Carbon::now()->format('Y-m-d'),
+            'next_emi_date' => Carbon::now()->add($product->trial_duration,$product->trial_duration_type)
+        ];
+        return $freeTrialData;
     }
 }
