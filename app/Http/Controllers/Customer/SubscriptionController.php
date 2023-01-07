@@ -74,7 +74,7 @@ class SubscriptionController extends Controller
             $due = $rinvoice->emi_amount;
             $subtotal = $due * 100 / (100 + $tax);
 
-            $emi = $rinvoice->paid_emis + 1;
+            $emi = $rinvoice->paid_emis;
             $data = [
                 'due' => $due,
                 'tax' => $tax,

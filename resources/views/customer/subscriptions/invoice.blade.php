@@ -59,9 +59,20 @@
                             <p>
                                 Due Amount
                             </p>
-                            <p class="text-3xl text-black font-bold">
-                                ₹ {{number_format($data['due'],2)}}
-                            </p>
+                            <label class="mt-1.5 flex -space-x-px">
+                                <div
+                                    class="flex items-center justify-center rounded-l-lg border border-slate-300 px-3.5 font-inter dark:border-navy-450"
+                                >
+                                    <span class="-mt-1">₹</span>
+                                </div>
+                                <input
+                                    class="form-input w-full rounded-r-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:z-10 hover:border-slate-400 focus:z-10 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                    placeholder="Due Amount"
+                                    type="text"
+                                    value="{{number_format($data['due'],2)}}"
+                                    required
+                                />
+                            </label>
                         </div>
                         @if($data['status']==0 && $data['emi']<$data['total_emis'])
                         <a href="{{route('invoices.payment.page',['id'=>$id,'invoiceId'=>$invoiceId,'rinvoiceId'=>$rinvoiceId,'amount'=>$data['due']])}}" class="btn bg-green-400 font-medium text-white py-2 px-5 rounded-lg text-md">
@@ -197,7 +208,7 @@
                             @endforeach
                             @else
                             <tr>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$data['product']->name}} [ EMI {{$data['emi']}} ]</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$data['product']->name}} [ EMI {{$data['emi'] == $data['total_emis'] ? $data['emi'] : $data['emi']+1}} ]</td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">1</td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{number_format($data['subtotal'],2)}}</td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">{{number_format($data['subtotal'],2)}}</td>
