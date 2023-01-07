@@ -11,6 +11,7 @@ use App\Models\Product;
 use App\Models\ProductLog;
 use App\Models\RecurringInvoice;
 use App\Services\Utilities\QueryStringParser;
+use App\Services\Payment\InvoiceService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Instamojo\Instamojo;
@@ -47,7 +48,7 @@ final class InstamojoService
         }
     }
 
-    public static function success(Request $request, $id, $gateway, $product)
+    public static function success(Request $request, $id, $gateway, $product, InvoiceService $invoiceService)
     {
         $api = self::getApi($gateway);
         $response = $api->getPaymentRequestDetails($request->id);
@@ -72,7 +73,7 @@ final class InstamojoService
         // Store Details after payment success
 
         $invoiceData['customer_id'] = $customer->id;
-        $invoiceData['invoice_number'] = date('Ymd') . rand(10000, 99999);
+        $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
         $invoiceData['total_amount'] = $response['amount'];
         $invoiceData['payment_method'] = 3;
         $invoiceData['status'] = ($response['status'] == "Completed" ? 1 : 2);
