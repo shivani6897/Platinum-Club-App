@@ -13,7 +13,10 @@ class PromocodeController extends Controller
     public function index(Request $request)
     {
         $promocode = PromoCode::when(request('search'),function($q){
-                $q->where('code','LIKE', '%'.request('search').'%');
+                $q->where('code','LIKE', '%'.request('search').'%')
+                ->orWhere('start_date','LIKE', '%'.request('search').'%')
+                ->orWhere('end_date','LIKE', '%'.request('search').'%')
+                ->orWhere('value','LIKE', '%'.request('search').'%');
             })
             ->paginate(10);
 
