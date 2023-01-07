@@ -194,24 +194,12 @@
                                 <span class="text-tiny+ text-error">{{$message}}</span>
                             @enderror
                             </label>
-{{--                            <label class="block">--}}
-{{--                                <span>is_flat</span>--}}
-{{--                                <span class="relative mt-1.5 flex">--}}
-{{--                                <input--}}
-{{--                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"--}}
-{{--                                    placeholder="is_flat"--}}
-{{--                                    type="text"--}}
-{{--                                    name="name"--}}
-{{--                                    autocomplete="off"--}}
-{{--                                    value="{{ $promocode->is_flat }}"--}}
-{{--                                    required--}}
-{{--                                />--}}
-{{--                            </span>--}}
-{{--                                @error('is_flat')--}}
-{{--                                <span class="text-tiny+ text-error">{{$message}}</span>--}}
-{{--                                @enderror--}}
-{{--                            </label>--}}
                         </div>
+                        @if($promocode->is_flat == 1)
+                            <small>
+
+                            </small>
+                        @endif
 
                         <div class="flex justify-end space-x-2">
                             <button

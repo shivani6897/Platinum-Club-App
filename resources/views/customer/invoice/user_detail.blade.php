@@ -249,8 +249,8 @@
                                                 @sortablelink('total_amount','Total Amount')
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                @sortablelink('gst_no','GST Number')
-{{--                                                GST Number--}}
+{{--                                                @sortablelink('gst_no','GST Number')--}}
+                                                GST Number
                                             </th>
                                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                                 Payment Method
