@@ -142,7 +142,6 @@
                                           />
                                         </span>
                                             @error('product_qty')
-                                            @error('product_qty')
                                             <span class="text-tiny+ text-error">{{$message}}</span>
                                             @enderror
                                         </label>

@@ -20,8 +20,8 @@ class Product extends Model
         'year' => 'YEAR'
     ];
 
-//    public function recurringInvoice()
-//    {
-//        return $this->hasMany(RecurringInvoice::class,'product_id','id');
-//    }
+    public function recurringInvoice()
+    {
+        return $this->hasMany(RecurringInvoice::class,'product_id','id');
+    }
 }

@@ -79,10 +79,10 @@
                               Customer Name
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                Downpayment
+                                Product Cost
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                Product Cost
+                                Downpayment
                             </th>
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Pending Amount
@@ -120,8 +120,8 @@
                                         {{ $rinvoice->customer?->name }}
                                     </a>
                                 </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->downpayment}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->product->price}} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->downpayment}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->pending}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $rinvoice->total_emis }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->emi_amount}} </td>
