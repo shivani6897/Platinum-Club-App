@@ -59,7 +59,10 @@
                             <p>
                                 Due Amount
                             </p>
-                            <label class="mt-1.5 flex -space-x-px">
+                            <p class="text-3xl text-black font-bold">
+                                ₹ {{number_format($data['due'],2)}}
+                            </p>
+                            {{-- <label class="mt-1.5 flex -space-x-px">
                                 <div
                                     class="flex items-center justify-center rounded-l-lg border border-slate-300 px-3.5 font-inter dark:border-navy-450"
                                 >
@@ -72,7 +75,7 @@
                                     value="{{number_format($data['due'],2)}}"
                                     required
                                 />
-                            </label>
+                            </label> --}}
                         </div>
                         @if($data['status']==0 && $data['emi']<$data['total_emis'])
                         <a href="{{route('invoices.payment.page',['id'=>$id,'invoiceId'=>$invoiceId,'rinvoiceId'=>$rinvoiceId,'amount'=>$data['due']])}}" class="btn bg-green-400 font-medium text-white py-2 px-5 rounded-lg text-md">
