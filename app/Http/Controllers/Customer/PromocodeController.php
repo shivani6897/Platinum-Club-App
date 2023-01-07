@@ -27,8 +27,28 @@ class PromocodeController extends Controller
 
     public function store(StoreRequest $request)
     {
-        $array = $request->validated();
-        $promocode = PromoCode::create($array);
+//        dd($request->all());
+//        $created_at = explode('-', request('created_at'));
+
+        $date = explode('to', request('date'));
+        $start_date = $date[0];
+        $end_date = $date[1];
+
+        $array = $request->only([
+            'code',
+            'value',
+            'is_flat',
+            'active',
+        ]);
+
+        $promocode = PromoCode::create([
+            'code' => $request->code,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'value' => $request->value,
+            'is_flat' => $request->is_flat ? 1 : 0,
+            'active' => $request->active ? 1 : 0,
+        ]);
 
         return redirect()->route('promocodes.index')->with('success','Promocode Created successfully');
     }
@@ -40,16 +60,25 @@ class PromocodeController extends Controller
 
     public function update(UpdateRequest $request,PromoCode $promocode)
     {
+        $date = explode('to', request('date'));
+        $start_date = $date[0];
+        $end_date = $date[1];
+
         $array = $request->only([
             'code',
-            'start_date',
-            'end_date',
             'value',
             'is_flat',
+            'active',
         ]);
-        $array['is_flat'] = $request->is_flat ? 1 : 0;
+        $promocode->update([
+            'code' => $request->code,
+            'start_date' => $start_date,
+            'end_date' => $end_date,
+            'value' => $request->value,
+            'is_flat' => $request->is_flat ? 1 : 0,
+            'active' => $request->active ? 1 : 0,
+        ]);
 
-        $promocode->update($array);
         return redirect()->route('promocodes.index')->with('success','Promocode Updated Successfully');
     }
 

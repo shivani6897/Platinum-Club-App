@@ -142,6 +142,7 @@
                                           />
                                         </span>
                                             @error('product_qty')
+                                            @error('product_qty')
                                             <span class="text-tiny+ text-error">{{$message}}</span>
                                             @enderror
                                         </label>
@@ -638,7 +639,7 @@
         var flg = 1;
         @endif
 
-        
+
         function cb(start, end) {
             $('#reportrange #date-duration').html(start.format('MMMM D, YYYY') + ' - ' + end.format(
             'MMMM D, YYYY'));
@@ -661,7 +662,7 @@
         });
 
         $('#reportrange').daterangepicker({
-            locale: { cancelLabel: 'Clear' } 
+            locale: { cancelLabel: 'Clear' }
         }, cb);
 
         @if(!empty(request('start_date')) && !empty(request('end_date')))

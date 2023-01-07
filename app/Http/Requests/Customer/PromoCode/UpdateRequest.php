@@ -25,8 +25,8 @@ class UpdateRequest extends FormRequest
     {
         return [
             'code'=>'required|max:255',
-            'start_date'=>'required',
-            'end_date'=>'required',
+//            'start_date'=>'required',
+//            'end_date'=>'required',
             'value'=>'required',
             'is_flat'=>'nullable',
         ];

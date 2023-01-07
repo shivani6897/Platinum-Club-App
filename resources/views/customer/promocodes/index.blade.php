@@ -89,6 +89,9 @@
                             <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Value
                             </th>
+                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                Status
+                            </th>
                             <th class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
                                 Action
                             </th>
@@ -101,7 +104,21 @@
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_promocode->code }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_promocode->start_date }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_promocode->end_date }} </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $single_promocode->value }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">
+                                    {{$single_promocode->is_flat == 0 ? $single_promocode->value .' %'  : $single_promocode->value}}
+                                </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">
+                                    @if($single_promocode->active == 1)
+                                        <div class="badge rounded-full border border-success text-success">
+                                            Active
+                                        </div>
+                                    @else
+                                        <div class="badge rounded-full border border-warning text-warning">
+                                            Inactive
+                                        </div>
+                                    @endif
+{{--                                    {{ $single_promocode->active }}--}}
+                                </td>
 
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                                     <div
