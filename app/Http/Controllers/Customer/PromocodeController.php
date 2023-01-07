@@ -40,7 +40,16 @@ class PromocodeController extends Controller
 
     public function update(UpdateRequest $request,PromoCode $promocode)
     {
-        $promocode->update($request->validated());
+        $array = $request->only([
+            'code',
+            'start_date',
+            'end_date',
+            'value',
+            'is_flat',
+        ]);
+        $array['is_flat'] = $request->is_flat ? 1 : 0;
+
+        $promocode->update($array);
         return redirect()->route('promocodes.index')->with('success','Promocode Updated Successfully');
     }
 

@@ -195,11 +195,6 @@
                             @enderror
                             </label>
                         </div>
-                        @if($promocode->is_flat == 1)
-                            <small>
-
-                            </small>
-                        @endif
 
                         <div class="flex justify-end space-x-2">
                             <button
