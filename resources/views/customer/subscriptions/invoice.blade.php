@@ -225,7 +225,7 @@
                            <p class="text-md text-black mr-4">Subtotal :</p> {{ number_format($data['subtotal'],2) }}
                        </span>
                         <span class="flex items-center text-md flex justify-end">
-                           <p class="text-md text-black mr-4">GST {{ $data['tax']? number_format($data['due'],2): '0' }}%:</p> {{ number_format($data['due']-$data['subtotal'],2) }}
+                           <p class="text-md text-black mr-4">GST {{ $data['tax']? number_format($data['tax'],2): '0' }}%:</p> {{ number_format($data['due']-$data['subtotal'],2) }}
                        </span>
                         <span class="flex items-center text-md font-bold text-black justify-end">
                            <p class="text-md text-black mr-4 font-bold">Total :</p> {{ number_format($data['due'],2) }}

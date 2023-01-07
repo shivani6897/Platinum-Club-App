@@ -124,7 +124,7 @@
                                         placeholder="Trial Duration"
                                         type="number"
                                         name="trial_duration"
-                                        min="1"
+                                        min="0"
                                         step="1"
                                         value="{{ old('trial_duration') }}"
                                         id="trial_duration"
