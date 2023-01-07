@@ -21,9 +21,7 @@ class OfflinePaymentController extends Controller
 {
     public function index()
     {
-        $customers = Customer::where('user_id',auth()->id())->get(['id'])->pluck('id')->toArray();
         $invoices = Invoice::with('customer')
-            ->whereIn('customer_id',$customers)
             ->when(request('search'),function($q){
                 $q->where('invoice_number','LIKE','%'.request('search').'%')
                     ->orWhereHas('customer',function($q2){
@@ -42,9 +40,9 @@ class OfflinePaymentController extends Controller
     public function edit(Invoice $invoices)
     {
 //        dd($invoices);
-        $products = Product::where('user_id',auth()->id())->get();
+        $products = Product::all();
         $productLogs = ProductLog::where('invoice_id',$invoices->id)->get();
-        $customers = Customer::where('user_id',auth()->id())->get(['id','name']);
+        $customers = Customer::all(['id','name']);
         return view('admin.offlinepayment.edit',compact('customers', 'products','invoices','productLogs'));
     }
 
@@ -56,7 +54,7 @@ class OfflinePaymentController extends Controller
             'description',
 //            'payment_method'
         ]);
-        $user_deatils = UserDetail::where('user_id',auth()->id())->first('business_name');
+        // $user_deatils = UserDetail::where('user_id',auth()->id())->first('business_name');
 
 //        $invoicecount = Invoice::whereYear('created_at', date('Y'))->count();
 //        $invoicecount = strlen($invoicecount) == 1 ?  '0'.$invoicecount+1 : $invoicecount+1;
@@ -68,7 +66,7 @@ class OfflinePaymentController extends Controller
         $productData = [];
         $total = 0;
 
-        $products = Product::where('user_id',auth()->id())->whereIn('id',$request->product_id)->get()->keyBy('id');
+        $products = Product::whereIn('id',$request->product_id)->get()->keyBy('id');
         $productLog = ProductLog::where('product_id', $request->product_id)->where('invoice_id',$invoices->id)->first();
 
         for($i= 0; $i<count($request->product_id); $i++)
