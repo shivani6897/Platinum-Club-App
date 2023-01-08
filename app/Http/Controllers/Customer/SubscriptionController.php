@@ -106,9 +106,11 @@ class SubscriptionController extends Controller
             return redirect()->back()->with('error', 'At least one payment gateway should active to access sharable link.');
 
         $invoice = Invoice::find($invoiceId);
+        $pendingAmount = 0;
         $customer = [];
         if (empty($invoice)) {
             $rinvoice = RecurringInvoice::find($rinvoiceId);
+            $pendingAmount = $rinvoice->pending;
             $customer = $rinvoice->customer;
             if ($amount < $rinvoice->emi_amount)
                 $amount = $rinvoice->emi_amount;
@@ -120,7 +122,7 @@ class SubscriptionController extends Controller
             $customer = $invoice->customer;
         }
 
-        return view('customer.subscriptions.invoice_payment', compact('id', 'invoiceId', 'rinvoiceId', 'amount', 'gateway', 'customer'));
+        return view('customer.subscriptions.invoice_payment', compact('id', 'invoiceId', 'rinvoiceId', 'amount', 'gateway', 'customer','pendingAmount'));
     }
 
     public function stripeSuccess($id, $invoiceId, $rinvoiceId, Request $request, InvoiceService $invoiceService)
@@ -198,6 +200,43 @@ class SubscriptionController extends Controller
                 $total = 0;
 
                 $product = Product::find($rinvoice->product_id);
+                
+                $payment = Payment::create([
+                    'invoice_id' => $invoice->id,
+                    'amount' => $paymentIntent->amount / 100,
+                    'type' => 3,
+                    'transaction_id' => $paymentIntent->id,
+                    'payment_response' => json_encode($paymentIntent),
+                    'gateway' => 'stripe'
+                ]);
+
+                $paid_amount = $paymentIntent->amount/100;
+                $pendingAmount = $rinvoice->pending - $paid_amount;
+                $paid_emis = $rinvoice->paid_emis + 1;
+                if ($paid_amount > $rinvoice->emi_amount) {
+                    $balance = $paid_amount - $rinvoice->emi_amount;
+
+                    // pay another emi when balance amount is more
+                    if($balance > $rinvoice->emi_amount){
+                        $emiCount = floor($balance/$rinvoice->emi_amount);
+                        $paid_emis = $paid_emis + $emiCount;
+                    }
+
+                    $due_emis = $rinvoice->total_emis - $paid_emis;
+                    $emi_amount = $pendingAmount/$due_emis;
+                    $rinvoice->update(['emi_amount' => $emi_amount]);
+                }
+
+                $rinvoice->update([
+                    'paid' => $rinvoice->paid + $paid_amount,
+                    'pending' => $pendingAmount,
+                    'paid_date' => date('Y-m-d'),
+                    'next_emi_date' => $rinvoice->next_emi_date->addDays('28')->format('Y-m-d'),
+                    'paid_emis' => $paid_emis,
+                    'status' => (($paid_emis) >= $rinvoice->total_emis ? 1 : 0)
+                ]);
+                $rinvoice->invoices()->attach($invoice->id);
+
                 $productData[] = [
                     'product_id' => $product->id,
                     'invoice_id' => $invoice->id,
@@ -208,25 +247,6 @@ class SubscriptionController extends Controller
                     'updated_at' => now(),
                 ];
                 $productLog = ProductLog::insert($productData);
-
-                $payment = Payment::create([
-                    'invoice_id' => $invoice->id,
-                    'amount' => $paymentIntent->amount / 100,
-                    'type' => 3,
-                    'transaction_id' => $paymentIntent->id,
-                    'payment_response' => json_encode($paymentIntent),
-                    'gateway' => 'stripe'
-                ]);
-
-                $rinvoice->update([
-                    'paid' => $rinvoice->paid + $rinvoice->emi_amount,
-                    'pending' => $rinvoice->pending - $rinvoice->emi_amount,
-                    'paid_date' => date('Y-m-d'),
-                    'next_emi_date' => $rinvoice->next_emi_date->addDays('28')->format('Y-m-d'),
-                    'paid_emis' => $rinvoice->paid_emis + 1,
-                    'status' => (($rinvoice->paid_emis + 1) >= $rinvoice->total_emis ? 1 : 0)
-                ]);
-                $rinvoice->invoices()->attach($invoice->id);
             }
             $incomeData = $request->only([
                 'date', 'income'
@@ -340,16 +360,6 @@ class SubscriptionController extends Controller
             $total = 0;
 
             $product = Product::find($rinvoice->product_id);
-            $productData[] = [
-                'product_id' => $product->id,
-                'invoice_id' => $invoice->id,
-                'name' => $product->name . '[' . ($rinvoice->paid_emis + 1) . ']',
-                'price' => $razorpayment->amount / 100,
-                'qty' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-            $productLog = ProductLog::insert($productData);
 
             $payment = Payment::create([
                 'invoice_id' => $invoice->id,
@@ -364,15 +374,43 @@ class SubscriptionController extends Controller
                 'gateway' => 'razorpay'
             ]);
 
+            $paid_amount = $razorpayment->amount/100;
+            $pendingAmount = $rinvoice->pending - $paid_amount;
+            $paid_emis = $rinvoice->paid_emis + 1;
+            if ($paid_amount > $rinvoice->emi_amount) {
+                $balance = $paid_amount - $rinvoice->emi_amount;
+
+                // pay another emi when balance amount is more
+                if($balance > $rinvoice->emi_amount){
+                    $emiCount = floor($balance/$rinvoice->emi_amount);
+                    $paid_emis = $paid_emis + $emiCount;
+                }
+
+                $due_emis = $rinvoice->total_emis - $paid_emis;
+                $emi_amount = $pendingAmount/$due_emis;
+                $rinvoice->update(['emi_amount' => $emi_amount]);
+            }
+
             $rinvoice->update([
-                'paid' => $rinvoice->paid + $rinvoice->emi_amount,
-                'pending' => $rinvoice->pending - $rinvoice->emi_amount,
+                'paid' => $rinvoice->paid + $paid_amount,
+                'pending' => $pendingAmount,
                 'paid_date' => date('Y-m-d'),
                 'next_emi_date' => $rinvoice->next_emi_date->addDays('28')->format('Y-m-d'),
-                'paid_emis' => $rinvoice->paid_emis + 1,
-                'status' => (($rinvoice->paid_emis + 1) >= $rinvoice->total_emis ? 1 : 0)
+                'paid_emis' => $paid_emis,
+                'status' => (($paid_emis) >= $rinvoice->total_emis ? 1 : 0)
             ]);
             $rinvoice->invoices()->attach($invoice->id);
+
+            $productData[] = [
+                'product_id' => $product->id,
+                'invoice_id' => $invoice->id,
+                'name' => $product->name . '[' . $paid_emis . ']',
+                'price' => $razorpayment->amount / 100,
+                'qty' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+            $productLog = ProductLog::insert($productData);
         }
         $incomeData = $request->only([
             'date', 'income'
@@ -521,16 +559,6 @@ class SubscriptionController extends Controller
             $total = 0;
 
             $product = Product::find($rinvoice->product_id);
-            $productData[] = [
-                'product_id' => $product->id,
-                'invoice_id' => $invoice->id,
-                'name' => $product->name . '[' . ($rinvoice->paid_emis + 1) . ']',
-                'price' => (float)$response['amount'],
-                'qty' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-            $productLog = ProductLog::insert($productData);
 
             $payment = Payment::create([
                 'invoice_id' => $invoice->id,
@@ -541,15 +569,44 @@ class SubscriptionController extends Controller
                 'gateway' => 'instamojo'
             ]);
 
+            $paid_amount = (float)$response['amount'];
+            $pendingAmount = $rinvoice->pending - $paid_amount;
+            $paid_emis = $rinvoice->paid_emis + 1;
+            if ($paid_amount > $rinvoice->emi_amount) {
+                $balance = $paid_amount - $rinvoice->emi_amount;
+
+                // pay another emi when balance amount is more
+                if($balance > $rinvoice->emi_amount){
+                    $emiCount = floor($balance/$rinvoice->emi_amount);
+                    $paid_emis = $paid_emis + $emiCount;
+                }
+
+                $due_emis = $rinvoice->total_emis - $paid_emis;
+                $emi_amount = $pendingAmount/$due_emis;
+                $rinvoice->update(['emi_amount' => $emi_amount]);
+            }
+
             $rinvoice->update([
-                'paid' => $rinvoice->paid + $rinvoice->emi_amount,
-                'pending' => $rinvoice->pending - $rinvoice->emi_amount,
+                'paid' => $rinvoice->paid + $paid_amount,
+                'pending' => $pendingAmount,
                 'paid_date' => date('Y-m-d'),
                 'next_emi_date' => $rinvoice->next_emi_date->addDays('28')->format('Y-m-d'),
-                'paid_emis' => $rinvoice->paid_emis + 1,
-                'status' => (($rinvoice->paid_emis + 1) >= $rinvoice->total_emis ? 1 : 0)
+                'paid_emis' => $paid_emis,
+                'status' => ($paid_emis >= $rinvoice->total_emis ? 1 : 0)
             ]);
             $rinvoice->invoices()->attach($invoice->id);
+
+            // PRODUCT LOG
+            $productData[] = [
+                'product_id' => $product->id,
+                'invoice_id' => $invoice->id,
+                'name' => $product->name . '[' . $paid_emis . ']',
+                'price' => (float)$response['amount'],
+                'qty' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+            $productLog = ProductLog::insert($productData);
         }
 
         //        $incomeData['invoice_id'] = $customer->id;

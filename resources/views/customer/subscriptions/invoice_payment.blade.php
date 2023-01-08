@@ -138,7 +138,7 @@
                                     type="checkbox"
                                     required
                                 />
-                                <p id="agree-label" class="text-black">I hereby agree to make payment Rs {{$amount}}
+                                <p id="agree-label" class="text-black">I hereby agree to make payment Rs {{request()->amount > $pendingAmount ? $amount : request()->amount}}
                                     /-</p>
                                 {{-- <p class="text-black">I hereby agree to make the monthly Emi of Rs <span id="emi-amount">13,333.00</span>/-</p> --}}
                             </label>
@@ -231,14 +231,15 @@
     }
 
     function payAttempt(obj) {
+        var payingAmount = '{{request()->amount > $pendingAmount ? $amount : request()->amount}}'; 
         if ($('#payment-gateway').val() == 'stripe') {
             newUrl = backURL + "?" + $('#paymentForm').serialize();
-            stripeUpdatePaymentIntent({{$amount}});
+            stripeUpdatePaymentIntent(payingAmount);
             setLoading(false);
             $('#stripeModal').show();
         } else if ($('#payment-gateway').val() == 'razorpay') {
             razorpayNewUrl = razorpayBackURL + "?" + $('#paymentForm').serialize();
-            razorpayCreateOrder({{$amount}});
+            razorpayCreateOrder(payingAmount);
         } else if ($('#payment-gateway').val() == 'instamojo') {
             $('#paymentForm').submit();
         }

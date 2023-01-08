@@ -17,6 +17,9 @@
     <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}"/>
 
     <script src="https://cdn.tailwindcss.com/"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <!-- CSS Assets -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}"/>
 
@@ -71,6 +74,7 @@
                                 <input
                                     class="form-input w-full rounded-r-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:z-10 hover:border-slate-400 focus:z-10 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                     placeholder="Due Amount"
+                                    id="due_amount"
                                     type="text"
                                     value="{{number_format($data['due'],2)}}"
                                     required
@@ -78,7 +82,7 @@
                             </label> --}}
                         </div>
                         @if($data['status']==0 && $data['emi']<$data['total_emis'])
-                        <a href="{{route('invoices.payment.page',['id'=>$id,'invoiceId'=>$invoiceId,'rinvoiceId'=>$rinvoiceId,'amount'=>$data['due']])}}" class="btn bg-green-400 font-medium text-white py-2 px-5 rounded-lg text-md">
+                        <a href="#" onclick="payAmount()" class="btn bg-green-400 font-medium text-white py-2 px-5 rounded-lg text-md">
                             Pay Now
                         </a>
                         @else
@@ -277,7 +281,12 @@
 </div>
 
 <script>
-
+    function payAmount(){
+        let dueAmount = $('#due_amount').val();
+        let urlRedirection = '{{url('/invoices/payment/'.$id.'/'.$invoiceId.'/'.$rinvoiceId)}}/'+dueAmount;
+        console.log(urlRedirection);
+        window.location.href = urlRedirection;
+    }
 </script>
 </body>
 
