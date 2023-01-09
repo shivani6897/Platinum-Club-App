@@ -22,7 +22,6 @@ use Carbon\Carbon;
 class LandingInvoiceMail extends Mailable
 {
     use Queueable, SerializesModels;
-    // public $userdetails, $user,$customer,$productData, $products,$subtotal,$emi,$tax,$due;
     private $userId, $invoiceId, $rinvoiceId, $invoiceService;
 
     /**
@@ -31,23 +30,11 @@ class LandingInvoiceMail extends Mailable
      * @return void
      */
     public function __construct ($userId, $invoiceId, $rinvoiceId)
-    // ($invoiceData,$userdetails, $user,$customer,$products,$productData,$subtotal,$tax,$due)
-//    public function __construct($invoiceData,$userdetails, $user,$customer,$products,$productData,$subtotal,$emi,$tax,$due)
     {
         $this->userId = $userId;
         $this->invoiceId = $invoiceId;
         $this->rinvoiceId = $rinvoiceId;
         $this->invoiceService = new InvoiceService();
-//         $this->invoiceData = $invoiceData;
-//         $this->customer = $customer;
-//         $this->userdetails = $userdetails;
-//         $this->user = $user;
-//         $this->products = $products;
-//         $this->productData = $productData;
-//         $this->subtotal = $subtotal;
-// //        $this->emi = $emi;
-//         $this->tax = $tax;
-//         $this->due = $due;
     }
 
     /**
@@ -132,22 +119,11 @@ class LandingInvoiceMail extends Mailable
 
         return new Content(
             view: 'emails.invoice',
-            // view: 'emails.landing_invoice',
             with: [
                     'data'=>$data,
                     'id'=>$this->userId,
                     'invoiceId'=>$this->invoiceId,
                     'rinvoiceId'=>$this->rinvoiceId,
-//                 'invoiceData' => $this->invoiceData,
-//                 'customer' => $this->customer,
-//                 'userdetails' => $this->userdetails,
-//                 'user' => $this->user,
-//                 'products' => $this->products,
-//                 'productData' => $this->productData,
-//                 'subtotal' => $this->subtotal,
-// //                'emi' => $this->emi,
-//                 'tax' => $this->tax,
-//                 'due' => $this->due,
             ],
         );
     }
