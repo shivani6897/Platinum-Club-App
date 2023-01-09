@@ -52,7 +52,7 @@ class LandingPageController extends Controller
 
             }
         }
-        if ($gateway->stripe_active != 1 && $gateway->razorpay_active != 1)
+        if ($gateway->stripe_active != 1 && $gateway->razorpay_active != 1 && $gateway->instamojo_active != 1)
             return redirect()->back()->with('error', 'At least one payment gateway should active to access sharable link.');
 
         return view('customer.landing.index', compact('products', 'id', 'selectedProduct', 'gateway'));
