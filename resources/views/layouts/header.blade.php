@@ -7,13 +7,16 @@
     <!-- Header Items -->
     <div class="flex w-full items-center justify-between">
       <!-- Left: Sidebar Toggle Button -->
-      <div class="h-8 w-7">
+      <div class="h-8">
         <div x-data="{showModal:false}">
+          <!-- <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Default</button> -->
+
           <button
             @click="showModal = true"
-            class="p-0 btn bg-white-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+            class="p-0 btn text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
           >
-          {!! QrCode::size(35)->generate(route('landing.index',auth()->id())) !!}
+          My Store
+          <!-- {!! QrCode::size(35)->generate(route('landing.index',auth()->id())) !!} -->
           </button>
             <template x-teleport="#x-teleport-target">
               <div
@@ -44,7 +47,7 @@
                   x-transition:leave-end="opacity-0"
                 >
                  <div class="mb-4">{!! QrCode::size(300)->generate(route('landing.index',auth()->id())) !!}</div>
-                 <a class="text-primary" title="Store Link" href="{{route('landing.index',auth()->id())}}" target="_blank"> Go to the store</a>
+                 <a class="text-primary" title="My Store" href="{{route('landing.index',auth()->id())}}" target="_blank"> Go to the store</a>
 
 
                 </div>
