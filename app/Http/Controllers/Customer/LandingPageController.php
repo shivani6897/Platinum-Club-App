@@ -7,6 +7,7 @@ use App\Mail\InvoiceMail;
 use App\Mail\LandingInvoiceMail;
 use App\Models\Income;
 use App\Models\User;
+use App\Models\PromoCode;
 use App\Models\UserDetail;
 use App\Services\Payment\InstamojoService;
 use Illuminate\Http\Request;
@@ -36,6 +37,21 @@ class LandingPageController extends Controller
         if (count($products) == 0)
             return redirect()->back()->with('error', 'Please add products to generate sharable link');
         $gateway = PaymentGateway::where('user_id', $id)->firstOrNew();
+
+        if(isset($request->code)){
+            $promoCode = PromoCode::where('promo_code',$request->code)
+            ->where('start_date','<=',Carbon::today())
+            ->where('end_date','>=',Carbon::today())
+            ->first();
+
+            if($promoCode){
+                return response->json(['message'=> 'Coupon Code applied', 'status'=>'success']);
+            }
+            else{
+                return response->json(['message'=> 'Coupon Code doesnot exists', 'status'=>'error']);
+
+            }
+        }
         if ($gateway->stripe_active != 1 && $gateway->razorpay_active != 1)
             return redirect()->back()->with('error', 'At least one payment gateway should active to access sharable link.');
 

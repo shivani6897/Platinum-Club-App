@@ -7,10 +7,60 @@
     <!-- Header Items -->
     <div class="flex w-full items-center justify-between">
       <!-- Left: Sidebar Toggle Button -->
-      <div class="h-7 w-7">
-        <a title="Sharable link" href="{{route('landing.index',auth()->id())}}" target="_blank">
-          <svg style="height:20px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M352 224c53 0 96-43 96-96s-43-96-96-96s-96 43-96 96c0 4 .2 8 .7 11.9l-94.1 47C145.4 170.2 121.9 160 96 160c-53 0-96 43-96 96s43 96 96 96c25.9 0 49.4-10.2 66.6-26.9l94.1 47c-.5 3.9-.7 7.8-.7 11.9c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-25.9 0-49.4 10.2-66.6 26.9l-94.1-47c.5-3.9 .7-7.8 .7-11.9s-.2-8-.7-11.9l94.1-47C302.6 213.8 326.1 224 352 224z"/></svg>
-        </a>
+      <div class="h-8 w-7">
+        <div x-data="{showModal:false}">
+          <button
+            @click="showModal = true"
+            class="p-0 btn bg-white-150 font-medium text-slate-800 hover:bg-slate-200 focus:bg-slate-200 active:bg-slate-200/80 dark:bg-navy-500 dark:text-navy-50 dark:hover:bg-navy-450 dark:focus:bg-navy-450 dark:active:bg-navy-450/90"
+          >
+          {!! QrCode::size(35)->generate(route('landing.index',auth()->id())) !!}
+          </button>
+            <template x-teleport="#x-teleport-target">
+              <div
+                class="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-5"
+                x-show="showModal"
+                role="dialog"
+                @keydown.window.escape="showModal = false"
+              >
+                <div
+                  class="absolute inset-0 bg-slate-900/60 backdrop-blur transition-opacity duration-300"
+                  @click="showModal = false"
+                  x-show="showModal"
+                  x-transition:enter="ease-out"
+                  x-transition:enter-start="opacity-0"
+                  x-transition:enter-end="opacity-100"
+                  x-transition:leave="ease-in"
+                  x-transition:leave-start="opacity-100"
+                  x-transition:leave-end="opacity-0"
+                ></div>
+                <div
+                  class="relative max-w-lg rounded-lg bg-white px-4 py-10 text-center transition-opacity duration-300 dark:bg-navy-700 sm:px-5"
+                  x-show="showModal"
+                  x-transition:enter="ease-out"
+                  x-transition:enter-start="opacity-0"
+                  x-transition:enter-end="opacity-100"
+                  x-transition:leave="ease-in"
+                  x-transition:leave-start="opacity-100"
+                  x-transition:leave-end="opacity-0"
+                >
+                 <div class="mb-4">{!! QrCode::size(300)->generate(route('landing.index',auth()->id())) !!}</div>
+                 <a class="text-primary" title="Store Link" href="{{route('landing.index',auth()->id())}}" target="_blank"> Go to the store</a>
+
+
+                </div>
+              </div>
+            </template>
+          </div>
+
+
+
+          <!-- <a target="_blank">{!! QrCode::size(350)->generate(route('landing.index',auth()->id())) !!}</a>
+
+        <!-- <a title="Sharable link" href="{{route('landing.index',auth()->id())}}" target="_blank">
+          <svg style="height:20px;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"> -->
+            <!--! Font Awesome Pro 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+            <!-- <path d="M352 224c53 0 96-43 96-96s-43-96-96-96s-96 43-96 96c0 4 .2 8 .7 11.9l-94.1 47C145.4 170.2 121.9 160 96 160c-53 0-96 43-96 96s43 96 96 96c25.9 0 49.4-10.2 66.6-26.9l94.1 47c-.5 3.9-.7 7.8-.7 11.9c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-25.9 0-49.4 10.2-66.6 26.9l-94.1-47c.5-3.9 .7-7.8 .7-11.9s-.2-8-.7-11.9l94.1-47C302.6 213.8 326.1 224 352 224z"/></svg>
+        </a> -->
         {{-- <button
           class="menu-toggle ml-0.5 flex h-7 w-7 flex-col justify-center space-y-1.5 text-primary outline-none focus:outline-none dark:text-accent-light/80"
           :class="$store.global.isSidebarExpanded && 'active'"
