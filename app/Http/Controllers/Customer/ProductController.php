@@ -57,10 +57,12 @@ class ProductController extends Controller
             'trial_duration_type',
             'trial_duration',
             'trial_price',
+            'billing_period',
         ]);
         $array['user_id'] = auth()->id();
         $array['emi'] = $request->emi ? 1 : 0;
         $array['is_free_trial'] = $request->is_free_trial ? 1 : 0;
+        $array['is_subscription'] = $request->is_subscription ? 1 : 0;
         $array['image'] = $imageService->store($request->image, '/images/products', $request->name);
         $product = Product::create($array);
         return redirect()->route('products.index')->with('success','Product Created');
@@ -96,6 +98,7 @@ class ProductController extends Controller
             'trial_duration_type',
             'trial_duration',
             'trial_price',
+            'billing_period',
         ]);
         $array['user_id'] = auth()->id();
         $array['image'] = $product->image;
@@ -108,6 +111,13 @@ class ProductController extends Controller
             $array['trial_price'] = 0.00;
         }else{
             $array['is_free_trial'] = 1;
+        }
+
+        if(!$request->is_subscription){
+            $array['is_subscription'] = 0;
+            $array['billing_period'] = NULL;
+        }else{
+            $array['is_subscription'] = 1;
         }
 
 

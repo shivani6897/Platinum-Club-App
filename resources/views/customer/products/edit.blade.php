@@ -154,6 +154,39 @@
                                 <span class="text-tiny+ text-error">{{$message}}</span>
                                 @enderror
                             </label>
+
+                            <!--  IS SUBSRIPTION-->
+                            <label class="block">
+                                <label class="inline-flex items-center space-x-2 mt-8">
+                                <p>Is Subscription?</p>
+                                <input
+                                    class="form-checkbox is-outline h-5 w-5 rounded-full border-slate-400/70 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
+                                    type="checkbox"
+                                    name="is_subscription"
+                                    id="is_subscription"
+                                    value="1"
+                                    {{($product->is_subscription?'checked':'')}}
+                                />
+                              </label>
+                            </label>
+                            <label class="block subscription_fields" style="{{($product->is_subscription ? '' : 'display:none;')}}">
+                                <span>Subscription Billing Period</span> <span>*</span>
+                                <span class="relative mt-1.5 flex">
+                                    <select
+                                        class="form-select w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        name="billing_period"
+                                        id="billing_period"
+                                    >
+                                      <option value="">Select</option>
+                                      @foreach(App\Models\Product::SUBSCRIPTION_PERIOD as $key => $type)
+                                      <option value="{{$key}}"  {{ $product->billing_period == $key ? 'selected' : ''}}>{{$type}}</option>
+                                      @endforeach
+                                    </select>
+                                </span>
+                                @error('billing_period')
+                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                @enderror
+                            </label>
                         </div>
 
                         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -213,7 +246,7 @@
                                 <span class="text-tiny+ text-error">{{$message}}</span>
                                 @enderror
                             </label>
-                            <label class="inline-flex items-center space-x-2 ml-4" style="margin-top: 27px">
+                            <label class="inline-flex items-center space-x-2 ml-4 emi_field" style="{{($product->is_subscription == 1 ? 'display:none;' : '')}}margin-top: 27px">
                             <label class="inline-flex items-center space-x-2" x-data="{emi: [1]}">
                                 <input
                                     type="checkbox"
@@ -326,6 +359,21 @@ $(document).ready(function(){
         else
         {
             $('.free_trial_fields').hide();
+        }
+    });
+
+    $('#is_subscription').on('change', function(){
+        if($(this).is(':checked'))
+        {
+            $('.subscription_fields').show();
+            $('.emi_field').hide();
+            $('#emi').prop('checked', false);
+        }
+        else
+        {
+            $('.subscription_fields').hide();
+            $('.emi_field').show();
+            $('#emi').prop('checked', true);
         }
     });
 });

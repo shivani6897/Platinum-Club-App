@@ -145,10 +145,43 @@
                                         min="0"
                                         step="0.01"
                                         id="trial_price"
-                                        value="{{ old('trial_price') }}"
+                                        value="{{ old('trial_price') ? old('trial_price') : 0 }}"
                                     />
                                 </span>
                                 @error('trial_price')
+                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                @enderror
+                            </label>
+
+                            <!--  IS SUBSRIPTION-->
+                            <label class="block">
+                                <label class="inline-flex items-center space-x-2 mt-8">
+                                <p>Is Subscription?</p>
+                                <input
+                                    class="form-checkbox is-outline h-5 w-5 rounded-full border-slate-400/70 before:bg-primary checked:border-primary hover:border-primary focus:border-primary dark:border-navy-400 dark:before:bg-accent dark:checked:border-accent dark:hover:border-accent dark:focus:border-accent"
+                                    type="checkbox"
+                                    name="is_subscription"
+                                    id="is_subscription"
+                                    value="1"
+                                    @if(old('is_subscription')) checked @endif
+                                />
+                              </label>
+                            </label>
+                            <label class="block subscription_fields" style="display:none;">
+                                <span>Subscription Billing Period</span> <span>*</span>
+                                <span class="relative mt-1.5 flex">
+                                    <select
+                                        class="form-select w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+                                        name="billing_period"
+                                        id="billing_period"
+                                    >
+                                      <option value="">Select</option>
+                                      @foreach(App\Models\Product::SUBSCRIPTION_PERIOD as $key => $type)
+                                      <option value="{{$key}}" @if(old('billing_period')) selected @endif>{{$type}}</option>
+                                      @endforeach
+                                    </select>
+                                </span>
+                                @error('billing_period')
                                 <span class="text-tiny+ text-error">{{$message}}</span>
                                 @enderror
                             </label>
@@ -211,7 +244,7 @@
                                     <span class="text-tiny+ text-error">{{$message}}</span>
                                 @enderror
                             </label>
-                            <label class="inline-flex items-center space-x-2" x-data="{emi: ['emi']}" style="margin-top: 27px">
+                            <label class="inline-flex items-center space-x-2 emi_field" x-data="{emi: ['emi']}" style="margin-top: 27px">
                                 <input
                                     x-model="emi"
                                     type="checkbox"
@@ -327,6 +360,10 @@ $(document).ready(function(){
     $('.free_trial_fields').show();
   @endif
 
+  @if($errors->any('billing_period'))
+    $('.subscription_fields').show();
+  @endif
+
   $('#is_free_trial').on('change', function(){
     if($(this).is(':checked'))
     {
@@ -337,6 +374,21 @@ $(document).ready(function(){
         $('.free_trial_fields').hide();
     }
   });
+
+    $('#is_subscription').on('change', function(){
+        if($(this).is(':checked'))
+        {
+            $('.subscription_fields').show();
+            $('.emi_field').hide();
+            $('#emi').prop('checked', false);
+        }
+        else
+        {
+            $('.subscription_fields').hide();
+            $('.emi_field').show();
+            $('#emi').prop('checked', true);
+        }
+    });
 
 });
 </script>

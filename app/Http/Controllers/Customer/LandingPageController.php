@@ -204,7 +204,9 @@ class LandingPageController extends Controller
             'trial_duration_type'=>$product->trial_duration_type,
             'trial_duration'=>$product->trial_duration,
             'trial_price'=>$product->trial_price,
-            'trial_msg'=>$trial_msg
+            'trial_msg'=>$trial_msg,
+            'is_subscription'=>$product->is_subscription,
+            'billing_period'=>$product->billing_period
         ];
 
         return response()->json(['status' => 1, 'message' => 'Data retrived', 'data' => $json]);
@@ -286,55 +288,67 @@ class LandingPageController extends Controller
                 'gateway' => 'stripe'
             ]);
 
-            $defaultData = [
-                'user_id' => $id,
-                'customer_id' => $customer->id,
-                'product_id' => $product->id,
-                'downpayment' => $request->downpayment,
-            ];
+            if ($request->is_free_trial || $request->payment_type == 1 || $product->is_subscription) {
+                $defaultData = [
+                    'user_id' => $id,
+                    'customer_id' => $customer->id,
+                    'product_id' => $product->id,
+                ];
 
-            // If Is Free Trial
-            if($request->is_free_trial){
-                $freeTrialData = $this->freeTrialData($product,$request);
-                if ($request->payment_type == 1){
-                    $emi = round(($product->price - $request->downpayment) / $request->emi, 2);
-                    $rData = [
-                        'pending' => $product->price - $request->downpayment,
-                        'emi_amount' => $emi,
-                        'total_emis' => $request->emi
-                    ];
+                $paid = 0;
+                $downpayment = 0;
+                $pending = $product->price;
+                $billed_at = null;
+                if($request->is_free_trial){
+                    $is_free_trial = true;
+                    $trial_price = $product->trial_price;
+                    $paid += $product->trial_price;
+                    $total_emis = 1;
+                    $emi_amount = $product->price;
+                    $next_emi_date = Carbon::now()->add($product->trial_duration,$product->trial_duration_type);
                 }else{
-                    $rData = [
-                        'pending' => $product->price,
-                        'emi_amount' => $product->price,
-                        'total_emis' => 1
-                    ];
+                    $is_free_trial = false;
+                    $trial_price = 0;
+                    $next_emi_date = Carbon::now()->addDays(28)->format('Y-m-d');
                 }
-                $rinvoiceData = array_merge($defaultData,$freeTrialData,$rData);
+
+                if ($request->payment_type == 1) {
+                    $emi_amount = round(($product->price - $request->downpayment) / $request->emi, 2);
+                    $downpayment = $request->downpayment;
+                    $paid += $request->downpayment;
+                    $pending -= $request->downpayment;
+                    $total_emis = $request->emi;
+                }
+
+                if($product->is_subscription){
+                    $total_emis = -1;
+                    $emi_amount = $product->price;
+                    $pending = !$request->is_free_trial ? 0 : $pending;
+                    $billed_at = $product->billing_period;
+                    $paid = !$request->is_free_trial ? $product->price : $product->trial_price;
+                }
+
+                $rData = [
+                    'is_free_trial' => $is_free_trial,
+                    'trial_price' => $trial_price,
+                    'downpayment' => $downpayment,
+                    'paid' => $paid,
+                    'pending' => $pending,
+                    'emi_amount' => $emi_amount,
+                    'next_emi_date' => $next_emi_date,
+                    'paid_date' => Carbon::now()->format('Y-m-d'),
+                    'total_emis' => $total_emis,
+                    'billed_at' => $billed_at
+                ];  
+                $rinvoiceData = array_merge($defaultData,$rData);
                 $rinvoice = RecurringInvoice::create($rinvoiceData);
                 $rinvoice->invoices()->attach($invoice->id);
-            }else{
-                if ($request->payment_type == 1) {
-                    $product = Product::find($request->product_id);
-                    $emi = round(($product->price - $request->downpayment) / $request->emi, 2);
-                    $rinvoiceData = array_merge($defaultData,[
-                        'paid' => $request->downpayment,
-                        'pending' => $product->price - $request->downpayment,
-                        'emi_amount' => $emi,
-                        'paid_date' => Carbon::now()->format('Y-m-d'),
-                        'next_emi_date' => Carbon::now()->addDays(28)->format('Y-m-d'),
-                        'total_emis' => $request->emi
-                    ]);
-                    $rinvoice = RecurringInvoice::create($rinvoiceData);
-
-                    $rinvoice->invoices()->attach($invoice->id);
-                }
             }
             
             $incomeData = $request->only([
                 'date', 'income'
             ]);
-//        $incomeData['invoice_id'] = $customer->id;
+            //$incomeData['invoice_id'] = $customer->id;
             $incomeData['user_id'] = auth()->id();
             $incomeData['invoice_id'] = $invoice->id;
             $incomeData['date'] = Carbon::now()->format('Y-m-d');
@@ -353,12 +367,13 @@ class LandingPageController extends Controller
             $tax = $invoice->product_log?->first()->product?->tax;
             $due = $invoice->total_amount;
             $subtotal = $due * 100 / (100 + $tax);
-//            $emi = $rinvoice->paid_emis + 1;
+            //$emi = $rinvoice->paid_emis + 1;
 
             Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData,$subtotal,$tax,$due));
 
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
         } catch (\Exception $e) {
+            dd($e);
             return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', $e->getMessage());
         }
     }
@@ -443,47 +458,61 @@ class LandingPageController extends Controller
                 'gateway' => 'razorpay'
             ]);
 
-            $defaultData = [
-                'user_id' => $id,
-                'customer_id' => $customer->id,
-                'product_id' => $product->id,
-                'downpayment' => $request->downpayment,
-            ];
+            if ($request->is_free_trial || $request->payment_type == 1 || $product->is_subscription) {
+                $defaultData = [
+                    'user_id' => $id,
+                    'customer_id' => $customer->id,
+                    'product_id' => $product->id,
+                ];
 
-            // If Is Free Trial
-            if($request->is_free_trial){
-                $freeTrialData = $this->freeTrialData($product,$request);
-                if ($request->payment_type == 1){
-                    $emi = round(($product->price - $request->downpayment) / $request->emi, 2);
-                    $rData = [
-                        'pending' => $product->price - $request->downpayment,
-                        'emi_amount' => $emi,
-                        'total_emis' => $request->emi
-                    ];
+                $paid = 0;
+                $downpayment = 0;
+                $pending = $product->price;
+                $billed_at = null;
+                if($request->is_free_trial){
+                    $is_free_trial = true;
+                    $trial_price = $product->trial_price;
+                    $paid += $product->trial_price;
+                    $total_emis = 1;
+                    $emi_amount = $product->price;
+                    $next_emi_date = Carbon::now()->add($product->trial_duration,$product->trial_duration_type);
                 }else{
-                    $rData = [
-                        'pending' => $product->price,
-                        'emi_amount' => $product->price,
-                        'total_emis' => 1
-                    ];
+                    $is_free_trial = false;
+                    $trial_price = 0;
+                    $next_emi_date = Carbon::now()->addDays(28)->format('Y-m-d');
                 }
-                $rinvoiceData = array_merge($defaultData,$freeTrialData,$rData);
+
+                if ($request->payment_type == 1) {
+                    $emi_amount = round(($product->price - $request->downpayment) / $request->emi, 2);
+                    $downpayment = $request->downpayment;
+                    $paid += $request->downpayment;
+                    $pending -= $request->downpayment;
+                    $total_emis = $request->emi;
+                }
+
+                if($product->is_subscription){
+                    $total_emis = -1;
+                    $emi_amount = $product->price;
+                    $pending = !$request->is_free_trial ? 0 : $pending;
+                    $billed_at = $product->billing_period;
+                    $paid = !$request->is_free_trial ? $product->price : $product->trial_price;
+                }
+
+                $rData = [
+                    'is_free_trial' => $is_free_trial,
+                    'trial_price' => $trial_price,
+                    'downpayment' => $downpayment,
+                    'paid' => $paid,
+                    'pending' => $pending,
+                    'emi_amount' => $emi_amount,
+                    'next_emi_date' => $next_emi_date,
+                    'paid_date' => Carbon::now()->format('Y-m-d'),
+                    'total_emis' => $total_emis,
+                    'billed_at' => $billed_at
+                ];  
+                $rinvoiceData = array_merge($defaultData,$rData);
                 $rinvoice = RecurringInvoice::create($rinvoiceData);
                 $rinvoice->invoices()->attach($invoice->id);
-            }else{
-                if ($request->payment_type == 1) {
-                    $emi = round(($product->price - $request->downpayment) / $request->emi, 2);
-                    $rinvoiceData = array_merge($defaultData,[
-                        'paid' => $request->downpayment,
-                        'pending' => $product->price - $request->downpayment,
-                        'emi_amount' => $emi,
-                        'paid_date' => Carbon::now()->format('Y-m-d'),
-                        'next_emi_date' => Carbon::now()->addDays(28)->format('Y-m-d'),
-                        'total_emis' => $request->emi
-                    ]);
-                    $rinvoice = RecurringInvoice::create($rinvoiceData);
-                    $rinvoice->invoices()->attach($invoice->id);
-                }
             }
 
             $incomeData = $request->only([
@@ -517,17 +546,5 @@ class LandingPageController extends Controller
         } else {
             return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', 'Error while paying with razorpay, signature did not matched.');
         }
-    }
-
-    public function freeTrialData($product,$request)
-    {
-        $freeTrialData = [
-            'is_free_trial' => 1,
-            'trial_price' => $product->trial_price,
-            'paid' => ($product->trial_price + $request->downpayment),
-            'paid_date' => Carbon::now()->format('Y-m-d'),
-            'next_emi_date' => Carbon::now()->add($product->trial_duration,$product->trial_duration_type)
-        ];
-        return $freeTrialData;
     }
 }

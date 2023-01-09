@@ -155,7 +155,7 @@
                                     @foreach($products as $product)
                                         <option value="{{$product->id}}"
                                                 data-price="{{$product->price}}">{{$product->name}}
-                                            (₹ {{$product->price}})
+                                            (₹ {{$product->price}}{{$product->is_subscription ? ($product->billing_period == 'month' ? '/mo' : '/yr') : ''}})
                                         </option>
                                     @endforeach
                                 </select>
@@ -507,12 +507,14 @@
                             <option value="6" data-emi="` + Math.round(pending / 6, 2) + `">₹` + Math.round(pending / 6, 2) + ` * 6 Months</option>
                             <option value="9" data-emi="` + Math.round(pending / 9, 2) + `">₹` + Math.round(pending / 9, 2) + ` * 9 Months</option>`).trigger('change');
 
+                        var sPriceSuffix = (result.data.is_subscription==1 ? (result.data.billing_period == 'month' ? '/mo' : '/yr') : '');
+
                         if ($('input[name="payment_type"]:checked').val() == 1) {
                             $('.emi-payment').slideDown('slow');
                             $('#agree-label').html('I hereby agree to make the monthly Emi of Rs <span id="emi-amount">' + $('select[name="emi"]').find(':selected').data('emi') + '</span>');
                         } else {
                             $('.emi-payment').slideUp('slow');
-                            $('#agree-label').html('I hereby agree to make payment of Rs ' + $('select[name="product_id"]').find(':selected').data('price'));
+                            $('#agree-label').html('I hereby agree to make payment of Rs ' + $('select[name="product_id"]').find(':selected').data('price')+sPriceSuffix);
                         }
 
                         freeTrialChanges(result);

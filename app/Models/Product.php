@@ -20,6 +20,11 @@ class Product extends Model
         'year' => 'YEAR'
     ];
 
+    const SUBSCRIPTION_PERIOD = [
+        'month' => 'Monthly',
+        'year' => 'Yearly'
+    ];
+
     public function recurringInvoice()
     {
         return $this->hasMany(RecurringInvoice::class,'product_id','id');
