@@ -73,10 +73,10 @@ class LandingPageController extends Controller
             try{
                 $customer = Customer::updateOrCreate([
                     'user_id' => $id,
-                    'email' => $request->email,
+                    'phone_no' => $request->phone_no,
                 ], [
                     'name' => $request->first_name . ' ' . $request->last_name,
-                    'phone_no' => $request->phone_no,
+                    'email' => $request->email,
                     'state' => '',
                 ]);
 
@@ -139,7 +139,7 @@ class LandingPageController extends Controller
                 $incomeData = $request->only([
                     'date', 'income'
                 ]);
-                $incomeData['user_id'] = auth()->id();
+                $incomeData['user_id'] = $id;
                 $incomeData['invoice_id'] = $invoice->id;
                 $incomeData['date'] = Carbon::now()->format('Y-m-d');
                 $incomeData['income'] = $invoice->total_amount;
@@ -147,16 +147,12 @@ class LandingPageController extends Controller
                 $incomeData['income_category_id'] = 1;
                 $income = Income::create($incomeData);
 
-                $userdetails = UserDetail::where('user_id',auth()->id())->first();
-                $user = User::where('id',auth()->id())->first();
-                $customers = Customer::where('user_id',auth()->id())->first();
-                $products = Product::where('id',$product)->get();
+                $user = User::where('id',$id)->first();
 
-                $tax = $invoice->product_log?->first()->product?->tax;
-                $due = $invoice->total_amount;
-                $subtotal = $due * 100 / (100 + $tax);
+                $invoiceId = (!empty($rinvoice)?0:$invoice->id);
+                $rinvoiceId = (!empty($rinvoice)?$rinvoice->id:0);
 
-                Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData,$subtotal,$tax,$due));
+                Mail::to($customer->email)->send(new LandingInvoiceMail($id, $invoiceId, $rinvoiceId));
 
                 return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
             }catch(Exception $e){
@@ -225,7 +221,7 @@ class LandingPageController extends Controller
         \Stripe\Stripe::setApiKey($gateway->stripe_secret);
         $stripe = new \Stripe\StripeClient($gateway->stripe_secret);
 
-        try {
+        // try {
             $paymentIntent = $stripe->paymentIntents->retrieve(
                 $request->payment_intent,
                 []
@@ -237,10 +233,10 @@ class LandingPageController extends Controller
 
             $customer = Customer::updateOrCreate([
                 'user_id' => $id,
-                'email' => $request->email,
+                'phone_no' => $request->phone_no
             ], [
                 'name' => $request->first_name . ' ' . $request->last_name,
-                'phone_no' => $request->phone_no,
+                'email' => $request->email,
                 'state' => '',
             ]);
             // Store Details after payment success
@@ -288,6 +284,7 @@ class LandingPageController extends Controller
                 'gateway' => 'stripe'
             ]);
 
+            $rinvoice = NULL;
             if ($request->is_free_trial || $request->payment_type == 1 || $product->is_subscription) {
                 $defaultData = [
                     'user_id' => $id,
@@ -349,7 +346,7 @@ class LandingPageController extends Controller
                 'date', 'income'
             ]);
             //$incomeData['invoice_id'] = $customer->id;
-            $incomeData['user_id'] = auth()->id();
+            $incomeData['user_id'] = $id;
             $incomeData['invoice_id'] = $invoice->id;
             $incomeData['date'] = Carbon::now()->format('Y-m-d');
             $incomeData['income'] = $invoice->total_amount;
@@ -357,25 +354,17 @@ class LandingPageController extends Controller
             $incomeData['income_category_id'] = 1;
             $income = Income::create($incomeData);
 
+            $user = User::where('id',$id)->first();
 
-            $userdetails = UserDetail::where('user_id',auth()->id())->first();
-            $user = User::where('id',auth()->id())->first();
-            $customers = Customer::where('user_id',auth()->id())->first();
-            $products = Product::where('id',$product)->get();
-            $rinvoice = RecurringInvoice::where('product_id',$product)->first();
+            $invoiceId = (!empty($rinvoice)?0:$invoice->id);
+            $rinvoiceId = (!empty($rinvoice)?$rinvoice->id:0);
 
-            $tax = $invoice->product_log?->first()->product?->tax;
-            $due = $invoice->total_amount;
-            $subtotal = $due * 100 / (100 + $tax);
-            //$emi = $rinvoice->paid_emis + 1;
-
-            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData,$subtotal,$tax,$due));
+            Mail::to($customer->email)->send(new LandingInvoiceMail($id, $invoiceId, $rinvoiceId));
 
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
-        } catch (\Exception $e) {
-            dd($e);
+        // } catch (\Exception $e) {
             return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', $e->getMessage());
-        }
+        // }
     }
 
     public function razorpayCreateOrder($id, $amount)
@@ -403,10 +392,10 @@ class LandingPageController extends Controller
 
             $customer = Customer::updateOrCreate([
                 'user_id' => $id,
-                'email' => $request->email,
+                'phone_no' => $request->phone_no,
             ], [
                 'name' => $request->first_name . ' ' . $request->last_name,
-                'phone_no' => $request->phone_no,
+                'email' => $request->email,
                 'state' => '',
             ]);
             // Store Details after payment success
@@ -458,6 +447,7 @@ class LandingPageController extends Controller
                 'gateway' => 'razorpay'
             ]);
 
+            $rinvoice = NULL;
             if ($request->is_free_trial || $request->payment_type == 1 || $product->is_subscription) {
                 $defaultData = [
                     'user_id' => $id,
@@ -518,8 +508,7 @@ class LandingPageController extends Controller
             $incomeData = $request->only([
                 'date', 'income'
             ]);
-            //$incomeData['invoice_id'] = $customer->id;
-            $incomeData['user_id'] = auth()->id();
+            $incomeData['user_id'] = $id;
             $incomeData['invoice_id'] = $invoice->id;
             $incomeData['date'] = Carbon::now()->format('Y-m-d');
             $incomeData['income'] = $invoice->total_amount;
@@ -527,20 +516,12 @@ class LandingPageController extends Controller
             $incomeData['income_category_id'] = 1;
             $income = Income::create($incomeData);
 
-            $userdetails = UserDetail::where('user_id',auth()->id())->first();
-            $user = User::where('id',auth()->id())->first();
-            $customers = Customer::where('user_id',auth()->id())->first();
-            $products = Product::where('id',$product)->get();
-            //$rinvoice = RecurringInvoice::where('product_id',$product)->first();
+            $user = User::where('id',$id)->first();
 
-            $tax = $invoice->product_log?->first()->product?->tax;
-            //dd($tax);
-            $due = $invoice->total_amount;
-            $subtotal = $due * 100 / (100 + $tax);
-            //$emi = $rinvoice->paid_emis + 1;
+            $invoiceId = (!empty($rinvoice)?0:$invoice->id);
+            $rinvoiceId = (!empty($rinvoice)?$rinvoice->id:0);
 
-
-            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData,$subtotal,$tax,$due));
+            Mail::to($customer->email)->send(new LandingInvoiceMail($id, $invoiceId, $rinvoiceId));
 
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
         } else {

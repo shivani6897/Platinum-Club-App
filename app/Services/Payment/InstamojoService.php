@@ -15,6 +15,8 @@ use App\Services\Payment\InvoiceService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Instamojo\Instamojo;
+use App\Mail\LandingInvoiceMail;
+use Mail;
 
 final class InstamojoService
 {
@@ -48,10 +50,11 @@ final class InstamojoService
         }
     }
 
-    public static function success(Request $request, $id, $gateway, $product, InvoiceService $invoiceService)
+    public static function success(Request $request, $id, $gateway, $product)
     {
         $api = self::getApi($gateway);
         $response = $api->getPaymentRequestDetails($request->id);
+        $invoiceService = new InvoiceService();
 
         $url = $response['redirect_url'];
         $url_components = parse_url($url, PHP_URL_QUERY);
@@ -64,10 +67,10 @@ final class InstamojoService
 
         $customer = Customer::updateOrCreate([
             'user_id' => $id,
-            'email' => $response['email'],
+            'phone_no' => $response['phone'],
         ], [
             'name' => $response['buyer_name'],
-            'phone_no' => $response['phone'],
+            'email' => $response['email'],
             'state' => '',
         ]);
         // Store Details after payment success
@@ -112,6 +115,7 @@ final class InstamojoService
         ];
 
         // If Is Free Trial
+        $rinvoice = NULL;
         if($request->is_free_trial){
             $freeTrialData = self::freeTrialData($product,$requestQuery);
             if ($request->payment_type == 1){
@@ -160,6 +164,11 @@ final class InstamojoService
         $incomeData['income_category_id'] = 1;
 
         Income::create($incomeData);
+
+        $invoiceId = (!empty($rinvoice)?0:$invoice->id);
+        $rinvoiceId = (!empty($rinvoice)?$rinvoiceId:0);
+
+        Mail::to($customer->email)->send(new LandingInvoiceMail($id, $invoiceId, $rinvoiceId));
     }
 
     /**
