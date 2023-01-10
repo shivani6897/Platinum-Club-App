@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}"/>
 
     <!-- Javascript Assets -->
+     <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+        integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
@@ -55,10 +57,10 @@
                             <p>
                                 Due Amount
                             </p>
-                            <p class="text-3xl text-black font-bold">
+                            {{-- <p class="text-3xl text-black font-bold">
                                 ₹ {{number_format($data['due'],2)}}
-                            </p>
-                            {{-- <label class="mt-1.5 flex -space-x-px">
+                            </p> --}}
+                            <label class="mt-1.5 flex -space-x-px">
                                 <div
                                     class="flex items-center justify-center rounded-l-lg border border-slate-300 px-3.5 font-inter dark:border-navy-450"
                                 >
@@ -67,14 +69,15 @@
                                 <input
                                     class="form-input w-full rounded-r-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:z-10 hover:border-slate-400 focus:z-10 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
                                     placeholder="Due Amount"
+                                    id="due_amount"
                                     type="text"
                                     value="{{number_format($data['due'],2)}}"
                                     required
                                 />
-                            </label> --}}
+                            </label>
                         </div>
-                        @if($data['status']==0 && $data['emi']<$data['total_emis'])
-                        <a href="{{route('invoices.payment.page',['id'=>$id,'invoiceId'=>$invoiceId,'rinvoiceId'=>$rinvoiceId,'amount'=>$data['due']])}}" class="btn bg-green-400 font-medium text-white py-2 px-5 rounded-lg text-md">
+                        @if(($data['status']==0 && $data['emi']<$data['total_emis']) || $data['total_emis'] < 0)
+                        <a href="#" onclick="payAmount()" class="btn bg-green-400 font-medium text-white py-2 px-5 rounded-lg text-md">
                             Pay Now
                         </a>
                         @else
@@ -273,7 +276,12 @@
 </div>
 
 <script>
-
+    function payAmount(){
+        let dueAmount = $('#due_amount').val();
+        let urlRedirection = '{{url('/invoices/payment/'.$id.'/'.$invoiceId.'/'.$rinvoiceId)}}/'+dueAmount;
+        console.log(urlRedirection);
+        window.location.href = urlRedirection;
+    }
 </script>
 </body>
 

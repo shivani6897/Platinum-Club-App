@@ -112,10 +112,15 @@ class SubscriptionController extends Controller
             $rinvoice = RecurringInvoice::find($rinvoiceId);
             $pendingAmount = $rinvoice->pending;
             $customer = $rinvoice->customer;
-            if ($amount < $rinvoice->emi_amount)
-                $amount = $rinvoice->emi_amount;
-            if ($amount > $rinvoice->pending)
-                $amount = $rinvoice->pending;
+            if($rinvoice->total_emis < 0){
+                if ($amount < $rinvoice->emi_amount || $amount > $rinvoice->emi_amount)
+                    $amount = $rinvoice->emi_amount;
+            }else{
+                if ($amount < $rinvoice->emi_amount)
+                    $amount = $rinvoice->emi_amount;
+                if ($amount > $rinvoice->pending)
+                    $amount = $rinvoice->pending;
+            }
         } else {
             if ($amount != $invoice->total_amount)
                 return redirect()->back()->with('error', 'Payment amount did not matched');
@@ -211,29 +216,38 @@ class SubscriptionController extends Controller
                 ]);
 
                 $paid_amount = $paymentIntent->amount/100;
-                $pendingAmount = $rinvoice->pending - $paid_amount;
                 $paid_emis = $rinvoice->paid_emis + 1;
-                if ($paid_amount > $rinvoice->emi_amount) {
-                    $balance = $paid_amount - $rinvoice->emi_amount;
 
-                    // pay another emi when balance amount is more
-                    if($balance > $rinvoice->emi_amount){
-                        $emiCount = floor($balance/$rinvoice->emi_amount);
-                        $paid_emis = $paid_emis + $emiCount;
+                if ($rinvoice->total_emis < 0) {
+                    $paid = $paid_amount;
+                    $pending = 0;
+                    $next_emi_date = $rinvoice->next_emi_date->add(1, $rinvoice->billed_at);
+                    $status = 1;
+                }else{
+                    $pending = $rinvoice->pending - $paid_amount;
+                    $next_emi_date = $rinvoice->next_emi_date->addDays('28')->format('Y-m-d');
+                    if ($paid_amount > $rinvoice->emi_amount) {
+                        $balance = $paid_amount - $rinvoice->emi_amount;
+
+                        // pay another emi when balance amount is more
+                        // if($balance > $rinvoice->emi_amount){
+                        //     $emiCount = floor($balance/$rinvoice->emi_amount);
+                        //     $paid_emis = $paid_emis + $emiCount;
+                        // }
+
+                        $due_emis = $rinvoice->total_emis - $paid_emis;
+                        $emi_amount = $pending/$due_emis;
+                        $rinvoice->update(['emi_amount' => $emi_amount]);
                     }
-
-                    $due_emis = $rinvoice->total_emis - $paid_emis;
-                    $emi_amount = $pendingAmount/$due_emis;
-                    $rinvoice->update(['emi_amount' => $emi_amount]);
                 }
 
                 $rinvoice->update([
                     'paid' => $rinvoice->paid + $paid_amount,
-                    'pending' => $pendingAmount,
+                    'pending' => $pending,
                     'paid_date' => date('Y-m-d'),
-                    'next_emi_date' => $rinvoice->next_emi_date->addDays('28')->format('Y-m-d'),
+                    'next_emi_date' => $next_emi_date,
                     'paid_emis' => $paid_emis,
-                    'status' => (($paid_emis) >= $rinvoice->total_emis ? 1 : 0)
+                    'status' => (($pending < 0 || $pending == 0) ? 1 : 0)
                 ]);
                 $rinvoice->invoices()->attach($invoice->id);
 
@@ -272,7 +286,7 @@ class SubscriptionController extends Controller
 //            $emi = $rinvoice->paid_emis + 1;
 
 
-            Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customer,$products,$productData,$subtotal,$tax,$due));
+            // Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customer,$products,$productData,$subtotal,$tax,$due));
 
 
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
@@ -375,29 +389,38 @@ class SubscriptionController extends Controller
             ]);
 
             $paid_amount = $razorpayment->amount/100;
-            $pendingAmount = $rinvoice->pending - $paid_amount;
             $paid_emis = $rinvoice->paid_emis + 1;
-            if ($paid_amount > $rinvoice->emi_amount) {
-                $balance = $paid_amount - $rinvoice->emi_amount;
 
-                // pay another emi when balance amount is more
-                if($balance > $rinvoice->emi_amount){
-                    $emiCount = floor($balance/$rinvoice->emi_amount);
-                    $paid_emis = $paid_emis + $emiCount;
+            if ($rinvoice->total_emis < 0) {
+                $paid = $paid_amount;
+                $pending = 0;
+                $next_emi_date = $rinvoice->next_emi_date->add(1, $rinvoice->billed_at);
+                $status = 1;
+            }else{
+                $pending = $rinvoice->pending - $paid_amount;
+                $next_emi_date = $rinvoice->next_emi_date->addDays('28')->format('Y-m-d');
+                if ($paid_amount > $rinvoice->emi_amount) {
+                    $balance = $paid_amount - $rinvoice->emi_amount;
+
+                    // pay another emi when balance amount is more
+                    // if($balance > $rinvoice->emi_amount){
+                    //     $emiCount = floor($balance/$rinvoice->emi_amount);
+                    //     $paid_emis = $paid_emis + $emiCount;
+                    // }
+
+                    $due_emis = $rinvoice->total_emis - $paid_emis;
+                    $emi_amount = $pending/$due_emis;
+                    $rinvoice->update(['emi_amount' => $emi_amount]);
                 }
-
-                $due_emis = $rinvoice->total_emis - $paid_emis;
-                $emi_amount = $pendingAmount/$due_emis;
-                $rinvoice->update(['emi_amount' => $emi_amount]);
             }
 
             $rinvoice->update([
                 'paid' => $rinvoice->paid + $paid_amount,
-                'pending' => $pendingAmount,
+                'pending' => $pending,
                 'paid_date' => date('Y-m-d'),
-                'next_emi_date' => $rinvoice->next_emi_date->addDays('28')->format('Y-m-d'),
+                'next_emi_date' => $next_emi_date,
                 'paid_emis' => $paid_emis,
-                'status' => (($paid_emis) >= $rinvoice->total_emis ? 1 : 0)
+                'status' => (($pending < 0 || $pending == 0) ? 1 : 0)
             ]);
             $rinvoice->invoices()->attach($invoice->id);
 
@@ -435,7 +458,7 @@ class SubscriptionController extends Controller
         $subtotal = $due * 100 / (100 + $tax);
 //        $emi = $rinvoice->paid_emis + 1;
 
-        Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData,$subtotal,$tax,$due));
+        // Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData,$subtotal,$tax,$due));
 
 
         return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
@@ -570,29 +593,38 @@ class SubscriptionController extends Controller
             ]);
 
             $paid_amount = (float)$response['amount'];
-            $pendingAmount = $rinvoice->pending - $paid_amount;
             $paid_emis = $rinvoice->paid_emis + 1;
-            if ($paid_amount > $rinvoice->emi_amount) {
-                $balance = $paid_amount - $rinvoice->emi_amount;
 
-                // pay another emi when balance amount is more
-                if($balance > $rinvoice->emi_amount){
-                    $emiCount = floor($balance/$rinvoice->emi_amount);
-                    $paid_emis = $paid_emis + $emiCount;
+            if ($rinvoice->total_emis < 0) {
+                $paid = $paid_amount;
+                $pending = 0;
+                $next_emi_date = $rinvoice->next_emi_date->add(1, $rinvoice->billed_at);
+                $status = 1;
+            }else{
+                $pending = $rinvoice->pending - $paid_amount;
+                $next_emi_date = $rinvoice->next_emi_date->addDays('28')->format('Y-m-d');
+                if ($paid_amount > $rinvoice->emi_amount) {
+                    $balance = $paid_amount - $rinvoice->emi_amount;
+
+                    // pay another emi when balance amount is more
+                    // if($balance > $rinvoice->emi_amount){
+                    //     $emiCount = floor($balance/$rinvoice->emi_amount);
+                    //     $paid_emis = $paid_emis + $emiCount;
+                    // }
+
+                    $due_emis = $rinvoice->total_emis - $paid_emis;
+                    $emi_amount = $pending/$due_emis;
+                    $rinvoice->update(['emi_amount' => $emi_amount]);
                 }
-
-                $due_emis = $rinvoice->total_emis - $paid_emis;
-                $emi_amount = $pendingAmount/$due_emis;
-                $rinvoice->update(['emi_amount' => $emi_amount]);
             }
 
             $rinvoice->update([
                 'paid' => $rinvoice->paid + $paid_amount,
-                'pending' => $pendingAmount,
+                'pending' => $pending,
                 'paid_date' => date('Y-m-d'),
-                'next_emi_date' => $rinvoice->next_emi_date->addDays('28')->format('Y-m-d'),
+                'next_emi_date' => $next_emi_date,
                 'paid_emis' => $paid_emis,
-                'status' => ($paid_emis >= $rinvoice->total_emis ? 1 : 0)
+                'status' => (($pending < 0 || $pending == 0) ? 1 : 0)
             ]);
             $rinvoice->invoices()->attach($invoice->id);
 

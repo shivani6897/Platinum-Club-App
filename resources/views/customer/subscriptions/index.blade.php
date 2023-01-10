@@ -123,11 +123,11 @@
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->product->price}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->downpayment}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->pending}} </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $rinvoice->total_emis }} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $rinvoice->total_emis < 0 ? 'Recurring' : $rinvoice->total_emis }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >₹ {{ $rinvoice->emi_amount}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $rinvoice->next_emi_date->format('d-m-Y') }} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $rinvoice->paid_emis}} </td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ ($rinvoice->total_emis - $rinvoice->paid_emis)}} </td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $rinvoice->total_emis < 0 ? 'Recurring' : ($rinvoice->total_emis - $rinvoice->paid_emis)}} </td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5" >
                                     @if($rinvoice->status==0)
                                         @if($rinvoice->next_emi_date->isPast())
