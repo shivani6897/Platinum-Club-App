@@ -189,7 +189,7 @@
                             {{-- For Offline created invoices --}}
                             @if($data['is_free_trial']==1 || $data['is_downpayment']==1)
                             <tr>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$data['product']->name}} [ {{ ($data['is_free_trial']==1?'Free Trial':'Downpayment') }} ]</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$data['product']->name}} [ {{ ($data['is_free_trial']==1?'Free Trial '.$data['product']->trial_duration.' '.ucfirst($data['product']->trial_duration_type).'(s)':'Downpayment') }} ]</td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">1</td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{number_format($data['subtotal'],2)}}</td>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">{{number_format($data['subtotal'],2)}}</td>

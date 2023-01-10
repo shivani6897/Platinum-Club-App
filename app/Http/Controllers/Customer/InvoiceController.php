@@ -60,11 +60,8 @@ class InvoiceController extends Controller
             'description',
             'payment_method'
         ]);
-        $user_deatils = UserDetail::where('user_id',auth()->id())->first('business_name');
 
-        $invoicecount = Invoice::whereYear('created_at', date('Y'))->count();
-        $invoicecount = strlen($invoicecount) == 1 ?  '0'.$invoicecount+1 : $invoicecount+1;
-        $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
+        $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber(auth()->id());
         $invoiceData['total_amount'] = 0;
         $invoiceData['status'] = 1;
         $invoice = Invoice::create($invoiceData);
@@ -145,7 +142,7 @@ class InvoiceController extends Controller
                 'payment_method'
             ]);
 
-            $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
+            $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber(auth()->id());
             $invoiceData['total_amount'] = $paymentIntent->amount/100;
             $invoiceData['status'] = ($paymentIntent->status=="succeeded"?1:2);
             $invoice = Invoice::create($invoiceData);
