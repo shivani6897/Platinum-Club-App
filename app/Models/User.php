@@ -38,6 +38,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function userToken(){
         return $this->belongsTo(UserToken::class);
     }
+    public function incomes()
+    {
+        return $this->hasMany(Income::class,'user_id','id');
+    }
 
 
     /**
