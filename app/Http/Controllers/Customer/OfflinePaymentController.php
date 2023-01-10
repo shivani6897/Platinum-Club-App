@@ -14,6 +14,8 @@ use App\Models\UserDetail;
 use App\Services\Payment\InvoiceService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Mail;
+use App\Mail\LandingInvoiceMail;
 
 
 class OfflinePaymentController extends Controller
@@ -60,6 +62,7 @@ class OfflinePaymentController extends Controller
             'customer_id',
             'description',
         ]);
+
         $user_deatils = UserDetail::where('user_id',auth()->id())->first('business_name');
 
         $invoicecount = Invoice::whereYear('created_at', date('Y'))->count();
@@ -107,6 +110,10 @@ class OfflinePaymentController extends Controller
         $incomeData['description'] = 'Payment from Invoice';
         $incomeData['income_category_id'] = 1;
         $income = Income::create($incomeData);
+
+        $customer = Customer::find($request->customer_id);
+
+        Mail::to($customer->email)->send(new LandingInvoiceMail(auth()->id(), $invoice->id, 0));
 
         return redirect()->route('offlinepayments.create')->with('success','Offline invoice created');
     }

@@ -134,6 +134,7 @@ class SubscriptionController extends Controller
     {
         $invoice = Invoice::find($invoiceId);
         $amount = 0;
+        $rinvoice = NULL;
         if (empty($invoice)) {
             $rinvoice = RecurringInvoice::find($rinvoiceId);
             $amount = $rinvoice->emi_amount;
@@ -265,8 +266,7 @@ class SubscriptionController extends Controller
             $incomeData = $request->only([
                 'date', 'income'
             ]);
-            //        $incomeData['invoice_id'] = $customer->id;
-            $incomeData['user_id'] = auth()->id();
+            $incomeData['user_id'] = $id;
             $incomeData['invoice_id'] = $invoice->id;
             $incomeData['date'] = Carbon::now()->format('Y-m-d');
             $incomeData['income'] = $invoice->total_amount;
@@ -274,20 +274,13 @@ class SubscriptionController extends Controller
             $incomeData['income_category_id'] = 1;
             $income = Income::create($incomeData);
 
-            $userdetails = UserDetail::where('user_id',auth()->id())->first();
-            $user = User::where('id',auth()->id())->first();
-            $customer = Customer::where('user_id',auth()->id())->first();
-            $products = Product::where('id',$rinvoice->product_id)->get();
-            $rinvoice = RecurringInvoice::where('product_id',$product)->first();
+            $user = User::where('id',$id)->first();
 
-            $tax = $invoice->product_log?->first()->product?->tax;
-            $due = $invoice->total_amount;
-            $subtotal = $due * 100 / (100 + $tax);
-//            $emi = $rinvoice->paid_emis + 1;
+            $invoiceId = (!empty($rinvoice)?0:$invoice->id);
+            $rinvoiceId = (!empty($rinvoice)?$rinvoice->id:0);
 
-
-            // Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customer,$products,$productData,$subtotal,$tax,$due));
-
+            if(!empty($invoice->customer))
+                Mail::to($invoice->customer->email)->send(new LandingInvoiceMail($id, $invoiceId, $rinvoiceId));
 
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
         } catch (\Exception $e) {
@@ -300,6 +293,7 @@ class SubscriptionController extends Controller
         $invoice = Invoice::find($invoiceId);
         $amount = 0;
 
+        $rinvoice = NULL;
         if (empty($invoice)) {
             $rinvoice = RecurringInvoice::find($rinvoiceId);
             $amount = $rinvoice->emi_amount;
@@ -447,19 +441,13 @@ class SubscriptionController extends Controller
         $incomeData['income_category_id'] = 1;
         $income = Income::create($incomeData);
 
-        $userdetails = UserDetail::where('user_id',auth()->id())->first();
-        $user = User::where('id',auth()->id())->first();
-        $customers = Customer::where('user_id',auth()->id())->first();
-        $products = Product::where('id',$rinvoice->product_id)->get();
-        $rinvoice = RecurringInvoice::where('product_id',$product)->get();
+        $user = User::where('id',$id)->first();
 
-        $tax = $invoice->product_log?->first()->product?->tax;
-        $due = $invoice->total_amount;
-        $subtotal = $due * 100 / (100 + $tax);
-//        $emi = $rinvoice->paid_emis + 1;
+        $invoiceId = (!empty($rinvoice)?0:$invoice->id);
+        $rinvoiceId = (!empty($rinvoice)?$rinvoice->id:0);
 
-        // Mail::to($user->email)->send(new LandingInvoiceMail($invoiceData,$userdetails, $user,$customers,$products,$productData,$subtotal,$tax,$due));
-
+        if(!empty($invoice->customer))
+            Mail::to($invoice->customer->email)->send(new LandingInvoiceMail($id, $invoiceId, $rinvoiceId));
 
         return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
     }
@@ -510,6 +498,7 @@ class SubscriptionController extends Controller
         $invoice = Invoice::find($invoiceId);
         $amount = 0;
 
+        $rinvoice = NULL;
         if (empty($invoice)) {
             $rinvoice = RecurringInvoice::find($rinvoiceId);
             $amount = $rinvoice->emi_amount;
@@ -649,6 +638,14 @@ class SubscriptionController extends Controller
         $incomeData['description'] = 'Payment from Invoice';
         $incomeData['income_category_id'] = 1;
         $income = Income::create($incomeData);
+
+        $user = User::where('id',$id)->first();
+
+        $invoiceId = (!empty($rinvoice)?0:$invoice->id);
+        $rinvoiceId = (!empty($rinvoice)?$rinvoice->id:0);
+
+        if(!empty($invoice->customer))
+            Mail::to($invoice->customer->email)->send(new LandingInvoiceMail($id, $invoiceId, $rinvoiceId));
 
         return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
     }

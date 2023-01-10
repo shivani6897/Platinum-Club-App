@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
-use App\Mail\InvoiceMail;
+use App\Mail\LandingInvoiceMail;
 use App\Models\Income;
 use App\Models\RecurringInvoice;
 use App\Models\User;
@@ -106,12 +106,9 @@ class InvoiceController extends Controller
         $incomeData['income_category_id'] = 1;
         $income = Income::create($incomeData);
 
+        $customer = Customer::find($request->customer_id);
 
-        $userdetails = UserDetail::where('user_id',auth()->id())->first();
-        $user = User::where('id',auth()->id())->first();
-        $customer = Customer::where('user_id',auth()->id())->first();
-
-        Mail::to($user->email)->send(new InvoiceMail($invoiceData,$userdetails, $user,$customer,$products,$productData));
+        Mail::to($customer->email)->send(new LandingInvoiceMail(auth()->id(), $invoice->id, 0));
 
         return redirect()->route('invoices.index')->with('success','Invoice created');
     }
@@ -195,11 +192,9 @@ class InvoiceController extends Controller
             $incomeData['income_category_id'] = 1;
             $income = Income::create($incomeData);
 
-            $userdetails = UserDetail::where('user_id',auth()->id())->first();
-            $user = User::where('id',auth()->id())->first();
-            $customer = Customer::where('user_id',auth()->id())->first();
+            $customer = Customer::find($request->customer_id);
 
-            Mail::to($user->email)->send(new InvoiceMail($invoiceData,$userdetails, $user,$customer,$products,$productLog));
+            Mail::to($customer->email)->send(new LandingInvoiceMail(auth()->id(), $invoice->id, 0));
 
 
             return redirect()->route('invoices.index')->with('success','Invoice Paid');

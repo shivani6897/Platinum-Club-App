@@ -186,7 +186,15 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @if(!empty($data['products']))
+                            {{-- For Offline created invoices --}}
+                            @if($data['is_free_trial']==1 || $data['is_downpayment']==1)
+                            <tr>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$data['product']->name}} [ {{ ($data['is_free_trial']==1?'Free Trial':'Downpayment') }} ]</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">1</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{number_format($data['subtotal'],2)}}</td>
+                                <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">{{number_format($data['subtotal'],2)}}</td>
+                            </tr>
+                            @else
                             @foreach($data['products'] as $product)
                             <tr>
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$product->name}}</td>
@@ -195,13 +203,6 @@
                                 <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">{{$product->price*$product->qty}}</td>
                             </tr>
                             @endforeach
-                            @else
-                            <tr>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{$data['product']->name}} [ EMI {{$data['emi'] == $data['total_emis'] ? $data['emi'] : $data['emi']+1}} ]</td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">1</td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{number_format($data['subtotal'],2)}}</td>
-                                <td class="whitespace-nowrap px-4 py-3 sm:px-5 text-right">{{number_format($data['subtotal'],2)}}</td>
-                            </tr>
                             @endif
                             </tbody>
                         </table>

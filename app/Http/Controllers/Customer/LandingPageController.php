@@ -221,7 +221,7 @@ class LandingPageController extends Controller
         \Stripe\Stripe::setApiKey($gateway->stripe_secret);
         $stripe = new \Stripe\StripeClient($gateway->stripe_secret);
 
-        // try {
+        try {
             $paymentIntent = $stripe->paymentIntents->retrieve(
                 $request->payment_intent,
                 []
@@ -362,9 +362,9 @@ class LandingPageController extends Controller
             Mail::to($customer->email)->send(new LandingInvoiceMail($id, $invoiceId, $rinvoiceId));
 
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
-        // } catch (\Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', $e->getMessage());
-        // }
+        }
     }
 
     public function razorpayCreateOrder($id, $amount)
