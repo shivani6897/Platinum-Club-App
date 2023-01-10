@@ -64,6 +64,7 @@ class UserController extends Controller
 
     public function update(UpdateRequest $request,User $user, UserToken $userToken)
     {
+
         $user->update($request->validated());
         $userToken->update([
             'user_id' => $user->id,

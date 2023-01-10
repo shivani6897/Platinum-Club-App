@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('heading', 'Tasks')
+@section('heading', 'Top performers')
 
 @section('breadcrums')
 <div class="hidden h-full py-1 sm:flex">
@@ -35,75 +35,14 @@
 @endsection
 
 @section('content')
-<div class="grid grid-cols-1 gap-4 sm:gap-5 lg:gap-6">
-  <!-- Users Table -->
-  <div>
-    <div class="flex items-center justify-between">
-      <h2
-        class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"
-      >
-        Top Performers Table
-      </h2>
-      <div class="flex">
-        <div class="flex items-center" x-data="{isInputActive:false}">
-          <form>
-          <label class="block">
-            <select
-              onchange="tableSearch(this)"
-              class="form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 pr-8 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
-              name="search"
-            >
-              <option value="0" @selected(request('search',0)==0)>All time</option>
-              <option value="1" @selected(request('search',0)==1)>Monthly</option>
-              <option value="2" @selected(request('search',0)==2)>Yearly</option>
-            </select>
-          </label>
-          </form>
-          {{-- <label class="block">
-            <input
-              x-effect="isInputActive === true && $nextTick(() => { $el.focus()});"
-              :class="isInputActive ? 'w-32 lg:w-48' : 'w-0'"
-              class="form-input bg-transparent px-1 text-right transition-all duration-100 placeholder:text-slate-500 dark:placeholder:text-navy-200"
-              placeholder="Search here..."
-              onchange="tableSearch(this)"
-              value="{{request('search','')}}"
-              type="text"
-            />
-          </label>
-          <button
-            @click="isInputActive = !isInputActive"
-            class="btn h-8 w-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4.5 w-4.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button> --}}
-        </div>
-        <div
-          class="inline-flex"
-        >
-        {{-- <a href="{{route('tasks.create')}}" class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90">Add Task</a> --}}
-        </div>
-      </div>
-    </div>
-        <div class="mt-3 mb-9">
+
+    <div class="mt-3 mb-9">
 
       <div
         class="card is-scrollbar-hidden min-w-full overflow-x-auto"
         x-data="pages.tables.initExample1"
       >
-        <div class=" p-4 m-2 text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"> Top 20 Performers</div>
+      	<div class=" p-4 m-2 text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"> Top 20 Performers</div>
 
         <table class="is-hoverable w-full text-left">
           <thead>
@@ -162,12 +101,12 @@
 
 
  <div class="grid grid-cols-12  gap-4 sm:gap-5 lg:gap-6">
-    <div class="card col-span-12 lg:col-span-6 mb-8">
-    <h4 class="pl-4 p-2 text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
+  	<div class="card col-span-12 lg:col-span-6 mb-8">
+		<h4 class="pl-4 p-2 text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
       {{ isset($topFive[0]?->name) ? $topFive[0]?->name : 'No Club Found' }}
     </h4>
 
-      <div
+    	<div
         class="card is-scrollbar-hidden min-w-full overflow-x-auto"
         x-data="pages.tables.initExample1"
       >
@@ -175,6 +114,11 @@
         <table class="is-hoverable text-left m-4">
           <thead>
             <tr>
+              <!-- <th
+                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+              >
+                Rank
+              </th> -->
               <th
                 class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
@@ -199,6 +143,9 @@
                       <tr
                         class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500"
                       >
+                        <!-- <td
+                          class="whitespace-nowrap px-4 py-3 sm:px-5"
+                        >{{$loop->iteration}}</td> -->
                         <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                           {{$user->first_name}} {{$user->last_name}}
                         </td>
@@ -220,20 +167,25 @@
           </tbody>
         </table>
       </div>
-    </div>
+  	</div>
 
 
-    <div class="card col-span-12 lg:col-span-6 mb-8">
+  	<div class="card col-span-12 lg:col-span-6 mb-8">
       <h4 class="pl-4 p-2 text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100">
         {{ isset($topFive[1]?->name) ? $topFive[1]?->name : 'No Club Found' }}
       </h4>
-      <div
+    	<div
         class="card is-scrollbar-hidden min-w-full overflow-x-auto"
         x-data="pages.tables.initExample1"
       >
         <table class="is-hoverable text-left m-4">
           <thead>
             <tr>
+              <!-- <th
+                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+              >
+                Rank
+              </th> -->
               <th
                 class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
@@ -258,6 +210,9 @@
                     <tr
                       class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500"
                     >
+                      <!-- <td
+                        class="whitespace-nowrap px-4 py-3 sm:px-5"
+                      >{{$loop->iteration}}</td> -->
                       <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                         {{$user->first_name}} {{$user->last_name}}
                       </td>
@@ -285,19 +240,24 @@
           </tbody>
         </table>
       </div>
-    </div>
+  	</div>
 
-  <div class="card col-span-12 lg:col-span-6  mb-8">
-      <div class="pl-4 p-2 text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"> 
+	<div class="card col-span-12 lg:col-span-6  mb-8">
+  		<div class="pl-4 p-2 text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"> 
         {{ isset($topFive[2]?->name) ? $topFive[2]?->name : 'No Club Found' }}
       </div>
-      <div
+    	<div
         class="card is-scrollbar-hidden min-w-full overflow-x-auto"
         x-data="pages.tables.initExample1"
       >
         <table class="is-hoverable text-left m-4">
           <thead>
             <tr>
+              <!-- <th
+                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+              >
+                Rank
+              </th> -->
               <th
                 class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
@@ -318,9 +278,14 @@
             @forelse($topFive as $stat)
               @if($stat->id ==3)
                 @foreach($stat->users as  $user)
+
+
                   <tr
                     class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500"
                   >
+                    <!-- <td
+                      class="whitespace-nowrap px-4 py-3 sm:px-5"
+                    >{{$loop->iteration}}</td> -->
                     <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                       {{$user->first_name}} {{$user->last_name}}
                     </td>
@@ -343,22 +308,27 @@
           </tbody>
         </table>
       </div>
-    </div>
+  	</div>
 
 
-    <div class="card col-span-12 lg:col-span-6 mb-8">
-      <div class="pl-4 p-2 text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"> 
+  	<div class="card col-span-12 lg:col-span-6 mb-8">
+  		<div class="pl-4 p-2 text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"> 
         {{ isset($topFive[3]?->name) ? $topFive[3]?->name : 'No Club Found' }}
 
       </div>
 
-      <div
+    	<div
         class="card is-scrollbar-hidden min-w-full overflow-x-auto"
         x-data="pages.tables.initExample1"
       >
         <table class="is-hoverable text-left m-4">
           <thead>
             <tr>
+              <!-- <th
+                class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
+              >
+                Rank
+              </th> -->
               <th
                 class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5"
               >
@@ -379,9 +349,14 @@
               @forelse($topFive as $stat)
                 @if($stat->id == 4) 
                   @foreach($stat->users as  $user)
+
+
                     <tr
                       class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500"
                     >
+                      <!-- <td
+                        class="whitespace-nowrap px-4 py-3 sm:px-5"
+                      >{{$loop->iteration}}</td> -->
                       <td class="whitespace-nowrap px-4 py-3 sm:px-5">
                         {{$stat->users->first()->first_name}} {{$stat->users->first()->last_name}}
                       </td>
@@ -402,10 +377,11 @@
               </tbody>
         </table>
       </div>
-    </div>
+  	</div>
 </div>
-  </div>
-</div>
+
+
+
 @endsection
 
 @push('scripts')
