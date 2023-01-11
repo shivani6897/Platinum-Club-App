@@ -8,6 +8,11 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Club;
+use App\Models\State;
+use App\Models\Otp;
+use Illuminate\Http\Request;
+
 
 class RegisterController extends Controller
 {
@@ -52,9 +57,12 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'city' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            // 'city' => ['required', 'string', 'max:255'],
+            'phone_no' => ['required', 'string', 'unique:users,phone_no'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'club_id' => ['required', 'numeric', 'exists:clubs,id'],
+            'state_id' => ['required','numeric','exists:states,id'],
         ]);
     }
 
@@ -75,4 +83,29 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
     }
+
+
+
+    // User registration with otp verification
+    public function verifyAndRegister(Request $request)
+    {
+        $phone_no = $request->phone_no;
+        $otp = Otp::updateOrCreate(['phone_no'=>$phone_no],['otp'=>rand(100000,999999)]);
+
+        session()->put(['regData'=>$request->all()]);
+        return view('auth.otp_verify',compact('otp'));
+    }
+
+    public function verifyAndStore(Request $request)
+    {
+        return redirect()->back()->with('error','Data error');
+    }
+
+    public function userRegister()
+    {
+        $clubs = Club::all(['id','name']);
+        $states = State::all(['id','name']);
+        return view("auth.register", compact('clubs','states'));
+    }
+
 }

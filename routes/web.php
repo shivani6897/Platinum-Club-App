@@ -3,6 +3,7 @@
 use App\Http\Controllers\Customer\SubscriptionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Customer\UserDetailsController;
 
@@ -19,7 +20,7 @@ use App\Http\Controllers\Customer\UserDetailsController;
 
 Route::redirect('/', 'login');
 
-Auth::routes(['verify' => true]);
+Auth::routes(['verify' => true, 'register'=>false]);
 
 // Admin Route
 Route::group([
@@ -27,6 +28,10 @@ Route::group([
     'as' => 'admin.',
     'middleware' => ['auth', 'auth.admin']
 ], base_path('routes/admin.php'));
+
+Route::get('/customer/register', [RegisterController::class, 'userRegister'])->name('customer.register');
+Route::post('/otp/verify', [RegisterController::class, 'verifyAndRegister'])->name('customer.verify.register');
+Route::post('/otp/verify/attempt',[RegisterController::class, 'verifyAndStore'])->name('customer.verify.register.attempt');
 
 Route::get('/login', [LoginController::class, 'customer'])->name('customerLogin.index');
 Route::post('/login', [LoginController::class, 'customerLogin'])->name('customer-login');
