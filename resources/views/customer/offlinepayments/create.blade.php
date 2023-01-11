@@ -76,7 +76,7 @@
                                     role="dialog"
                                     @keydown.window.escape="showModal = false"
                                 >
-                                <div
+                                    <div
                                     class="absolute inset-0 bg-slate-900/60 transition-opacity duration-300"
                                     @click="showModal = false"
                                     x-show="showModal"
@@ -86,175 +86,174 @@
                                     x-transition:leave="ease-in"
                                     x-transition:leave-start="opacity-100"
                                     x-transition:leave-end="opacity-0"
-                                ></div>
-                                <div style="width: 50%;"
-                                  class="relative rounded-lg bg-white pt-10 pb-4 transition-all duration-300 dark:bg-navy-700"
-                                  x-show="showModal"
-                                  x-transition:enter="easy-out"
-                                  x-transition:enter-start="opacity-0 [transform:translate3d(0,1rem,0)]"
-                                  x-transition:enter-end="opacity-100 [transform:translate3d(0,0,0)]"
-                                  x-transition:leave="easy-in"
-                                  x-transition:leave-start="opacity-100 [transform:translate3d(0,0,0)]"
-                                  x-transition:leave-end="opacity-0 [transform:translate3d(0,1rem,0)]">
-                                    <form method="POST"
-                                        action="{{ route('offlinepayments.storeCustomer') }}"
-                                        accept-charset="UTF-8"
-                                        class="p-lg-5"
-                                        enctype="multipart/form-data"
-                                    >
-                                    @csrf
-                                        <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
-                                            <div class="col-span-12">
-                                                <div class="card p-4 pt-0 sm:p-5">
-                                                    <h2 style="font-size: 20px"> Create Customer</h2>
+                                    ></div>
+                                    <div style="width: 50%;"
+                                        class="relative rounded-lg bg-white pt-10 pb-4 transition-all duration-300 dark:bg-navy-700"
+                                        x-show="showModal"
+                                        x-transition:enter="easy-out"
+                                        x-transition:enter-start="opacity-0 [transform:translate3d(0,1rem,0)]"
+                                        x-transition:enter-end="opacity-100 [transform:translate3d(0,0,0)]"
+                                        x-transition:leave="easy-in"
+                                        x-transition:leave-start="opacity-100 [transform:translate3d(0,0,0)]"
+                                        x-transition:leave-end="opacity-0 [transform:translate3d(0,1rem,0)]">
+                                        <form method="POST"
+                                            action="{{ route('offlinepayments.storeCustomer') }}"
+                                            accept-charset="UTF-8"
+                                            class="p-lg-5"
+                                            enctype="multipart/form-data"
+                                        >
+                                        @csrf
+                                            <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+                                                <div class="col-span-12">
+                                                    <div class="card p-4 pt-0 sm:p-5">
+                                                        <h2 style="font-size: 20px"> Create Customer</h2>
 
-                                                    <div class="mt-4 space-y-4">
-                                                        {{-- <div class="grid grid-cols-1 gap-4 sm:grid-cols-2"> --}}
-                                                            <label class="block">
-                                                                <span>Customer name</span> <span>*</span>
-                                                                <span class="relative mt-1.5 flex">
-                                                                <input
-                                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                                    placeholder="Customer Name"
-                                                                    type="text"
-                                                                    name="name"
-                                                                    autocomplete="off"
-                                                                    value="{{ old('name') }}"
-                                                                    required
-                                                                />
-                                                            </span>
-                                                                @error('name')
-                                                                <span class="text-tiny+ text-error">{{$message}}</span>
-                                                                @enderror
-                                                            </label>
-                                                            <label class="block">
-                                                                <span>Email</span> <span>*</span>
-                                                                <span class="relative mt-1.5 flex">
-                                                                <input
-                                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                                    placeholder="Customer's Email"
-                                                                    type="email"
-                                                                    name="email"
-                                                                    autocomplete="off"
-                                                                    value="{{ old('email') }}"
-                                                                    required
-                                                                />
-                                                            </span>
-                                                                @error('email')
-                                                                <span class="text-tiny+ text-error">{{$message}}</span>
-                                                                @enderror
-                                                            </label>
-                                                        {{-- </div>
-                                                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2"> --}}
-                                                            <label class="block">
-                                                                <span>Phone Number</span> <span>*</span>
-                                                                <span class="relative mt-1.5 flex">
-                                                                <input
-                                                                    x-input-mask="{
-                                                                          numeric:true,
-                                                                          blocks: [3, 3, 4],
-                                                                      }"
-                                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                                    placeholder="Customer's Phone Number"
-                                                                    type="text"
-                                                                    name="phone_no"
-                                                                    autocomplete="off"
-                                                                    value="{{ old('phone_no') }}"
-                                                                    required
-                                                                />
-                                                            </span>
-                                                                @error('phone_no')
-                                                                <span class="text-tiny+ text-error">{{$message}}</span>
-                                                                @enderror
-                                                            </label>
-                                                            <label class="block">
-                                                                <span>State</span> <span>*</span>
-                                                                <span class="relative mt-1.5 flex">
-                                                                <input
-                                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                                    placeholder="State"
-                                                                    type="text"
-                                                                    name="state"
-                                                                    autocomplete="off"
-                                                                    value="{{ old('state') }}"
-                                                                    required
-                                                                />
-                                                            </span>
-                                                                @error('state')
-                                                                <span class="text-tiny+ text-error">{{$message}}</span>
-                                                                @enderror
-                                                            </label>
-                                                        {{-- </div>
-                                                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2"> --}}
-                                                            <label class="block">
-                                                                <span>Company name</span>
-                                                                <span class="relative mt-1.5 flex">
+                                                        <div class="mt-4 space-y-4">
+                                                            {{-- <div class="grid grid-cols-1 gap-4 sm:grid-cols-2"> --}}
+                                                                <label class="block">
+                                                                    <span>Customer name</span> <span>*</span>
+                                                                    <span class="relative mt-1.5 flex">
                                                                     <input
                                                                         class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                                        placeholder="Company Name"
+                                                                        placeholder="Customer Name"
                                                                         type="text"
-                                                                        name="company_name"
+                                                                        name="name"
                                                                         autocomplete="off"
-                                                                        value="{{ old('company_name') }}"
+                                                                        value="{{ old('name') }}"
+                                                                        required
                                                                     />
                                                                 </span>
-                                                                @error('company_name')
+                                                                    @error('name')
                                                                     <span class="text-tiny+ text-error">{{$message}}</span>
-                                                                @enderror
-                                                            </label>
-                                                            <label class="block">
-                                                                <span>Gst Number</span>
-                                                                <span class="relative mt-1.5 flex">
+                                                                    @enderror
+                                                                </label>
+                                                                <label class="block">
+                                                                    <span>Email</span> <span>*</span>
+                                                                    <span class="relative mt-1.5 flex">
                                                                     <input
                                                                         class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                                        placeholder="Gst Number"
-                                                                        type="text"
-                                                                        name="gst_no"
+                                                                        placeholder="Customer's Email"
+                                                                        type="email"
+                                                                        name="email"
                                                                         autocomplete="off"
-                                                                        value="{{ old('gst_no') }}"
-                                                                        
+                                                                        value="{{ old('email') }}"
+                                                                        required
                                                                     />
                                                                 </span>
-                                                                @error('gst_no')
+                                                                    @error('email')
                                                                     <span class="text-tiny+ text-error">{{$message}}</span>
-                                                                @enderror
-                                                            </label>
-                                                        </div>
-                                                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-1 mt-4">
-                                                            <label class="block">
-                                                                <span>Company's Address</span>
-                                                                <span class="relative mt-1.5 flex">
+                                                                    @enderror
+                                                                </label>
+                                                            {{-- </div>
+                                                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2"> --}}
+                                                                <label class="block">
+                                                                    <span>Phone Number</span> <span>*</span>
+                                                                    <span class="relative mt-1.5 flex">
                                                                     <input
+                                                                        x-input-mask="{
+                                                                              numeric:true,
+                                                                              blocks: [3, 3, 4],
+                                                                          }"
                                                                         class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                                        placeholder="Company's Address"
+                                                                        placeholder="Customer's Phone Number"
                                                                         type="text"
-                                                                        name="company_address"
+                                                                        name="phone_no"
                                                                         autocomplete="off"
-                                                                        value="{{ old('company_address') }}"
-                                                                        
+                                                                        value="{{ old('phone_no') }}"
+                                                                        required
                                                                     />
                                                                 </span>
-                                                                @error('company_address')
-                                                                <span class="text-tiny+ text-error">{{$message}}</span>
-                                                                @enderror
-                                                            </label>
-                                                        </div>
-                                                        <div class="flex justify-end space-x-2 mt-4">
-                                                            <button
-                                                                class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
-                                                            >
-                                                                <span>Submit</span>
-                                                            </button>
+                                                                    @error('phone_no')
+                                                                    <span class="text-tiny+ text-error">{{$message}}</span>
+                                                                    @enderror
+                                                                </label>
+                                                                <label class="block">
+                                                                    <span>State</span> <span>*</span>
+                                                                    <span class="relative mt-1.5 flex">
+                                                                    <input
+                                                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                                        placeholder="State"
+                                                                        type="text"
+                                                                        name="state"
+                                                                        autocomplete="off"
+                                                                        value="{{ old('state') }}"
+                                                                        required
+                                                                    />
+                                                                </span>
+                                                                    @error('state')
+                                                                    <span class="text-tiny+ text-error">{{$message}}</span>
+                                                                    @enderror
+                                                                </label>
+                                                            {{-- </div>
+                                                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2"> --}}
+                                                                <label class="block">
+                                                                    <span>Company name</span>
+                                                                    <span class="relative mt-1.5 flex">
+                                                                        <input
+                                                                            class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                                            placeholder="Company Name"
+                                                                            type="text"
+                                                                            name="company_name"
+                                                                            autocomplete="off"
+                                                                            value="{{ old('company_name') }}"
+                                                                        />
+                                                                    </span>
+                                                                    @error('company_name')
+                                                                        <span class="text-tiny+ text-error">{{$message}}</span>
+                                                                    @enderror
+                                                                </label>
+                                                                <label class="block">
+                                                                    <span>Gst Number</span>
+                                                                    <span class="relative mt-1.5 flex">
+                                                                        <input
+                                                                            class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                                            placeholder="Gst Number"
+                                                                            type="text"
+                                                                            name="gst_no"
+                                                                            autocomplete="off"
+                                                                            value="{{ old('gst_no') }}"
+                                                                            
+                                                                        />
+                                                                    </span>
+                                                                    @error('gst_no')
+                                                                        <span class="text-tiny+ text-error">{{$message}}</span>
+                                                                    @enderror
+                                                                </label>
+                                                            </div>
+                                                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-1 mt-4">
+                                                                <label class="block">
+                                                                    <span>Company's Address</span>
+                                                                    <span class="relative mt-1.5 flex">
+                                                                        <input
+                                                                            class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                                            placeholder="Company's Address"
+                                                                            type="text"
+                                                                            name="company_address"
+                                                                            autocomplete="off"
+                                                                            value="{{ old('company_address') }}"
+                                                                            
+                                                                        />
+                                                                    </span>
+                                                                    @error('company_address')
+                                                                    <span class="text-tiny+ text-error">{{$message}}</span>
+                                                                    @enderror
+                                                                </label>
+                                                            </div>
+                                                            <div class="flex justify-end space-x-2 mt-4">
+                                                                <button
+                                                                    class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                                                                >
+                                                                    <span>Submit</span>
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </form>
+                                        </form>
+                                    </div>
                                 </div>
-                              </div>
                             </template>
-
                         </div>
                         <form id="createInvoiceForm" method="post" action="{{route('offlinepayments.store')}}">
                             @csrf
@@ -565,163 +564,162 @@
                                     Collect Cash
                                 </button>
                             </div>
-                        {{-- </div> --}}
                         </form>
                     </div>
                 </div>
+            </div>
 
-                <div>
-                    <div class="card col-span-12">
-                        <div class=" p-4 sm:p-5">
-                            <div>
+            <div>
+                <div class="card col-span-12">
+                    <div class=" p-4 sm:p-5">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <h2
+                                    class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"
+                                >
+                                    Offline Collection Table
+                                </h2>
+                            </div>
+                            <form method="get" action="">
                                 <div class="flex items-center justify-between">
-                                    <h2
-                                        class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"
-                                    >
-                                        Offline Collection Table
-                                    </h2>
+                                <div class="flex">
+                                    <label class="block">
+                                        <select
+                                            class="search form-select mt-1.5 w-full pr-8 rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
+                                            name="transactions"
+                                            id="transactions"
+                                        >
+                                            <option value="">All Transaction</option>
+                                            <option value="2" @selected(request('transactions',0)==2)> 5</option>
+                                            <option value="20" @selected(request('transactions',0)==20)>20</option>
+                                            <option value="50" @selected(request('transactions',0)==50)>50</option>
+                                        </select>
+                                    </label>
                                 </div>
-                                <form method="get" action="">
-                                    <div class="flex items-center justify-between">
-                                    <div class="flex">
+                                <div class="flex">
+                                    <div class="flex items-center" x-data="{isInputActive:false}">
                                         <label class="block">
-                                            <select
-                                                class="search form-select mt-1.5 w-full pr-8 rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                name="transactions"
-                                                id="transactions"
-                                            >
-                                                <option value="">All Transaction</option>
-                                                <option value="2" @selected(request('transactions',0)==2)> 5</option>
-                                                <option value="20" @selected(request('transactions',0)==20)>20</option>
-                                                <option value="50" @selected(request('transactions',0)==50)>50</option>
-                                            </select>
+                                                <span class="relative mr-1.5 flex">
+                                                  <input
+                                                      class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                      placeholder="Search here..."
+                                                      onchange="tableSearch(this)"
+                                                      name="search"
+                                                      type="text"
+                                                      value="{{request('search','')}}"
+                                                  />
+                                                </span>
                                         </label>
                                     </div>
-                                    <div class="flex">
-                                        <div class="flex items-center" x-data="{isInputActive:false}">
-                                            <label class="block">
-                                                    <span class="relative mr-1.5 flex">
-                                                      <input
-                                                          class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                                          placeholder="Search here..."
-                                                          onchange="tableSearch(this)"
-                                                          name="search"
-                                                          type="text"
-                                                          value="{{request('search','')}}"
-                                                      />
-                                                    </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <div id="reportrange" name="duration"
-                                        class="form-input mt-3 peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
-                                        <i class="fa fa-calendar"></i>&nbsp;
-                                        <span id="date-duration"></span>
-                                    </div>
-                                    <input type="hidden" name="start_date">
-                                    <input type="hidden" name="end_date">
-                                </form>
+                                </div>
+                                </div>
+                                <div id="reportrange" name="duration"
+                                    class="form-input mt-3 peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
+                                    <i class="fa fa-calendar"></i>&nbsp;
+                                    <span id="date-duration"></span>
+                                </div>
+                                <input type="hidden" name="start_date">
+                                <input type="hidden" name="end_date">
+                            </form>
 
-                                <div class=" mt-3">
-                                    <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
-                                        <table class="is-hoverable w-full text-left">
-                                            <thead>
-                                                <tr>
-                                                    <th class="whitespace-nowrap rounded-tl-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                        #
-                                                    </th>
-                                                    <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                        @sortablelink('created_at','Created At')
-                                                    </th>
-                                                    <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                        @sortablelink('invoice_number','Invoice Number')
-                                                    </th>
-                                                    <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                        @sortablelink('customer.name','Customer Name')
-                                                    </th>
-                                                    <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                        @sortablelink('total_amount','Total Amount')
-                                                    </th>
-                                                    <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                        @sortablelink('customer.gst_no','GST Number')
-                                                    </th>
-                                                
-                                                    <th class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                        Action
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @forelse($invoices as $invoice)
-                                                    <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
-                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
-                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->created_at->format('Y-m-d') }} </td>
-                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->invoice_number }} </td>
-                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->customer->name }} </td>
-                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $invoice->total_amount}} </td>
-                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ isset($invoice->customer->gst_no) ? $invoice->customer->gst_no : '-' }} </td>
+                            <div class=" mt-3">
+                                <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
+                                    <table class="is-hoverable w-full text-left">
+                                        <thead>
+                                            <tr>
+                                                <th class="whitespace-nowrap rounded-tl-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                    #
+                                                </th>
+                                                <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                    @sortablelink('created_at','Created At')
+                                                </th>
+                                                <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                    @sortablelink('invoice_number','Invoice Number')
+                                                </th>
+                                                <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                    @sortablelink('customer.name','Customer Name')
+                                                </th>
+                                                <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                    @sortablelink('total_amount','Total Amount')
+                                                </th>
+                                                <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                    @sortablelink('customer.gst_no','GST Number')
+                                                </th>
+                                            
+                                                <th class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                    Action
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($invoices as $invoice)
+                                                <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
+                                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
+                                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->created_at->format('Y-m-d') }} </td>
+                                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->invoice_number }} </td>
+                                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->customer->name }} </td>
+                                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $invoice->total_amount}} </td>
+                                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ isset($invoice->customer->gst_no) ? $invoice->customer->gst_no : '-' }} </td>
 
-                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5">
-                                                            <div
-                                                                x-data="usePopper({placement:'bottom-end',offset:4})"
-                                                                @click.outside="if(isShowPopper) isShowPopper = false"
-                                                                class="inline-flex"
+                                                    <td class="whitespace-nowrap px-4 py-3 sm:px-5">
+                                                        <div
+                                                            x-data="usePopper({placement:'bottom-end',offset:4})"
+                                                            @click.outside="if(isShowPopper) isShowPopper = false"
+                                                            class="inline-flex"
+                                                        >
+                                                            <a href="{{route('invoices.payment',['id'=>auth()->id(),'invoiceId'=>$invoice->id,'rinvoiceId'=>0])}}" target="_blank" title="Share invoice now"><i class="fa-solid fa-share-from-square"></i></a>
+                                                            <button
+                                                                x-ref="popperRef"
+                                                                @click="isShowPopper = !isShowPopper"
+                                                                class="btn h-8 w-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
                                                             >
-                                                                <a href="{{route('invoices.payment',['id'=>auth()->id(),'invoiceId'=>$invoice->id,'rinvoiceId'=>0])}}" target="_blank" title="Share invoice now"><i class="fa-solid fa-share-from-square"></i></a>
-                                                                <button
-                                                                    x-ref="popperRef"
-                                                                    @click="isShowPopper = !isShowPopper"
-                                                                    class="btn h-8 w-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    class="h-5 w-5"
+                                                                    fill="none"
+                                                                    viewBox="0 0 24 24"
+                                                                    stroke="currentColor"
+                                                                    stroke-width="2"
                                                                 >
-                                                                    <svg
-                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                        class="h-5 w-5"
-                                                                        fill="none"
-                                                                        viewBox="0 0 24 24"
-                                                                        stroke="currentColor"
-                                                                        stroke-width="2"
-                                                                    >
-                                                                        <path
-                                                                            stroke-linecap="round"
-                                                                            stroke-linejoin="round"
-                                                                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                                                                        />
-                                                                    </svg>
-                                                                </button>
+                                                                    <path
+                                                                        stroke-linecap="round"
+                                                                        stroke-linejoin="round"
+                                                                        d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                                                                    />
+                                                                </svg>
+                                                            </button>
 
-                                                                <div
-                                                                    x-ref="popperRoot"
-                                                                    class="popper-root"
-                                                                    :class="isShowPopper && 'show'"
-                                                                >
-                                                                    <div class="popper-box rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
-                                                                        <ul>
-                                                                            <li>
-                                                                                <a
-                                                                                    href="{{ route('invoices.pdf', $invoice->id) }}"
-                                                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
-                                                                                    PDF
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
+                                                            <div
+                                                                x-ref="popperRoot"
+                                                                class="popper-root"
+                                                                :class="isShowPopper && 'show'"
+                                                            >
+                                                                <div class="popper-box rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
+                                                                    <ul>
+                                                                        <li>
+                                                                            <a
+                                                                                href="{{ route('invoices.pdf', $invoice->id) }}"
+                                                                                class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
+                                                                                PDF
+                                                                            </a>
+                                                                        </li>
+                                                                    </ul>
                                                                 </div>
                                                             </div>
-                                                        </td>
-                                                    </tr>
-                                                @empty
-                                                    <td colspan="5" class="text-center">No record found</td>
-                                                @endforelse
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    @if(empty(request('transactions')))
-                                        <div class="flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5">
-                                            {!! $invoices->appends(\Request::except('page'))->render() !!}
-                                        </div>
-                                    @endif
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <td colspan="5" class="text-center">No record found</td>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
                                 </div>
+                                @if(empty(request('transactions')))
+                                    <div class="flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5">
+                                        {!! $invoices->appends(\Request::except('page'))->render() !!}
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

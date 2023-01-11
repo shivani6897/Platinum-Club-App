@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\OfflinePayment\StoreRequest;
-use App\Http\Requests\Customer\Customer\StoreRequest as CustmerStoreRequest;
+// use App\Http\Requests\Customer\Customer\StoreRequest;
 use App\Http\Requests\Customer\OfflinePayment\UpdateRequest;
 use App\Models\Customer;
 use App\Models\Income;
@@ -121,9 +121,18 @@ class OfflinePaymentController extends Controller
         return redirect()->route('offlinepayments.create')->with('success','Offline invoice created');
     }
 
-    public function storeCustomer(CustmerStoreRequest $customerStoreReq)
+    public function storeCustomer(Request $request)
     {
-        $array = $customerStoreReq->validated();
+        $request->validate([
+            // 'name' => 'required|max:255',
+            'company_name' => 'nullable','string',
+            'email' => 'required', 'string', 'email', 'max:255', 'unique:customers',
+            'phone_no' => 'required|unique:customers',
+            'gst_no' => 'nullable','numeric',
+            'state' => 'required','string',
+            'company_address' => 'nullable','string','max:255',
+        ]);
+        $array = $request->all();
         $array['user_id'] = auth()->id();
         $customer = Customer::create($array);
 

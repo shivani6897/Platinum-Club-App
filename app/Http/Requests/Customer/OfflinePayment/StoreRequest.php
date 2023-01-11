@@ -29,11 +29,6 @@ class StoreRequest extends FormRequest
             'product_qty'=>'array|min:1',
             'product_price'=>'array|min:1',
             'description'=>'nullable',
-//            'payment_method'=>'numeric|between:0,2',
-//            'name_on_card'=>'required_unless:payment_method,0',
-//            'card_number'=>'required_unless:payment_method,0',
-//            'expiry_date'=>'required_unless:payment_method,0',
-//            'security_code'=>'required_unless:payment_method,0',
         ];
     }
 }
