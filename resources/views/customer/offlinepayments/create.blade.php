@@ -87,8 +87,7 @@
                                     x-transition:leave-start="opacity-100"
                                     x-transition:leave-end="opacity-0"
                                 ></div>
-                                <div
-                                style="width: 50%;"
+                                <div style="width: 50%;"
                                   class="relative rounded-lg bg-white pt-10 pb-4 transition-all duration-300 dark:bg-navy-700"
                                   x-show="showModal"
                                   x-transition:enter="easy-out"
@@ -96,10 +95,7 @@
                                   x-transition:enter-end="opacity-100 [transform:translate3d(0,0,0)]"
                                   x-transition:leave="easy-in"
                                   x-transition:leave-start="opacity-100 [transform:translate3d(0,0,0)]"
-                                  x-transition:leave-end="opacity-0 [transform:translate3d(0,1rem,0)]"
-                                >
-
-                                  
+                                  x-transition:leave-end="opacity-0 [transform:translate3d(0,1rem,0)]">
                                     <form method="POST"
                                         action="{{ route('offlinepayments.storeCustomer') }}"
                                         accept-charset="UTF-8"
@@ -283,22 +279,24 @@
                                 <span class="text-tiny+ text-error">{{$message}}</span>
                                 @enderror
                             </label>
+                            
 
                             <label class="block mt-2">
                                 <span>Customer Email</span>
-                                <span class="relative mt-1.5 flex">
-                                  <input
-                                      class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                                      @error('email')
-                                          border-error
-                                      @enderror"
-                                      placeholder="Customer Email"
-                                      name="email"
-                                      type="email"
-                                      {{-- value="{{ $customers->first()->email }}" --}}
-                                      required
-                                  />
-                            </span>
+
+                                <select
+                                    class="select2 mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
+                                    @error('email')
+                                        border-error
+                                    @enderror"
+                                    name="email"
+                                    id="email"
+                                    required
+                                >
+                                    @foreach($customers as $customer)
+                                        <option value="{{$customer->id}}" @selected(old('customer_id',0)==$customer->id)>{{$customer->email}}</option>
+                                    @endforeach
+                                </select>
                                 @error('email')
                                 <span class="text-tiny+ text-error">{{$message}}</span>
                                 @enderror
@@ -306,29 +304,24 @@
 
                             <label class="block mt-2">
                                 <span>Customer Contact</span>
-                                <span class="relative mt-1.5 flex">
-                                  <input
-                                      class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                                      @error('phone_no')
-                                          border-error
-                                      @enderror"
-                                      placeholder="Customer Phone Number"
-                                      name="phone_no"
-                                      id="phone_no"
-                                      type="number"
-                                      {{-- @foreach($customers as $customer) --}}
-                                      {{-- value="{{ $customer->phone_no }}" --}}
-                                        {{-- @endforeach --}}
-                                      required
-                                  />
-                            </span>
-                                @error('email')
-                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                    <select
+                                        class="select2 mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
+                                        @error('phone_no')
+                                            border-error
+                                        @enderror"
+                                        name="phone_no"
+                                        id="phone_no"
+                                        required
+                                    >
+                                    @foreach($customers as $customer)
+                                        <option value="{{$customer->id}}" @selected(old('customer_id',0)==$customer->id)>{{$customer->phone_no}}</option>
+                                    @endforeach
+                                    </select>
+                                </span>
+                                @error('phone_no')
+                                    <span class="text-tiny+ text-error">{{$message}}</span>
                                 @enderror
                             </label>
-
-
-                            {{--                        </div>--}}
 
                             <div class="grid mt-2 grid-cols-1 mt-5 gap-4 sm:grid-cols-12">
                                 <div class="sm:col-span-8">
@@ -343,7 +336,6 @@
                                         onclick="addProduct()"
                                     >
                                         <i class="fa fa-plus" aria-hidden="true"></i>
-{{--                                        <span>Add</span>--}}
                                     </button>
                                 </div>
                             </div>
@@ -351,11 +343,10 @@
                             <div id="products_div">
                                 @forelse(old('product_name',[]) as $data)
                                     @if($loop->first)
-                                        {{--                                    <div class="grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">--}}
                                         <label class="block mt-2">
                                             <span>Product Name</span>
                                             <span class="relative mt-1.5 flex">
-                                              <input
+                                                <input
                                                   class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
                                                   @error('product_name')
                                                       border-error
@@ -365,99 +356,97 @@
                                                   type="text"
                                                   value="{{old('product_name')[0]}}"
                                                   required
-                                              />
-                                        </span>
+                                                />
+                                            </span>
                                             @error('product_name')
-                                            <span class="text-tiny+ text-error">{{$message}}</span>
+                                                    <span class="text-tiny+ text-error">{{$message}}</span>
                                             @enderror
                                         </label>
                                         <label class="block mt-2">
                                             <span>Product Qty</span>
                                             <span class="relative mt-1.5 flex">
-                                          <input
-                                              class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                                              @error('product_qty')
-                                                  border-error
-                                              @enderror"
-                                              placeholder="Product Qty"
-                                              name="product_qty[]"
-                                              type="number"
-                                              step="1"
-                                              min="1"
-                                              value="{{old('product_qty')[0]}}"
-                                              required
-                                          />
-                                        </span>
+                                                <input
+                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                                                    @error('product_qty')
+                                                        border-error
+                                                    @enderror"
+                                                    placeholder="Product Qty"
+                                                    name="product_qty[]"
+                                                    type="number"
+                                                    step="1"
+                                                    min="1"
+                                                    value="{{old('product_qty')[0]}}"
+                                                    required
+                                                />
+                                            </span>
                                             @error('product_qty')
-                                            <span class="text-tiny+ text-error">{{$message}}</span>
+                                                <span class="text-tiny+ text-error">{{$message}}</span>
                                             @enderror
                                         </label>
                                         <label class="block mt-2">
                                             <span>Product Price</span>
                                             <span class="relative mt-1.5 flex">
-                                              <input
-                                                  class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                                                  @error('product_price')
+                                                <input
+                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                                                    @error('product_price')
                                                       border-error
-                                                  @enderror"
-                                                  placeholder="Product Price"
-                                                  name="product_price[]"
-                                                  type="number"
-                                                  step="0.01"
-                                                  min="1"
-                                                  value="{{old('product_price')[0]}}"
-                                                  required
-                                              />
-                                        </span>
+                                                    @enderror"
+                                                    placeholder="Product Price"
+                                                    name="product_price[]"
+                                                    type="number"
+                                                    step="0.01"
+                                                    min="1"
+                                                    value="{{old('product_price')[0]}}"
+                                                    required
+                                                />
+                                            </span>
                                             @error('product_price')
-                                            <span class="text-tiny+ text-error">{{$message}}</span>
+                                                <span class="text-tiny+ text-error">{{$message}}</span>
                                             @enderror
                                         </label>
-                                        {{--                                    </div>--}}
                                     @else
-                                        {{--                                    <div class="product_div grid mt-2 grid-cols-1 gap-4 sm:grid-cols-12">--}}
                                         <label class="block mt-2 ">
                                             <span>Product Name</span>
                                             <span class="relative mt-1.5 flex">
-                                          <input
-                                              class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                              placeholder="Product Name"
-                                              name="product_name[]"
-                                              type="text"
-                                              value="{{old('product_name')[$loop->index]}}"
-                                              required
-                                          />
-                                        </span>
+                                                <input
+                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                    placeholder="Product Name"
+                                                    name="product_name[]"
+                                                    type="text"
+                                                    value="{{old('product_name')[$loop->index]}}"
+                                                    required
+                                                />
+                                            </span>
                                         </label>
                                         <label class="block mt-2">
                                             <span>Product Qty</span>
                                             <span class="relative mt-1.5 flex">
-                                          <input
-                                              class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                              placeholder="Product Qty"
-                                              name="product_qty[]"
-                                              type="number"
-                                              step="1"
-                                              min="1"
-                                              value="{{old('product_qty')[$loop->index]}}"
-                                              required
-                                          />
-                                        </span>
+                                                <input
+                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                    placeholder="Product Qty"
+                                                    name="product_qty[]"
+                                                    type="number"
+                                                    step="1"
+                                                    min="1"
+                                                    value="{{old('product_qty')[$loop->index]}}"
+                                                    required
+                                                />
+                                            </span>
                                         </label>
                                         <label class="block mt-2">
                                             <span>Product Price</span>
                                             <span class="relative mt-1.5 flex">
-                                          <input
-                                              class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
-                                              placeholder="Product Price"
-                                              name="product_price[]"
-                                              type="number"
-                                              step="0.01"
-                                              min="1"
-                                              value="{{old('product_price')[$loop->index]}}"
-                                              required
-                                          />
-                                        </span>
+                                                <input
+                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                    placeholder="Product Price"
+                                                    name="product_price[]"
+                                                    type="number"
+                                                    step="0.01"
+                                                     min="1"
+                                                    value="{{old('product_price')[$loop->index]}}"
+                                                    required
+                                                />
+                                            </span>
                                         </label>
                                         <div class="sm:col-span-2 flex justify-end items-end">
                                             <button
@@ -465,8 +454,6 @@
                                                 type="button"
                                                 onclick="deleteProduct(this)"
                                             >
-{{--                                                <i class="fa fa-plus" aria-hidden="true"></i>--}}
-
                                                 <span>Delete</span>
                                             </button>
                                         </div>
@@ -578,24 +565,24 @@
                                     Collect Cash
                                 </button>
                             </div>
+                        {{-- </div> --}}
+                        </form>
                     </div>
-                    </form>
                 </div>
-            </div>
 
-            <div>
-                <div class="card col-span-12">
-                    <div class=" p-4 sm:p-5">
-                        <div>
-                            <div class="flex items-center justify-between">
-                                <h2
-                                    class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"
-                                >
-                                    Offline Collection Table
-                                </h2>
-                            </div>
-                            <form method="get" action="">
+                <div>
+                    <div class="card col-span-12">
+                        <div class=" p-4 sm:p-5">
+                            <div>
                                 <div class="flex items-center justify-between">
+                                    <h2
+                                        class="text-base font-medium tracking-wide text-slate-700 line-clamp-1 dark:text-navy-100"
+                                    >
+                                        Offline Collection Table
+                                    </h2>
+                                </div>
+                                <form method="get" action="">
+                                    <div class="flex items-center justify-between">
                                     <div class="flex">
                                         <label class="block">
                                             <select
@@ -626,146 +613,121 @@
                                             </label>
                                         </div>
                                     </div>
-                                </div>
-                                <div id="reportrange" name="duration"
-                                    class="form-input mt-3 peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
-                                    <i class="fa fa-calendar"></i>&nbsp;
-                                    <span id="date-duration"></span>
-                                </div>
-                                <input type="hidden" name="start_date">
-                                <input type="hidden" name="end_date">
-                                {{-- <label class="block mt-4">
-                                    <span>Select dates</span><br>
-                                        <input
-                                            x-init="$el._x_flatpickr = flatpickr($el,{mode: 'range',maxDate: 'today',altFormat: 'd-m-Y',dateFormat: 'Y-m-d'})"
-                                            class="search form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 pl-9 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
-                                            @error('created_at')
-                                                border-error
-                                            @enderror"
-                                            placeholder="Choose date range..."
-                                            type="text"
-                                            id="created_at"
-                                            name="created_at"
-                                            value="{{request('created_at','')}}"
-                                        />
-                                </label> --}}
-                            </form>
-
-                            {{--                            </div>--}}
-                            <div class=" mt-3">
-                                <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
-                                    <table class="is-hoverable w-full text-left">
-                                        <thead>
-                                        <tr>
-                                            <th class="whitespace-nowrap rounded-tl-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                #
-                                            </th>
-                                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                @sortablelink('created_at','Created At')
-                                            </th>
-                                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                @sortablelink('invoice_number','Invoice Number')
-                                            </th>
-                                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                @sortablelink('customer.name','Customer Name')
-                                            </th>
-                                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                @sortablelink('total_amount','Total Amount')
-                                            </th>
-                                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                @sortablelink('customer.gst_no','GST Number')
-                                            </th>
-                                            {{--                                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">--}}
-                                            {{--                                                Payment Method--}}
-                                            {{--                                            </th>--}}
-                                            {{--                                            <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">--}}
-                                            {{--                                                Status--}}
-                                            {{--                                            </th>--}}
-                                            <th class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
-                                                Action
-                                            </th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        @forelse($invoices as $invoice)
-                                            <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
-                                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
-                                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->created_at->format('Y-m-d') }} </td>
-                                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->invoice_number }} </td>
-                                                <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->customer->name }} </td>
-                                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $invoice->total_amount}} </td>
-                                                <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ isset($invoice->customer->gst_no) ? $invoice->customer->gst_no : '-' }} </td>
-
-                                                <td class="whitespace-nowrap px-4 py-3 sm:px-5">
-                                                    <div
-                                                        x-data="usePopper({placement:'bottom-end',offset:4})"
-                                                        @click.outside="if(isShowPopper) isShowPopper = false"
-                                                        class="inline-flex"
-                                                    >
-                                                        <a href="{{route('invoices.payment',['id'=>auth()->id(),'invoiceId'=>$invoice->id,'rinvoiceId'=>0])}}" target="_blank" title="Share invoice now"><i class="fa-solid fa-share-from-square"></i></a>
-                                                        <button
-                                                            x-ref="popperRef"
-                                                            @click="isShowPopper = !isShowPopper"
-                                                            class="btn h-8 w-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
-                                                        >
-                                                            <svg
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                class="h-5 w-5"
-                                                                fill="none"
-                                                                viewBox="0 0 24 24"
-                                                                stroke="currentColor"
-                                                                stroke-width="2"
-                                                            >
-                                                                <path
-                                                                    stroke-linecap="round"
-                                                                    stroke-linejoin="round"
-                                                                    d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-                                                                />
-                                                            </svg>
-                                                        </button>
-
-                                                        <div
-                                                            x-ref="popperRoot"
-                                                            class="popper-root"
-                                                            :class="isShowPopper && 'show'"
-                                                        >
-                                                            <div class="popper-box rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
-                                                                <ul>
-                                                                    <li>
-                                                                        <a
-                                                                            href="{{ route('invoices.pdf', $invoice->id) }}"
-                                                                            class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
-                                                                            PDF
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </td>
-
-                                            </tr>
-                                        @empty
-                                            <td colspan="5" class="text-center">No record found</td>
-                                        @endforelse
-                                        </tbody>
-                                    </table>
-                                </div>
-                                @if(empty(request('transactions')))
-                                    <div class="flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5">
-                                        {!! $invoices->appends(\Request::except('page'))->render() !!}
-
-{{--                                        {{$invoices->links()}}--}}
                                     </div>
-                                @endif
+                                    <div id="reportrange" name="duration"
+                                        class="form-input mt-3 peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent">
+                                        <i class="fa fa-calendar"></i>&nbsp;
+                                        <span id="date-duration"></span>
+                                    </div>
+                                    <input type="hidden" name="start_date">
+                                    <input type="hidden" name="end_date">
+                                </form>
+
+                                <div class=" mt-3">
+                                    <div class="is-scrollbar-hidden min-w-full overflow-x-auto">
+                                        <table class="is-hoverable w-full text-left">
+                                            <thead>
+                                                <tr>
+                                                    <th class="whitespace-nowrap rounded-tl-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                        #
+                                                    </th>
+                                                    <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                        @sortablelink('created_at','Created At')
+                                                    </th>
+                                                    <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                        @sortablelink('invoice_number','Invoice Number')
+                                                    </th>
+                                                    <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                        @sortablelink('customer.name','Customer Name')
+                                                    </th>
+                                                    <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                        @sortablelink('total_amount','Total Amount')
+                                                    </th>
+                                                    <th class="whitespace-nowrap bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                        @sortablelink('customer.gst_no','GST Number')
+                                                    </th>
+                                                
+                                                    <th class="whitespace-nowrap rounded-tr-lg bg-slate-200 px-4 py-3 font-semibold uppercase text-slate-800 dark:bg-navy-800 dark:text-navy-100 lg:px-5">
+                                                        Action
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse($invoices as $invoice)
+                                                    <tr class="border-y border-transparent border-b-slate-200 dark:border-b-navy-500">
+                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5">{{((request('page',1)-1)*10+$loop->iteration)}}</td>
+                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->created_at->format('Y-m-d') }} </td>
+                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->invoice_number }} </td>
+                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5"> {{ $invoice->customer->name }} </td>
+                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ $invoice->total_amount}} </td>
+                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5" > {{ isset($invoice->customer->gst_no) ? $invoice->customer->gst_no : '-' }} </td>
+
+                                                        <td class="whitespace-nowrap px-4 py-3 sm:px-5">
+                                                            <div
+                                                                x-data="usePopper({placement:'bottom-end',offset:4})"
+                                                                @click.outside="if(isShowPopper) isShowPopper = false"
+                                                                class="inline-flex"
+                                                            >
+                                                                <a href="{{route('invoices.payment',['id'=>auth()->id(),'invoiceId'=>$invoice->id,'rinvoiceId'=>0])}}" target="_blank" title="Share invoice now"><i class="fa-solid fa-share-from-square"></i></a>
+                                                                <button
+                                                                    x-ref="popperRef"
+                                                                    @click="isShowPopper = !isShowPopper"
+                                                                    class="btn h-8 w-8 rounded-full p-0 hover:bg-slate-300/20 focus:bg-slate-300/20 active:bg-slate-300/25 dark:hover:bg-navy-300/20 dark:focus:bg-navy-300/20 dark:active:bg-navy-300/25"
+                                                                >
+                                                                    <svg
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        class="h-5 w-5"
+                                                                        fill="none"
+                                                                        viewBox="0 0 24 24"
+                                                                        stroke="currentColor"
+                                                                        stroke-width="2"
+                                                                    >
+                                                                        <path
+                                                                            stroke-linecap="round"
+                                                                            stroke-linejoin="round"
+                                                                            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
+                                                                        />
+                                                                    </svg>
+                                                                </button>
+
+                                                                <div
+                                                                    x-ref="popperRoot"
+                                                                    class="popper-root"
+                                                                    :class="isShowPopper && 'show'"
+                                                                >
+                                                                    <div class="popper-box rounded-md border border-slate-150 bg-white py-1.5 font-inter dark:border-navy-500 dark:bg-navy-700">
+                                                                        <ul>
+                                                                            <li>
+                                                                                <a
+                                                                                    href="{{ route('invoices.pdf', $invoice->id) }}"
+                                                                                    class="flex h-8 items-center px-3 pr-8 font-medium tracking-wide outline-none transition-all hover:bg-slate-100 hover:text-slate-800 focus:bg-slate-100 focus:text-slate-800 dark:hover:bg-navy-600 dark:hover:text-navy-100 dark:focus:bg-navy-600 dark:focus:text-navy-100">
+                                                                                    PDF
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @empty
+                                                    <td colspan="5" class="text-center">No record found</td>
+                                                @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    @if(empty(request('transactions')))
+                                        <div class="flex flex-col justify-between space-y-4 px-4 py-4 sm:flex-row sm:items-center sm:space-y-0 sm:px-5">
+                                            {!! $invoices->appends(\Request::except('page'))->render() !!}
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
 @endsection
@@ -881,59 +843,30 @@
 
     <script type="text/javascript">
 
-        //     $('#customer_id').on('change', function (e) {
-        //       var selectedValues = $(this).val();  //Get the selected Values
-        //       $('#phone_no').val(selectedValues);        //Update S2 with selected values.
-        // });
         $(document).ready(function(){
         
-        $("#customer_id").select2();
-        // $("#email").select2();
-        // $("#phone_no").select2();
-        // var triggerManual = false;
-        // $('#customer_id').on('change', function (e) {
-        //     if( triggerManual ) {
-        //         return;
-        //     }
-        //     var selectedValues = $(this).val();
-        //     console.log(selectedValues);
-        //     $('#email').val(selectedValues);
-        //     $('#phone_no').val(selectedValues);
-        //     changeSelValues();
-        // });
+        $(".select2").select2();
+        var triggerManual = false;
+        $('.select2').on('change', function (e) {
+            if( triggerManual ) {
+                return;
+            }
+            $('.select2').val($(this).val());
+            changeSelValues($(this).attr('id'));
+        });
 
-        // $('#email').on('change', function (e) {
-        //       if( triggerManual ) {
-        //         return;
-        //       }
-        //       var selectedValues = $(this).val();
-        //       $('#customer_id').val(selectedValues);
-        //       $('#phone_no').val(selectedValues);
-        //       changeSelValues();
-        // }); 
+       
+        function changeSelValues(id) {
+            triggerManual = true;
+            $('.select2:not(#'+id+')').trigger('change');
+            // $('#email').trigger('change');
 
-        // $('#phone_no').on('change', function (e) {
-        //       if( triggerManual ) {
-        //         return;
-        //       }
-        //       var selectedValues = $(this).val();
-        //       $('#customer_id').val(selectedValues);
-        //       $('#email').val(selectedValues);
-        //       changeSelValues();
-        // }); 
-        
-        // function changeSelValues() {
-        //     triggerManual = true;
-        //     $('#customer_id').trigger('change');
-        //     $('#email').trigger('change');
-        //     $('#phone_no').trigger('change');
             
-        //     triggerManual = false;
-        // } 
+            triggerManual = false;
+        } 
         }); 
     </script>
     <script>
-
         @if(!empty(request('start_date')) && !empty(request('end_date')))
         var start = moment('{{request('start_date')}}','YYYY-MM-DD');
         var end = moment('{{request('end_date')}}','YYYY-MM-DD');
@@ -985,21 +918,38 @@
 @endpush
 @push('scripts')
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+
 @endpush
 
 
 @push('styles')
 
 <style>
-    .select2-dropdown {
-      background-color: white;
-      border: 1px solid #aaa;
-      border-radius: 4px;
-      box-sizing: border-box;
-      display: block;
-      position: absolute;
-      left: -100000px;
-      width: 100%;
-      z-index: 1051; }
+    .select2-container .select2-selection--single {
+        height: 38.6px !important;
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+        border-radius: 0.5rem !important;
+        border-color: rgb(203 213 225 / 1) !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        top: 6px !important;
+        right: 9px !important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 21px !important;
+    }
+    .select2-results__option.select2-results__option--highlighted {
+        background-color: #5897FB !important;
+        color: white !important;
+    }
+    .select2-results__option {
+        padding: 6px !important;
+        padding-left: 1em !important;
+    }
 </style>
 @endpush
