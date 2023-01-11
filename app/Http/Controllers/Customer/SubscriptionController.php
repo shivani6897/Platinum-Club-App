@@ -81,7 +81,7 @@ class SubscriptionController extends Controller
                 'due_date' => $rinvoice->next_emi_date->format('d-m-Y'),
                 'invoice_date' => Carbon::now()->format('d-m-Y'),
                 'invoiceId' => 0,
-                'invoice_number' => $invoiceService->generateInvoiceNumber(),
+                'invoice_number' => $invoiceService->generateInvoiceNumber($id),
                 'subtotal' => $subtotal,
                 'emi' => $emi,
                 'total_emis'=>$rinvoice->total_emis,
@@ -195,7 +195,7 @@ class SubscriptionController extends Controller
                     'customer_id' => $invoice->customer_id,
                     'description' => $invoice->description,
                     'payment_method' => 3,
-                    'invoice_number' => $invoiceService->generateInvoiceNumber(),
+                    'invoice_number' => $invoiceService->generateInvoiceNumber($id),
                     'total_amount' => $paymentIntent->amount / 100,
                     'status' => ($paymentIntent->status == "succeeded" ? 1 : 2),
                 ];
@@ -357,7 +357,7 @@ class SubscriptionController extends Controller
                 'customer_id' => $invoice->customer_id,
                 'description' => $invoice->description,
                 'payment_method' => 3,
-                'invoice_number' => $invoiceService->generateInvoiceNumber(),
+                'invoice_number' => $invoiceService->generateInvoiceNumber($id),
                 'total_amount' => $razorpayment->amount / 100,
                 'status' => ($razorpayment->status == "captured" ? 1 : 2),
             ];
@@ -560,7 +560,7 @@ class SubscriptionController extends Controller
                 'customer_id' => $invoice->customer_id,
                 'description' => $invoice->description,
                 'payment_method' => 3,
-                'invoice_number' => $invoiceService->generateInvoiceNumber(),
+                'invoice_number' => $invoiceService->generateInvoiceNumber($id),
                 'total_amount' => (float)$response['amount'],
                 'status' => ($response['status'] == "Completed" ? 1 : 2),
             ];

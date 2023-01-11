@@ -54,11 +54,6 @@ class OfflinePaymentController extends Controller
             'description',
 //            'payment_method'
         ]);
-        // $user_deatils = UserDetail::where('user_id',auth()->id())->first('business_name');
-
-//        $invoicecount = Invoice::whereYear('created_at', date('Y'))->count();
-//        $invoicecount = strlen($invoicecount) == 1 ?  '0'.$invoicecount+1 : $invoicecount+1;
-//        $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
         $invoiceData['total_amount'] = 0;
         $invoices->update([$invoiceData]);
 

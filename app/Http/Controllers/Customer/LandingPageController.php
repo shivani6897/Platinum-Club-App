@@ -87,7 +87,7 @@ class LandingPageController extends Controller
                     'payment_method'
                 ]);
                 $invoiceData['customer_id'] = $customer->id;
-                $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
+                $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber($id);
                 $invoiceData['total_amount'] = 0;
                 $invoiceData['payment_method'] = 0;
                 $invoiceData['status'] = 1;
@@ -170,8 +170,7 @@ class LandingPageController extends Controller
             InstamojoService::success($request, $id, $gateway, $product);
             return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
         } catch (\Exception $e) {
-            dd($e);
-            return redirect('/');
+            return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', $e->getMessage());
         }
     }
 
@@ -221,7 +220,7 @@ class LandingPageController extends Controller
         \Stripe\Stripe::setApiKey($gateway->stripe_secret);
         $stripe = new \Stripe\StripeClient($gateway->stripe_secret);
 
-        try {
+        // try {
             $paymentIntent = $stripe->paymentIntents->retrieve(
                 $request->payment_intent,
                 []
@@ -231,140 +230,24 @@ class LandingPageController extends Controller
                 return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', 'Cannot reload, please try again');
             }
 
-            $customer = Customer::updateOrCreate([
-                'user_id' => $id,
-                'phone_no' => $request->phone_no
-            ], [
-                'name' => $request->first_name . ' ' . $request->last_name,
-                'email' => $request->email,
-                'state' => '',
-            ]);
-            // Store Details after payment success
+            $flg = InvoiceService::create(
+                $id,
+                $request,
+                ($paymentIntent->amount / 100),
+                ($paymentIntent->status == "succeeded" ? 1 : 2),
+                $paymentIntent->id,
+                json_encode($paymentIntent),
+                'stripe',
+                [$request->product_id],
+            );
 
-            $invoiceData = $request->only([
-                'customer_id',
-                'description',
-                'payment_method'
-            ]);
-            $invoiceData['customer_id'] = $customer->id;
-            $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
-            $invoiceData['total_amount'] = $paymentIntent->amount / 100;
-            $invoiceData['payment_method'] = 3;
-            $invoiceData['status'] = ($paymentIntent->status == "succeeded" ? 1 : 2);
-            $invoice = Invoice::create($invoiceData);
-
-            //Create Product Log and calculate total amount
-            $productData = [];
-            $total = 0;
-
-            $product = Product::find($request->product_id);
-
-            // foreach($request->product_id as $key => $product_id)
-            // {
-            $productData[] = [
-                'product_id' => $product->id,
-                'invoice_id' => $invoice->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'qty' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-            // $total += ($request->product_price[$key]*$request->product_qty[$key]);
-            // }
-
-            $productLog = ProductLog::insert($productData);
-
-            $payment = Payment::create([
-                'invoice_id' => $invoice->id,
-                'amount' => $paymentIntent->amount / 100,
-                'type' => 3,
-                'transaction_id' => $paymentIntent->id,
-                'payment_response' => json_encode($paymentIntent),
-                'gateway' => 'stripe'
-            ]);
-
-            $rinvoice = NULL;
-            if ($request->is_free_trial || $request->payment_type == 1 || $product->is_subscription) {
-                $defaultData = [
-                    'user_id' => $id,
-                    'customer_id' => $customer->id,
-                    'product_id' => $product->id,
-                ];
-
-                $paid = 0;
-                $downpayment = 0;
-                $pending = $product->price;
-                $billed_at = null;
-                if($request->is_free_trial){
-                    $is_free_trial = true;
-                    $trial_price = $product->trial_price;
-                    $paid += $product->trial_price;
-                    $total_emis = 1;
-                    $emi_amount = $product->price;
-                    $next_emi_date = Carbon::now()->add($product->trial_duration,$product->trial_duration_type);
-                }else{
-                    $is_free_trial = false;
-                    $trial_price = 0;
-                    $next_emi_date = Carbon::now()->addDays(28)->format('Y-m-d');
-                }
-
-                if ($request->payment_type == 1) {
-                    $emi_amount = round(($product->price - $request->downpayment) / $request->emi, 2);
-                    $downpayment = $request->downpayment;
-                    $paid += $request->downpayment;
-                    $pending -= $request->downpayment;
-                    $total_emis = $request->emi;
-                }
-
-                if($product->is_subscription){
-                    $total_emis = -1;
-                    $emi_amount = $product->price;
-                    $pending = !$request->is_free_trial ? 0 : $pending;
-                    $billed_at = $product->billing_period;
-                    $paid = !$request->is_free_trial ? $product->price : $product->trial_price;
-                }
-
-                $rData = [
-                    'is_free_trial' => $is_free_trial,
-                    'trial_price' => $trial_price,
-                    'downpayment' => $downpayment,
-                    'paid' => $paid,
-                    'pending' => $pending,
-                    'emi_amount' => $emi_amount,
-                    'next_emi_date' => $next_emi_date,
-                    'paid_date' => Carbon::now()->format('Y-m-d'),
-                    'total_emis' => $total_emis,
-                    'billed_at' => $billed_at
-                ];  
-                $rinvoiceData = array_merge($defaultData,$rData);
-                $rinvoice = RecurringInvoice::create($rinvoiceData);
-                $rinvoice->invoices()->attach($invoice->id);
-            }
-            
-            $incomeData = $request->only([
-                'date', 'income'
-            ]);
-            //$incomeData['invoice_id'] = $customer->id;
-            $incomeData['user_id'] = $id;
-            $incomeData['invoice_id'] = $invoice->id;
-            $incomeData['date'] = Carbon::now()->format('Y-m-d');
-            $incomeData['income'] = $invoice->total_amount;
-            $incomeData['description'] = 'Payment from Invoice';
-            $incomeData['income_category_id'] = 1;
-            $income = Income::create($incomeData);
-
-            $user = User::where('id',$id)->first();
-
-            $invoiceId = (!empty($rinvoice)?0:$invoice->id);
-            $rinvoiceId = (!empty($rinvoice)?$rinvoice->id:0);
-
-            Mail::to($customer->email)->send(new LandingInvoiceMail($id, $invoiceId, $rinvoiceId));
-
-            return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
-        } catch (\Exception $e) {
-            return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', $e->getMessage());
-        }
+            if($flg)
+                return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
+            else
+                return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', $e->getMessage());
+        // } catch (\Exception $e) {
+        //     return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', $e->getMessage());
+        // }
     }
 
     public function razorpayCreateOrder($id, $amount)
@@ -379,9 +262,7 @@ class LandingPageController extends Controller
     {
         $gateway = PaymentGateway::where('user_id', $id)->first();
         $generated_signature = hash_hmac('sha256', $request->razorpay_order_id . "|" . $request->razorpay_payment_id, $gateway->razorpay_secret);
-
         $api = new Api($gateway->razorpay_key, $gateway->razorpay_secret);
-
         $razorpayment = $api->payment->fetch($request->razorpay_payment_id);
 
         $alreadyPaid = Payment::where('transaction_id', $razorpayment->id)->first();
@@ -390,140 +271,25 @@ class LandingPageController extends Controller
 
         if ($generated_signature == $request->razorpay_signature) {
 
-            $customer = Customer::updateOrCreate([
-                'user_id' => $id,
-                'phone_no' => $request->phone_no,
-            ], [
-                'name' => $request->first_name . ' ' . $request->last_name,
-                'email' => $request->email,
-                'state' => '',
-            ]);
-            // Store Details after payment success
-
-            $invoiceData = $request->only([
-                'customer_id',
-                'description',
-                'payment_method'
-            ]);
-            $invoiceData['customer_id'] = $customer->id;
-            $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
-            $invoiceData['total_amount'] = $razorpayment->amount / 100;
-            $invoiceData['payment_method'] = 3;
-            $invoiceData['status'] = ($razorpayment->status == "captured" ? 1 : 2);
-            $invoice = Invoice::create($invoiceData);
-
-            //Create Product Log and calculate total amount
-            $productData = [];
-            $total = 0;
-
-            $product = Product::find($request->product_id);
-
-            // foreach($request->product_id as $key => $product_id)
-            // {
-            $productData[] = [
-                'product_id' => $product->id,
-                'invoice_id' => $invoice->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'qty' => 1,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-            // $total += ($request->product_price[$key]*$request->product_qty[$key]);
-            // }
-
-            $productLog = ProductLog::insert($productData);
-
-            $payment = Payment::create([
-                'invoice_id' => $invoice->id,
-                'amount' => $razorpayment->amount / 100,
-                'type' => 3,
-                'transaction_id' => $razorpayment->id,
-                'payment_response' => json_encode($request->only([
+            $flg = InvoiceService::create(
+                $id,
+                $request,
+                ($razorpayment->amount / 100),
+                ($razorpayment->status == "captured" ? 1 : 2),
+                $razorpayment->id,
+                json_encode($request->only([
                     'razorpay_payment_id',
                     'razorpay_order_id',
                     'razorpay_signature'
                 ])),
-                'gateway' => 'razorpay'
-            ]);
-
-            $rinvoice = NULL;
-            if ($request->is_free_trial || $request->payment_type == 1 || $product->is_subscription) {
-                $defaultData = [
-                    'user_id' => $id,
-                    'customer_id' => $customer->id,
-                    'product_id' => $product->id,
-                ];
-
-                $paid = 0;
-                $downpayment = 0;
-                $pending = $product->price;
-                $billed_at = null;
-                if($request->is_free_trial){
-                    $is_free_trial = true;
-                    $trial_price = $product->trial_price;
-                    $paid += $product->trial_price;
-                    $total_emis = 1;
-                    $emi_amount = $product->price;
-                    $next_emi_date = Carbon::now()->add($product->trial_duration,$product->trial_duration_type);
-                }else{
-                    $is_free_trial = false;
-                    $trial_price = 0;
-                    $next_emi_date = Carbon::now()->addDays(28)->format('Y-m-d');
-                }
-
-                if ($request->payment_type == 1) {
-                    $emi_amount = round(($product->price - $request->downpayment) / $request->emi, 2);
-                    $downpayment = $request->downpayment;
-                    $paid += $request->downpayment;
-                    $pending -= $request->downpayment;
-                    $total_emis = $request->emi;
-                }
-
-                if($product->is_subscription){
-                    $total_emis = -1;
-                    $emi_amount = $product->price;
-                    $pending = !$request->is_free_trial ? 0 : $pending;
-                    $billed_at = $product->billing_period;
-                    $paid = !$request->is_free_trial ? $product->price : $product->trial_price;
-                }
-
-                $rData = [
-                    'is_free_trial' => $is_free_trial,
-                    'trial_price' => $trial_price,
-                    'downpayment' => $downpayment,
-                    'paid' => $paid,
-                    'pending' => $pending,
-                    'emi_amount' => $emi_amount,
-                    'next_emi_date' => $next_emi_date,
-                    'paid_date' => Carbon::now()->format('Y-m-d'),
-                    'total_emis' => $total_emis,
-                    'billed_at' => $billed_at
-                ];  
-                $rinvoiceData = array_merge($defaultData,$rData);
-                $rinvoice = RecurringInvoice::create($rinvoiceData);
-                $rinvoice->invoices()->attach($invoice->id);
-            }
-
-            $incomeData = $request->only([
-                'date', 'income'
-            ]);
-            $incomeData['user_id'] = $id;
-            $incomeData['invoice_id'] = $invoice->id;
-            $incomeData['date'] = Carbon::now()->format('Y-m-d');
-            $incomeData['income'] = $invoice->total_amount;
-            $incomeData['description'] = 'Payment from Invoice';
-            $incomeData['income_category_id'] = 1;
-            $income = Income::create($incomeData);
-
-            $user = User::where('id',$id)->first();
-
-            $invoiceId = (!empty($rinvoice)?0:$invoice->id);
-            $rinvoiceId = (!empty($rinvoice)?$rinvoice->id:0);
-
-            Mail::to($customer->email)->send(new LandingInvoiceMail($id, $invoiceId, $rinvoiceId));
-
-            return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
+                'razorpay',
+                [$request->product_id],
+            );
+            
+            if($flg)
+                return view('customer.landing.thankyou', compact('id'))->with('success', 'Purchase Successful');
+            else
+                return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', $e->getMessage());
         } else {
             return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', 'Error while paying with razorpay, signature did not matched.');
         }

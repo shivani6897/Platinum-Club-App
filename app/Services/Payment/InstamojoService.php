@@ -65,110 +65,131 @@ final class InstamojoService
         if (!empty($alreadyPaid))
             return redirect()->route('landing.index', compact('id'))->withInput($request->all())->with('error', 'Cannot reload, please try again');
 
-        $customer = Customer::updateOrCreate([
-            'user_id' => $id,
-            'phone_no' => $response['phone'],
-        ], [
-            'name' => $response['buyer_name'],
-            'email' => $response['email'],
-            'state' => '',
-        ]);
+        $requestData = new \stdClass();
+        $requestData->phone_no = $response['phone'];
+        $requestData->first_name = explode(' ', $response['buyer_name'])[0];
+        $requestData->last_name = (isset(explode(' ', $response['buyer_name'])[1])?explode(' ', $response['buyer_name'])[1]:'');
+        $requestData->email = $response['email'];
+        $requestData->is_free_trial = $request->is_free_trial;
+        $requestData->downpayment = $request->downpayment;
+        $requestData->payment_type = $request->payment_type;
+        $requestData->emi = $request->emi;
+
+        $flg = InvoiceService::create(
+                $id,
+                $requestData,
+                $response['amount'],
+                ($response['status'] == "Completed" ? 1 : 2),
+                $request->id,
+                json_encode($response),
+                'instamojo',
+                [$product->id],
+        );
+
+        // $customer = Customer::updateOrCreate([
+        //     'user_id' => $id,
+        //     'phone_no' => $response['phone'],
+        // ], [
+        //     'name' => $response['buyer_name'],
+        //     'email' => $response['email'],
+        //     'state' => '',
+        // ]);
         // Store Details after payment success
 
-        $invoiceData['customer_id'] = $customer->id;
-        $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber();
-        $invoiceData['total_amount'] = $response['amount'];
-        $invoiceData['payment_method'] = 3;
-        $invoiceData['status'] = ($response['status'] == "Completed" ? 1 : 2);
-        $invoice = Invoice::create($invoiceData);
+        // $invoiceData['customer_id'] = $customer->id;
+        // $invoiceData['invoice_number'] = $invoiceService->generateInvoiceNumber($id);
+        // $invoiceData['total_amount'] = $response['amount'];
+        // $invoiceData['payment_method'] = 3;
+        // $invoiceData['status'] = ($response['status'] == "Completed" ? 1 : 2);
+        // $invoice = Invoice::create($invoiceData);
 
         //Create Product Log and calculate total amount
-        $productData = [];
-        $total = 0;
+        // $productData = [];
+        // $total = 0;
 
-        $productData[] = [
-            'product_id' => $product->id,
-            'invoice_id' => $invoice->id,
-            'name' => $product->name,
-            'price' => $product->price,
-            'qty' => 1,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ];
+        // $productData[] = [
+        //     'product_id' => $product->id,
+        //     'invoice_id' => $invoice->id,
+        //     'name' => $product->name,
+        //     'price' => $product->price,
+        //     'qty' => 1,
+        //     'created_at' => now(),
+        //     'updated_at' => now(),
+        // ];
 
-        $productLog = ProductLog::insert($productData);
+        // $productLog = ProductLog::insert($productData);
 
-        $payment = Payment::create([
-            'invoice_id' => $invoice->id,
-            'amount' => $response['amount'],
-            'type' => 3,
-            'transaction_id' => $request->id,
-            'payment_response' => json_encode($response),
-            'gateway' => 'instamojo'
-        ]);
+        // $payment = Payment::create([
+        //     'invoice_id' => $invoice->id,
+        //     'amount' => $response['amount'],
+        //     'type' => 3,
+        //     'transaction_id' => $request->id,
+        //     'payment_response' => json_encode($response),
+        //     'gateway' => 'instamojo'
+        // ]);
 
-        $defaultData = [
-            'user_id' => $id,
-            'customer_id' => $customer->id,
-            'product_id' => $product->id,
-            'downpayment' => ((float)$requestQuery['downpayment']),
-        ];
+        // $defaultData = [
+        //     'user_id' => $id,
+        //     'customer_id' => $customer->id,
+        //     'product_id' => $product->id,
+        //     'downpayment' => ((float)$requestQuery['downpayment']),
+        // ];
 
         // If Is Free Trial
-        $rinvoice = NULL;
-        if($request->is_free_trial){
-            $freeTrialData = self::freeTrialData($product,$requestQuery);
-            if ($request->payment_type == 1){
-                $emi = round(($product->price - ((float)$requestQuery['downpayment'])) / (int)$requestQuery['emi'], 2);
-                $rData = [
-                    'pending' => $product->price - ((float)$requestQuery['downpayment']),
-                    'emi_amount' => $emi,
-                    'total_emis' => (int)$requestQuery['emi']
-                ];
-            }else{
-                $rData = [
-                    'pending' => $product->price,
-                    'emi_amount' => $product->price,
-                    'total_emis' => 1
-                ];
-            }
-            $rinvoiceData = array_merge($defaultData,$freeTrialData,$rData);
-            $rinvoice = RecurringInvoice::create($rinvoiceData);
-            $rinvoice->invoices()->attach($invoice->id);
-        }else{
-            if ($requestQuery['payment_type'] == 1) {
-                $emi = round(($product->price - ((float)$requestQuery['downpayment'])) / (int)$requestQuery['emi'], 2);
-                $rinvoiceData = [
-                    'user_id' => $id,
-                    'customer_id' => $customer->id,
-                    'product_id' => $product->id,
-                    'downpayment' => ((float)$requestQuery['downpayment']),
-                    'paid' => ((float)$requestQuery['downpayment']),
-                    'pending' => $product->price - ((float)$requestQuery['downpayment']),
-                    'emi_amount' => $emi,
-                    'paid_date' => Carbon::now()->format('Y-m-d'),
-                    'next_emi_date' => Carbon::now()->addDays(28)->format('Y-m-d'),
-                    'total_emis' => (int)$requestQuery['emi']
-                ];
-                $rinvoice = RecurringInvoice::create($rinvoiceData);
+        // $rinvoice = NULL;
+        // if($request->is_free_trial){
+        //     $freeTrialData = self::freeTrialData($product,$requestQuery);
+        //     if ($request->payment_type == 1){
+        //         $emi = round(($product->price - ((float)$requestQuery['downpayment'])) / (int)$requestQuery['emi'], 2);
+        //         $rData = [
+        //             'pending' => $product->price - ((float)$requestQuery['downpayment']),
+        //             'emi_amount' => $emi,
+        //             'total_emis' => (int)$requestQuery['emi']
+        //         ];
+        //     }else{
+        //         $rData = [
+        //             'pending' => $product->price,
+        //             'emi_amount' => $product->price,
+        //             'total_emis' => 1
+        //         ];
+        //     }
+        //     $rinvoiceData = array_merge($defaultData,$freeTrialData,$rData);
+        //     $rinvoice = RecurringInvoice::create($rinvoiceData);
+        //     $rinvoice->invoices()->attach($invoice->id);
+        // }else{
+        //     if ($requestQuery['payment_type'] == 1) {
+        //         $emi = round(($product->price - ((float)$requestQuery['downpayment'])) / (int)$requestQuery['emi'], 2);
+        //         $rinvoiceData = [
+        //             'user_id' => $id,
+        //             'customer_id' => $customer->id,
+        //             'product_id' => $product->id,
+        //             'downpayment' => ((float)$requestQuery['downpayment']),
+        //             'paid' => ((float)$requestQuery['downpayment']),
+        //             'pending' => $product->price - ((float)$requestQuery['downpayment']),
+        //             'emi_amount' => $emi,
+        //             'paid_date' => Carbon::now()->format('Y-m-d'),
+        //             'next_emi_date' => Carbon::now()->addDays(28)->format('Y-m-d'),
+        //             'total_emis' => (int)$requestQuery['emi']
+        //         ];
+        //         $rinvoice = RecurringInvoice::create($rinvoiceData);
 
-                $rinvoice->invoices()->attach($invoice->id);
-            }
-        }
+        //         $rinvoice->invoices()->attach($invoice->id);
+        //     }
+        // }
         
-        $incomeData['user_id'] = auth()->id();
-        $incomeData['invoice_id'] = $invoice->id;
-        $incomeData['date'] = Carbon::now()->format('Y-m-d');
-        $incomeData['income'] = $invoice->total_amount;
-        $incomeData['description'] = 'Payment from Invoice';
-        $incomeData['income_category_id'] = 1;
+        // $incomeData['user_id'] = auth()->id();
+        // $incomeData['invoice_id'] = $invoice->id;
+        // $incomeData['date'] = Carbon::now()->format('Y-m-d');
+        // $incomeData['income'] = $invoice->total_amount;
+        // $incomeData['description'] = 'Payment from Invoice';
+        // $incomeData['income_category_id'] = 1;
 
-        Income::create($incomeData);
+        // Income::create($incomeData);
 
-        $invoiceId = (!empty($rinvoice)?0:$invoice->id);
-        $rinvoiceId = (!empty($rinvoice)?$rinvoiceId:0);
+        // $invoiceId = (!empty($rinvoice)?0:$invoice->id);
+        // $rinvoiceId = (!empty($rinvoice)?$rinvoiceId:0);
 
-        Mail::to($customer->email)->send(new LandingInvoiceMail($id, $invoiceId, $rinvoiceId));
+        // Mail::to($customer->email)->send(new LandingInvoiceMail($id, $invoiceId, $rinvoiceId));
     }
 
     /**

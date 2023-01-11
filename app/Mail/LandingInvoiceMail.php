@@ -140,7 +140,7 @@ class LandingInvoiceMail extends Mailable
         //         'due_date' => $rinvoice->next_emi_date->format('d-m-Y'),
         //         'invoice_date' => Carbon::now()->format('d-m-Y'),
         //         'invoiceId' => 0,
-        //         'invoice_number' => $this->invoiceService->generateInvoiceNumber(),
+        //         'invoice_number' => $this->invoiceService->generateInvoiceNumber($this->userId),
         //         'subtotal' => $subtotal,
         //         'emi' => $emi,
         //         'total_emis'=>$rinvoice->total_emis,
