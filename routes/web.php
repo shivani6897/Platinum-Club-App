@@ -169,7 +169,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::post('/user-authorized_contact/post/', [UserDetailsController::class, 'postAuthorizeContact'])->name('user.authorizeContact.post');
 
     Route::get('/offlinepayments/', [\App\Http\Controllers\Customer\OfflinePaymentController::class, 'create'])->name('offlinepayments.create');
-    Route::post('/offlinepayments/post/', [\App\Http\Controllers\Customer\OfflinePaymentController::class, 'store'])->name('offlinepayments.store');
+    Route::post('/offlinepayments/store/', [\App\Http\Controllers\Customer\OfflinePaymentController::class, 'store'])->name('offlinepayments.store');
+    Route::post('/offlinepayments/store/customer/', [\App\Http\Controllers\Customer\OfflinePaymentController::class, 'storeCustomer'])->name('offlinepayments.storeCustomer');
 
     Route::get('/invoice/user/{customers}/details', [\App\Http\Controllers\Customer\InvoiceController::class, 'userDetails'])->name('customer.invoice.details');
     Route::get('/subscription/user/{customers}/details', [\App\Http\Controllers\Customer\SubscriptionController::class, 'userDetails'])->name('customer.subscription.details');

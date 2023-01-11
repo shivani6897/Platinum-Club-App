@@ -54,11 +54,212 @@
             <div>
                 <div class="col-span-12">
                     <div class="card p-4 sm:p-5">
-                        <p
-                            class="text-base font-medium text-slate-700 dark:text-navy-100"
-                        >
-                            Customer Details
-                        </p>
+                        <div x-data="{showModal:false}" >
+
+                            <p
+                                class="text-base font-medium text-slate-700 dark:text-navy-100 flex justify-between"
+                            >
+                                Customer Details
+                            
+                                <button
+                                    @click="showModal = true"
+                                    class="btn space-x-2 bg-primary text-white font-medium hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                                >
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </button>
+                            </p>
+
+                            <template x-teleport="#x-teleport-target">
+                                <div
+                                    class="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden px-4 py-6 sm:px-5"
+                                    x-show="showModal"
+                                    role="dialog"
+                                    @keydown.window.escape="showModal = false"
+                                >
+                                <div
+                                    class="absolute inset-0 bg-slate-900/60 transition-opacity duration-300"
+                                    @click="showModal = false"
+                                    x-show="showModal"
+                                    x-transition:enter="ease-out"
+                                    x-transition:enter-start="opacity-0"
+                                    x-transition:enter-end="opacity-100"
+                                    x-transition:leave="ease-in"
+                                    x-transition:leave-start="opacity-100"
+                                    x-transition:leave-end="opacity-0"
+                                ></div>
+                                <div
+                                style="width: 50%;"
+                                  class="relative rounded-lg bg-white pt-10 pb-4 transition-all duration-300 dark:bg-navy-700"
+                                  x-show="showModal"
+                                  x-transition:enter="easy-out"
+                                  x-transition:enter-start="opacity-0 [transform:translate3d(0,1rem,0)]"
+                                  x-transition:enter-end="opacity-100 [transform:translate3d(0,0,0)]"
+                                  x-transition:leave="easy-in"
+                                  x-transition:leave-start="opacity-100 [transform:translate3d(0,0,0)]"
+                                  x-transition:leave-end="opacity-0 [transform:translate3d(0,1rem,0)]"
+                                >
+
+                                  
+                                    <form method="POST"
+                                        action="{{ route('offlinepayments.storeCustomer') }}"
+                                        accept-charset="UTF-8"
+                                        class="p-lg-5"
+                                        enctype="multipart/form-data"
+                                    >
+                                    @csrf
+                                        <div class="grid grid-cols-12 gap-4 sm:gap-5 lg:gap-6">
+                                            <div class="col-span-12">
+                                                <div class="card p-4 pt-0 sm:p-5">
+                                                    <h2 style="font-size: 20px"> Create Customer</h2>
+
+                                                    <div class="mt-4 space-y-4">
+                                                        {{-- <div class="grid grid-cols-1 gap-4 sm:grid-cols-2"> --}}
+                                                            <label class="block">
+                                                                <span>Customer name</span> <span>*</span>
+                                                                <span class="relative mt-1.5 flex">
+                                                                <input
+                                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                                    placeholder="Customer Name"
+                                                                    type="text"
+                                                                    name="name"
+                                                                    autocomplete="off"
+                                                                    value="{{ old('name') }}"
+                                                                    required
+                                                                />
+                                                            </span>
+                                                                @error('name')
+                                                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                                                @enderror
+                                                            </label>
+                                                            <label class="block">
+                                                                <span>Email</span> <span>*</span>
+                                                                <span class="relative mt-1.5 flex">
+                                                                <input
+                                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                                    placeholder="Customer's Email"
+                                                                    type="email"
+                                                                    name="email"
+                                                                    autocomplete="off"
+                                                                    value="{{ old('email') }}"
+                                                                    required
+                                                                />
+                                                            </span>
+                                                                @error('email')
+                                                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                                                @enderror
+                                                            </label>
+                                                        {{-- </div>
+                                                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2"> --}}
+                                                            <label class="block">
+                                                                <span>Phone Number</span> <span>*</span>
+                                                                <span class="relative mt-1.5 flex">
+                                                                <input
+                                                                    x-input-mask="{
+                                                                          numeric:true,
+                                                                          blocks: [3, 3, 4],
+                                                                      }"
+                                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                                    placeholder="Customer's Phone Number"
+                                                                    type="text"
+                                                                    name="phone_no"
+                                                                    autocomplete="off"
+                                                                    value="{{ old('phone_no') }}"
+                                                                    required
+                                                                />
+                                                            </span>
+                                                                @error('phone_no')
+                                                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                                                @enderror
+                                                            </label>
+                                                            <label class="block">
+                                                                <span>State</span> <span>*</span>
+                                                                <span class="relative mt-1.5 flex">
+                                                                <input
+                                                                    class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                                    placeholder="State"
+                                                                    type="text"
+                                                                    name="state"
+                                                                    autocomplete="off"
+                                                                    value="{{ old('state') }}"
+                                                                    required
+                                                                />
+                                                            </span>
+                                                                @error('state')
+                                                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                                                @enderror
+                                                            </label>
+                                                        {{-- </div>
+                                                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2"> --}}
+                                                            <label class="block">
+                                                                <span>Company name</span>
+                                                                <span class="relative mt-1.5 flex">
+                                                                    <input
+                                                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                                        placeholder="Company Name"
+                                                                        type="text"
+                                                                        name="company_name"
+                                                                        autocomplete="off"
+                                                                        value="{{ old('company_name') }}"
+                                                                    />
+                                                                </span>
+                                                                @error('company_name')
+                                                                    <span class="text-tiny+ text-error">{{$message}}</span>
+                                                                @enderror
+                                                            </label>
+                                                            <label class="block">
+                                                                <span>Gst Number</span>
+                                                                <span class="relative mt-1.5 flex">
+                                                                    <input
+                                                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                                        placeholder="Gst Number"
+                                                                        type="text"
+                                                                        name="gst_no"
+                                                                        autocomplete="off"
+                                                                        value="{{ old('gst_no') }}"
+                                                                        
+                                                                    />
+                                                                </span>
+                                                                @error('gst_no')
+                                                                    <span class="text-tiny+ text-error">{{$message}}</span>
+                                                                @enderror
+                                                            </label>
+                                                        </div>
+                                                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-1 mt-4">
+                                                            <label class="block">
+                                                                <span>Company's Address</span>
+                                                                <span class="relative mt-1.5 flex">
+                                                                    <input
+                                                                        class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent"
+                                                                        placeholder="Company's Address"
+                                                                        type="text"
+                                                                        name="company_address"
+                                                                        autocomplete="off"
+                                                                        value="{{ old('company_address') }}"
+                                                                        
+                                                                    />
+                                                                </span>
+                                                                @error('company_address')
+                                                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                                                @enderror
+                                                            </label>
+                                                        </div>
+                                                        <div class="flex justify-end space-x-2 mt-4">
+                                                            <button
+                                                                class="btn space-x-2 bg-primary font-medium text-white hover:bg-primary-focus focus:bg-primary-focus active:bg-primary-focus/90 dark:bg-accent dark:hover:bg-accent-focus dark:focus:bg-accent-focus dark:active:bg-accent/90"
+                                                            >
+                                                                <span>Submit</span>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                              </div>
+                            </template>
+
+                        </div>
                         <form id="createInvoiceForm" method="post" action="{{route('offlinepayments.store')}}">
                             @csrf
                             <input type="hidden" value="" name="paymentIntent">
@@ -66,11 +267,12 @@
                             <label class="block">
                                 <span>Customer</span>
                                 <select
-                                    class="select2 form-select mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
+                                    class="select2 mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:bg-navy-700 dark:hover:border-navy-400 dark:focus:border-accent
                                     @error('customer_id')
                                         border-error
                                     @enderror"
                                     name="customer_id"
+                                    id="customer_id"
                                     required
                                 >
                                     @foreach($customers as $customer)
@@ -81,6 +283,51 @@
                                 <span class="text-tiny+ text-error">{{$message}}</span>
                                 @enderror
                             </label>
+
+                            <label class="block mt-2">
+                                <span>Customer Email</span>
+                                <span class="relative mt-1.5 flex">
+                                  <input
+                                      class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                                      @error('email')
+                                          border-error
+                                      @enderror"
+                                      placeholder="Customer Email"
+                                      name="email"
+                                      type="email"
+                                      {{-- value="{{ $customers->first()->email }}" --}}
+                                      required
+                                  />
+                            </span>
+                                @error('email')
+                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                @enderror
+                            </label>
+
+                            <label class="block mt-2">
+                                <span>Customer Contact</span>
+                                <span class="relative mt-1.5 flex">
+                                  <input
+                                      class="form-input peer w-full rounded-lg border border-slate-300 bg-transparent px-3 py-2 placeholder:text-slate-400/70 hover:border-slate-400 focus:border-primary dark:border-navy-450 dark:hover:border-navy-400 dark:focus:border-accent
+                                      @error('phone_no')
+                                          border-error
+                                      @enderror"
+                                      placeholder="Customer Phone Number"
+                                      name="phone_no"
+                                      id="phone_no"
+                                      type="number"
+                                      {{-- @foreach($customers as $customer) --}}
+                                      {{-- value="{{ $customer->phone_no }}" --}}
+                                        {{-- @endforeach --}}
+                                      required
+                                  />
+                            </span>
+                                @error('email')
+                                <span class="text-tiny+ text-error">{{$message}}</span>
+                                @enderror
+                            </label>
+
+
                             {{--                        </div>--}}
 
                             <div class="grid mt-2 grid-cols-1 mt-5 gap-4 sm:grid-cols-12">
@@ -629,7 +876,64 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+
+    <script type="text/javascript">
+
+        //     $('#customer_id').on('change', function (e) {
+        //       var selectedValues = $(this).val();  //Get the selected Values
+        //       $('#phone_no').val(selectedValues);        //Update S2 with selected values.
+        // });
+        $(document).ready(function(){
+        
+        $("#customer_id").select2();
+        // $("#email").select2();
+        // $("#phone_no").select2();
+        // var triggerManual = false;
+        // $('#customer_id').on('change', function (e) {
+        //     if( triggerManual ) {
+        //         return;
+        //     }
+        //     var selectedValues = $(this).val();
+        //     console.log(selectedValues);
+        //     $('#email').val(selectedValues);
+        //     $('#phone_no').val(selectedValues);
+        //     changeSelValues();
+        // });
+
+        // $('#email').on('change', function (e) {
+        //       if( triggerManual ) {
+        //         return;
+        //       }
+        //       var selectedValues = $(this).val();
+        //       $('#customer_id').val(selectedValues);
+        //       $('#phone_no').val(selectedValues);
+        //       changeSelValues();
+        // }); 
+
+        // $('#phone_no').on('change', function (e) {
+        //       if( triggerManual ) {
+        //         return;
+        //       }
+        //       var selectedValues = $(this).val();
+        //       $('#customer_id').val(selectedValues);
+        //       $('#email').val(selectedValues);
+        //       changeSelValues();
+        // }); 
+        
+        // function changeSelValues() {
+        //     triggerManual = true;
+        //     $('#customer_id').trigger('change');
+        //     $('#email').trigger('change');
+        //     $('#phone_no').trigger('change');
+            
+        //     triggerManual = false;
+        // } 
+        }); 
+    </script>
     <script>
+
         @if(!empty(request('start_date')) && !empty(request('end_date')))
         var start = moment('{{request('start_date')}}','YYYY-MM-DD');
         var end = moment('{{request('end_date')}}','YYYY-MM-DD');
@@ -681,4 +985,21 @@
 @endpush
 @push('scripts')
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+@endpush
+
+
+@push('styles')
+
+<style>
+    .select2-dropdown {
+      background-color: white;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      box-sizing: border-box;
+      display: block;
+      position: absolute;
+      left: -100000px;
+      width: 100%;
+      z-index: 1051; }
+</style>
 @endpush

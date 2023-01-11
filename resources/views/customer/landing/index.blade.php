@@ -307,7 +307,7 @@
                                     required
                                 />
                                 <p id="agree-label" class="text-black">I hereby agree to make payment
-                                    Rs {{$selectedProduct->price}}/-</p>
+                                    Rs {{$selectedProduct->price}}/- </p>
                                 <p id="tax-detail"></p>
                                 {{-- <p class="text-black">I hereby agree to make the monthly Emi of Rs <span id="emi-amount">13,333.00</span>/-</p> --}}
                             </label>

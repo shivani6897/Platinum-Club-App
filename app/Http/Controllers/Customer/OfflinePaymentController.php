@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\OfflinePayment\StoreRequest;
+use App\Http\Requests\Customer\Customer\StoreRequest as CustmerStoreRequest;
 use App\Http\Requests\Customer\OfflinePayment\UpdateRequest;
 use App\Models\Customer;
 use App\Models\Income;
@@ -26,7 +27,7 @@ class OfflinePaymentController extends Controller
         $input = $request->all();
 
         $products = Product::where('user_id',auth()->id())->pluck('name', 'id')->all();
-        $customers = Customer::where('user_id',auth()->id())->get(['id','name']);
+        $customers = Customer::where('user_id',auth()->id())->get(['id','name','email','phone_no']);
         $customerids = $customers->pluck('id')->toArray();
 
         $invoices = Invoice::with('customer')
@@ -111,11 +112,23 @@ class OfflinePaymentController extends Controller
         $incomeData['income_category_id'] = 1;
         $income = Income::create($incomeData);
 
+
         $customer = Customer::find($request->customer_id);
+        // dd($customer);
 
         Mail::to($customer->email)->send(new LandingInvoiceMail(auth()->id(), $invoice->id, 0));
 
         return redirect()->route('offlinepayments.create')->with('success','Offline invoice created');
+    }
+
+    public function storeCustomer(CustmerStoreRequest $customerStoreReq)
+    {
+        $array = $customerStoreReq->validated();
+        $array['user_id'] = auth()->id();
+        $customer = Customer::create($array);
+
+        return redirect()->back()->with('success', 'Custmer Created successfully');
+
     }
 
 }
